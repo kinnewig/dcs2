@@ -4,19 +4,17 @@ find_package(TRILINOS)
 if(TRILINOS_FOUND)
   message(STATUS "TRILINOS found: ${TRILINOS_DIR}")
   return()
+else()
+  message(STATUS "Build TRILINOS")
 endif()
 
-# Trilinos
-set(trilinos_tag "trilinos-release-15-1-0")
-set(trilinos_url "https://github.com/trilinos/trilinos.git")
-
-set(trilinos_cmake_args,
+set(trilinos_cmake_args
   -D BUILD_SHARED_LIBS:BOOL=ON 
-  -D CMAKE_C_COMPILER=mpicc 
-  -D CMAKE_CXX_COMPILER=mpicxx 
-  -D CMAKE_Fortran_COMPILER=mpifort 
+  -D CMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+  -D CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+  -D CMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER}
   -D CMAKE_BUILD_TYPE:STRING=RELEASE 
-  -D CMAKE_INSTALL_PREFIX:PATH=${INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
+  -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
   -D CMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON 
   -D CMAKE_VERBOSE_MAKEFILE:BOOL=OFF 
   -D TPL_ENABLE_Boost:BOOL=ON 
@@ -57,10 +55,26 @@ set(trilinos_cmake_args,
   -D Kokkos_ENABLE_TESTS:BOOL=ON 
 )
 
+# Trilinos with ScaLAPACK
+if (DEFINED BLIS_DIR)
+  list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
+  list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:STRING=${BLIS_DIR}/lib")
+endif()
+
+if (DEFINED SCALAPACK_DIR)
+  list(APPEND trilinos_cmake_args "-D TPL_ENABLE_SCALAPACK:BOOL=ON")
+  list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_NAMES='scalapack'")
+  list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_DIRS:PATH=${SCALAPACK_DIR}/lib64")
+  list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_SCALAPACK:BOOL=ON")
+endif()
+
 # Trilinos with MUMPS
-list(APPEND "-D TPL_ENABLE_MUMPS=ON")
-list(APPEND "-D MUMPS_INCLUDE_DIRS:STRING=${mumps_DIR}/include")
-list(APPEND "-D MUMPS_LIBRARY_DIRS:STRING=${mumps_DIR}/lib")
+if (DEFINED MUMPS_DIR)
+  list(APPEND trilinos_cmake_args "-D TPL_ENABLE_MUMPS=ON")
+  list(APPEND trilinos_cmake_args "-D MUMPS_LIBRARY_DIRS:PATH=${MUMPS_DIR}/lib")
+  list(APPEND trilinos_cmake_args "-D MUMPS_INCLUDE_DIRS:PATH=${MUMPS_DIR}/include")
+  list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_MUMPS:BOOL=ON")
+endif()
 
 # Complex number support
 if ( DEALII_WITH_COMPLEX )
@@ -69,13 +83,29 @@ if ( DEALII_WITH_COMPLEX )
   list(APPEND trilinos_cmake_args "-D Teuchos_ENABLE_COMPLEX:BOOL=ON")
 endif()
 
+# get the download url for trilinos:
+file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
+string(JSON trilinos_url GET ${json} trilinos git)
+string(JSON trilinos_tag GET ${json} trilinos ${TRILINOS_VERSION} tag)
+
 ExternalProject_Add(
     trilinos
     GIT_REPOSITORY ${trilinos_url}
     GIT_TAG ${trilinos_tag}
     CMAKE_ARGS ${trilinos_cmake_args}
     BUILD_BYPRODUCTS ${TRILINOS_LIBRARIES}
-    BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
+    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
 )
 
 set(TRILINOS_DIR "${trilinos_DIR}")
+
+add_library(TRILINOS::TRILINOS INTERFACE IMPORTED GLOBAL)
+target_include_directories(TRILINOS::TRILINOS INTERFACE ${TRILINOS_INCLUDE_DIRS})
+target_link_libraries(TRILINOS::TRILINOS INTERFACE ${TRILINOS_LIBRARIES})
+
+add_dependencies(TRILINOS::TRILINOS trilinos)
+
+# Populate the path
+set(TRILINOS_DIR "${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}")
+set(TRILINOS_LIBRARIES "${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}/lib64")
+set(TRILINOS_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINIOS_VERSION}/include")

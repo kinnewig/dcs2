@@ -1,0 +1,55 @@
+{
+  "blis": {
+    "git": "https://github.com/flame/blis.git",
+    "0.9.0": {
+      "tag": "14c86f66b20901b60ee276da355c1b62642c18d2"
+    }
+  },
+
+  "scalapack": {
+    "git": "https://github.com/scivision/scalapack.git",
+    "2.2.1": {
+      "tag": "7d2a199b91187f92c553179e22f76f42bc813728"
+    },
+    "2.2.0": {
+      "tag": "7dbf35c74ceb77e06fdacf7056f78b5f56fe67fb"
+    }
+  },
+
+  "mumps": {
+    "git": "https://github.com/scivision/mumps.git",
+    "5.6.2": {
+      "tag": "80fe9ac3e935a817923d8d5da0f38034ff0073bf"
+    },
+    "5.6.1": {
+      "tag": "477ab2ce4450cfe357acbfbc3cfd61d1e41dd391"
+    }
+  },
+
+  "p4est": {
+    "git": "https://github.com/cburstedde/p4est.git",
+    "2.8.5": {
+      "tag": "5f0e2f34b377066e9ba453aadf26dbc5cded4963"
+    }
+  },
+
+  "trilinos": {
+    "git": "https://github.com/trilinos/trilinos.git",
+    "15.1.0": {
+      "tag": "6af5f44df4eb9be0799961afcdbcbf2c2ea3f5ca"
+    },
+    "15.0.0": {
+      "tag": "3703c194db5ba3d9f2353aa0f1bb4731c7e53d45"
+    }
+  },
+
+  "dealii": {
+    "git": "https://github.com/dealii/dealii",
+    "master": {
+      "tag": "master"
+    },
+    "9.5.2": {
+      "tag": "6f07117be556bf929220c50820b4dead54dc31d0"
+    }
+  }
+}

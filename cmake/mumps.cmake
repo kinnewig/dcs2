@@ -2,36 +2,53 @@ include(ExternalProject)
 
 find_package(MUMPS)
 if(MUMPS_FOUND)
-  message(STATUS "MUMPS found: ${MUMPS_DIR}")
   return()
+else()
+  message(STATUS "Building MUMPS")
 endif()
 
-# MUMPS
-set(mumps_tag "master")
-set(mumps_url "https://github.com/scivision/mumps.git")
-
-set(mumps_cmake_args,
-  -DBUILD_SINGLE:BOOL=ON
-  -DBUILD_DOUBLE:BOOL=ON
-  -DBUILD_COMPLEX:BOOL=${DEAL_WITH_COMPLEX}
-  -DBUILD_COMPLEX16:BOOL=${DEAL_WITH_COMPLEX}
-  -DBUILD_SHARED_LIBS:BOOL=ON
-  -DCMAKE_INSTALL_PREFIX:PATH=${INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
-  -DCMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-  -DCMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
-  -DBUILD_TESTING:BOOL=off
-  -DCMAKE_BUILD_TYPE:STRING=Release
-)
-list(APPEND mumps_cmake_args, -D LAPACK_ROOT=${LAPACK_DIR})
-list(APPEND mumps_cmake_args, -D SCALAPACK_ROOT=${SCALAPACK_DIR})
-
-ExternalProject_Add(
-    mumps
-    GIT_REPOSITORY ${mumps_url}
-    GIT_TAG ${mumps_tag}
-    CMAKE_ARGS ${mumps_cmake_args}
-    BUILD_BYPRODUCTS ${MUMPS_LIBRARIES}
-    BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
+set(mumps_cmake_args
+  -D BUILD_SINGLE:BOOL=ON
+  -D BUILD_DOUBLE:BOOL=ON
+  -D BUILD_COMPLEX:BOOL=${DEALII_WITH_COMPLEX}
+  -D BUILD_COMPLEX16:BOOL=${DEALII_WITH_COMPLEX}
+  -D BUILD_SHARED_LIBS:BOOL=ON
+  -D BUILD_TESTING:BOOL=OFF
+  -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
+  -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
+  -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
+  -D CMAKE_BUILD_TYPE:STRING=Release
+  -D CMAKE_TLS_VERIFY:BOOL=${CMAKE_TLS_VERIFY}
 )
 
-set(MUMPS_DIR "${mumps_DIR}")
+list(APPEND mumps_cmake_args -D LAPACK_ROOT=${LAPACK_DIR})
+list(APPEND mumps_cmake_args -D SCALAPACK_ROOT=${SCALAPACK_DIR})
+
+# get the download url for mumps:
+file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
+string(JSON mumps_url GET ${json} mumps git)
+string(JSON mumps_tag GET ${json} mumps ${MUMPS_VERSION} tag)
+if (NOT mumps_tag)
+  message(FATAL_ERROR "Git tag for MUMPS version ${MUMPS_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
+endif()
+
+ExternalProject_Add(mumps
+  GIT_REPOSITORY ${mumps_url}
+  GIT_TAG ${mumps_tag}
+  GIT_SHALLOW true
+  CMAKE_ARGS ${mumps_cmake_args}
+  BUILD_BYPRODUCTS ${MUMPS_LIBRARIES}
+  CONFIGURE_HANDLED_BY_BUILD true
+  CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+)
+
+add_library(MUMPS::MUMPS INTERFACE IMPORTED GLOBAL)
+target_include_directories(MUMPS::MUMPS INTERFACE ${MUMPS_INCLUDE_DIRS})
+target_link_libraries(MUMPS::MUMPS INTERFACE ${MUMPS_LIBRARIES})
+
+add_dependencies(MUMPS::MUMPS mumps)
+
+# Populate the path
+set(MUMPS_DIR "${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}")
+set(MUMPS_LIBRARIES "${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}/lib64")
+set(MUMPS_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}/include")

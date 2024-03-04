@@ -1,37 +1,64 @@
 include(ExternalProject)
 
-find_package(SCALAPACK)
-if(SCALAPACK_FOUND)
-  message(STATUS "ScaLAPACK found: ${SCALAPACK_DIR}")
-  return()
+#if(SCALAPACK_FOUND)
+#  return()
+#else()
+#  message(STATUS "Building SCALAPACK")
+#endif()
+
+set(scalapack_cmake_args
+  -D BUILD_SINGLE:BOOL=ON
+  -D BUILD_DOUBLE:BOOL=ON
+  -D BUILD_COMPLEX:BOOL=${DEALII_WITH_COMPLEX}
+  -D BUILD_COMPLEX16:BOOL=${DEALII_WITH_COMPLEX}
+  -D BUILD_SHARED_LIBS:BOOL=ON
+  -D BUILD_TESTING:BOOL=OFF
+  -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}
+  -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
+  -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
+  -D CMAKE_BUILD_TYPE:STRING=Release
+  -D CMAKE_TLS_VERIFY:BOOL=${CMAKE_TLS_VERIFY}
+  -D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}
+)
+
+list(APPEND scalapack_cmake_args "-D find_lapack=off")
+
+# get the download url for scalapack:
+file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
+string(JSON scalapack_url GET ${json} scalapack git)
+string(JSON scalapack_tag GET ${json} scalapack ${SCALAPACK_VERSION} tag)
+if (NOT scalapack_tag)
+  message(FATAL_ERROR "Git tag for SCALAPACK version ${SCALAPACK_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
 endif()
 
-# Scalapack
-set(scalapack_tag "master")
-set(scalapack_url "https://github.com/scivision/scalapack.git")
 
-set(scalapack_cmake_args,
-  -DBUILD_SINGLE:BOOL=ON
-  -DBUILD_DOUBLE:BOOL=ON
-  -DBUILD_COMPLEX:BOOL=${DEAL_WITH_COMPLEX}
-  -DBUILD_COMPLEX16:BOOL=${DEAL_WITH_COMPLEX}
-  -DBUILD_SHARED_LIBS:BOOL=ON
-  -DCMAKE_INSTALL_PREFIX:PATH=${INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}
-  -DCMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-  -DCMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
-  -DBUILD_TESTING:BOOL=off
-  -DCMAKE_BUILD_TYPE:STRING=Release
-)
-#-Dfind_lapack=off #<-- force LAPACK to be compiled
+if(BUILD_SHARED_LIBS)
+  set(SCALAPACK_LIBRARIES ${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}scalapack${CMAKE_SHARED_LIBRARY_SUFFIX}
+    ${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}blacs${CMAKE_SHARED_LIBRARY_SUFFIX}
+  )
+else()
+  set(SCALAPACK_LIBRARIES ${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}scalapack${CMAKE_STATIC_LIBRARY_SUFFIX}
+    ${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}blacs${CMAKE_STATIC_LIBRARY_SUFFIX}
+  )
+endif()
 
-ExternalProject_Add(
-    scalapack
-    GIT_REPOSITORY ${scalapack_url}
-    GIT_TAG ${scalapack_tag}
-    CMAKE_ARGS ${scalapack_cmake_args}
-    UPDATE_COMMAND "git submodule update --init --recursive"
-    BUILD_BYPRODUCTS ${SCALAPACK_LIBRARIES}
-    BUILD_COMMAND ${DEFAULT_BUILD_COMMAND}
+ExternalProject_Add(scalapack
+  GIT_REPOSITORY ${scalapack_url}
+  GIT_TAG ${scalapack_tag}
+  GIT_SHALLOW true
+  CMAKE_ARGS ${scalapack_cmake_args}
+  BUILD_BYPRODUCTS ${SCALAPACK_LIBRARIES}
+  CONFIGURE_HANDLED_BY_BUILD true
+  CMAKE_GENERATOR ${DEFAULT_GENERATOR}
 )
 
-set(SCALAPACK_DIR "${scalapack_DIR}")
+add_library(SCALAPACK::SCALAPACK INTERFACE IMPORTED GLOBAL)
+target_include_directories(SCALAPACK::SCALAPACK INTERFACE ${SCALAPACK_INCLUDE_DIRS})
+target_link_libraries(SCALAPACK::SCALAPACK INTERFACE ${SCALAPACK_LIBRARIES})
+
+add_dependencies(SCALAPACK::SCALAPACK scalapack)
+
+# Populate the path
+set(SCALAPACK_DIR "${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}")
+set(SCALAPACK_LIBRARIES "${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}/lib64")
+set(SCALAPACK_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}/include")

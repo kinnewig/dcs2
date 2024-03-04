@@ -1,16 +1,37 @@
 cmake_minimum_required(VERSION 3.10)
 project(dcs)
 
+# We do not allow in place builds:
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR "Please use out of source build like:
+  cmake -B build")
+endif()
+
+# Add the Find<PACKAGE>.cmake files from dcs to CMAKE_MODULE_PATH
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+# Options
+option(DEALII_WITH_COMPLEX "Build deal.II with support for complex numbers" OFF)
+
 # Set versions for each package
-set(SCALAPACK_VERSION "your_scalapack_version_here")
-set(MUMPS_VERSION "your_mumps_version_here")
-set(TRILINOS_VERSION "your_trilinos_version_here")
+set(BLIS_VERSION "0.9.0")
+set(SCALAPACK_VERSION "2.2.1")
+set(MUMPS_VERSION "5.6.2")
+set(P4EST_VERSION "2.8.5")
+set(TRILINOS_VERSION "15.1.0")
+set(DEALII_VERSION "master")
 
-# Set paths for installation
-set(INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
+# Build Tool
+set(DEFAULT_GENERATOR "Ninja")
 
-include(scalapack.cmake)
-include(mumps.cmake)
-include(trilinos.cmake)
-include(p4est.cmake)
-include(dealii.cmake)
+#Compiler
+set(CMAKE_Fortran_COMPILER "mpifort")
+set(CMAKE_C_COMPILER "mpicc")
+set(CMAKE_CXX_COMPILER "mpicxx")
+
+#include(cmake/blis.cmake)
+include(cmake/scalapack.cmake)
+include(cmake/mumps.cmake)
+include(cmake/trilinos.cmake)
+include(cmake/p4est.cmake)
+include(cmake/dealii.cmake)
