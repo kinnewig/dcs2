@@ -1,0 +1,23 @@
+# This module finds ScaLAPACK
+
+if(SCALAPACK_INCLUDE_DIR AND SCALAPACK_LIBRARY)
+  # ScaLAPACK already found in cache, be silent
+  set(SCALAPACK_FOUND TRUE)
+else()
+  find_path(SCALAPACK_INCLUDE_DIR NAMES scalapack.h HINTS ${SCALAPACK_DIR} ${INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION})
+  find_library(SCALAPACK_LIBRARY NAMES scalapack HINTS ${SCALAPACK_DIR} ${INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION})
+
+  if(SCALAPACK_INCLUDE_DIR AND SCALAPACK_LIBRARY)
+    # Derive SCALAPACK_DIR from ScaLAPACK_LIBRARY
+    get_filename_component(SCALAPACK_DIR "${SCALAPACK_LIBRARY}" DIRECTORY)
+
+    set(SCALAPACK_FOUND TRUE)
+  else()
+    set(SCALAPACK_FOUND FALSE)
+  endif()
+endif()
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(SCALAPACK DEFAULT_MSG SCALAPACK_LIBRARY SCALAPACK_INCLUDE_DIR)
+
+mark_as_advanced(SCALAPACK_INCLUDE_DIR SCALAPACK_LIBRARY)
