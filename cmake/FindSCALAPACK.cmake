@@ -1,21 +1,34 @@
-# This module finds ScaLAPACK
+# FindSCALAPACK.cmake
+# -------------------
+# Locates the SCALAPACK package.
+# This will define the following variables:
+# SCALAPACK_FOUND - System has SCALAPACK
+# SCALAPACK_INCLUDE_DIRS - The SCALAPACK include directories
+# SCALAPACK_LIBRARIES - The libraries needed to use SCALAPACK
+# SCALAPACK_DIR - The directory of the found SCALAPACK installation
 
-unset(SCALAPACK_LIBRARY)
-unset(SCALAPACK_INCLUDE_DIR)
+find_package(PkgConfig)
+pkg_check_modules(PC_SCALAPACK QUIET SCALAPACK)
 
-find_path(SCALAPACK_INCLUDE_DIR NAMES scalapack.h HINTS ${SCALAPACK_DIR} ${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION})
-find_library(SCALAPACK_LIBRARY NAMES scalapack HINTS ${SCALAPACK_DIR} ${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION})
+set(SCALAPACK_DIR "" CACHE PATH "The directory of the SCALAPACK installation")
 
-if(SCALAPACK_INCLUDE_DIR AND SCALAPACK_LIBRARY)
-  # Derive SCALAPACK_DIR from ScaLAPACK_LIBRARY
-  get_filename_component(SCALAPACK_DIR "${SCALAPACK_LIBRARY}" DIRECTORY)
+find_path(SCALAPACK_INCLUDE_DIR NAMES scalapack.h
+          HINTS ${SCALAPACK_DIR}/include ${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}/include
+          PATHS ${PC_SCALAPACK_INCLUDEDIR} ${PC_SCALAPACK_INCLUDE_DIRS})
 
-  set(SCALAPACK_FOUND TRUE)
-else()
-  set(SCALAPACK_FOUND FALSE)
-endif()
+find_library(SCALAPACK_LIBRARY NAMES scalapack
+             HINTS ${SCALAPACK_DIR}/lib ${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}/lib
+             PATHS ${PC_SCALAPACK_LIBDIR} ${PC_SCALAPACK_LIBRARY_DIRS})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(SCALAPACK DEFAULT_MSG SCALAPACK_LIBRARY SCALAPACK_INCLUDE_DIR)
+
+if(SCALAPACK_FOUND)
+  set(SCALAPACK_LIBRARIES ${SCALAPACK_LIBRARY})
+  set(SCALAPACK_INCLUDE_DIRS ${SCALAPACK_INCLUDE_DIR})
+
+  get_filename_component(SCALAPACK_DIR "${SCALAPACK_LIBRARY}" DIRECTORY)
+  get_filename_component(SCALAPACK_DIR "${SCALAPACK_DIR}" DIRECTORY)
+endif()
 
 mark_as_advanced(SCALAPACK_INCLUDE_DIR SCALAPACK_LIBRARY)

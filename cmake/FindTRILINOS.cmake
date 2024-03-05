@@ -1,21 +1,36 @@
-# This module finds ScaLAPACK
+# FindTRILINOS.cmake
+# -------------------
+# Locates the Trilinos package.
+# This will define the following variables:
+# TRILINOS_FOUND - System has Trilinos
+# TRILINOS_INCLUDE_DIRS - The Trilinos include directories
+# TRILINOS_LIBRARIES - The libraries needed to use Trilinos
+# TRILINOS_DIR - The directory of the found Trilinos installation
 
-unset(TRILINOS_LIBRARY)
-unset(TRILINOS_INCLUDE_DIR)
+find_package(PkgConfig)
+pkg_check_modules(PC_TRILINOS QUIET TRILINOS)
 
-find_path(TRILINOS_INCLUDE_DIR NAMES trilinos.h HINTS ${TRILINOS_DIR} ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION})
-find_library(TRILINOS_LIBRARY NAMES trilinos HINTS ${TRILINOS_DIR} ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION})
+set(TRILINOS_DIR "" CACHE PATH "The directory of the Trilinos installation")
 
-if(TRILINOS_INCLUDE_DIR AND TRILINOS_LIBRARY)
-  # Derive TRILINOS_DIR from ScaLAPACK_LIBRARY
-  get_filename_component(TRILINOS_DIR "${TRILINOS_LIBRARY}" DIRECTORY)
+find_path(TRILINOS_INCLUDE_DIR NAMES Trilinos_version.h
+          HINTS ${TRILINOS_DIR}/include ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}/include 
+          PATHS ${PC_TRILINOS_INCLUDEDIR} ${PC_TRILINOS_INCLUDE_DIRS})
 
-  set(TRILINOS_FOUND TRUE)
-else()
-  set(TRILINOS_FOUND FALSE)
-endif()
+find_library(TRILINOS_LIBRARY NAMES trilinosss
+             HINTS ${TRILINOS_DIR}/lib64 ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}/lib64
+             PATHS ${PC_TRILINOS_LIBDIR} ${PC_TRILINOS_LIBRARY_DIRS})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TRILINOS DEFAULT_MSG TRILINOS_LIBRARY TRILINOS_INCLUDE_DIR)
+
+if(TRILINOS_FOUND)
+  set(TRILINOS_LIBRARIES ${TRILINOS_LIBRARY})
+  set(TRILINOS_INCLUDE_DIRS ${TRILINOS_INCLUDE_DIR})
+
+  get_filename_component(TRILINOS_DIR "${TRILINOS_LIBRARY}" DIRECTORY)
+  get_filename_component(TRILINOS_DIR ${TRILINOS_DIR} DIRECTORY)
+endif()
+
+message("${TRILINOS_DIR}")
 
 mark_as_advanced(TRILINOS_INCLUDE_DIR TRILINOS_LIBRARY)

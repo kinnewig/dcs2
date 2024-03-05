@@ -1,21 +1,34 @@
-# This module finds MUMPS
+# FindMUMPS.cmake
+# -------------------
+# Locates the MUMPS package.
+# This will define the following variables:
+# MUMPS_FOUND - System has MUMPS
+# MUMPS_INCLUDE_DIRS - The MUMPS include directories
+# MUMPS_LIBRARIES - The libraries needed to use MUMPS
+# MUMPS_DIR - The directory of the found MUMPS installation
 
-unset(MUMPS_INCLUDE_DIR)
-unset(MUMPS_LIBRARY)
+find_package(PkgConfig)
+pkg_check_modules(PC_MUMPS QUIET MUMPS)
 
-find_path(MUMPS_INCLUDE_DIR NAMES mumps.h HINTS ${MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION})
-find_library(MUMPS_LIBRARY NAMES mumps HINTS ${MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION})
+set(MUMPS_DIR "" CACHE PATH "The directory of the MUMPS installation")
 
-if(MUMPS_INCLUDE_DIR AND MUMPS_LIBRARY)
-  # Derive MUMPS_DIR from ScaLAPACK_LIBRARY
-  get_filename_component(MUMPS_DIR "${MUMPS_LIBRARY}" DIRECTORY)
+find_path(MUMPS_INCLUDE_DIR NAMES dmumps_c.h
+          HINTS ${MUMPS_DIR}/include ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}/include
+          PATHS ${PC_MUMPS_INCLUDEDIR} ${PC_MUMPS_INCLUDE_DIRS})
 
-  set(MUMPS_FOUND TRUE)
-else()
-  set(MUMPS_FOUND FALSE)
-endif()
+find_library(MUMPS_LIBRARY NAMES dmumps
+             HINTS ${MUMPS_DIR}/lib ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}/lib
+             PATHS ${PC_MUMPS_LIBDIR} ${PC_MUMPS_LIBRARY_DIRS})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MUMPS DEFAULT_MSG MUMPS_LIBRARY MUMPS_INCLUDE_DIR)
+
+if(MUMPS_FOUND)
+  set(MUMPS_LIBRARIES ${MUMPS_LIBRARY})
+  set(MUMPS_INCLUDE_DIRS ${MUMPS_INCLUDE_DIR})
+
+  get_filename_component(MUMPS_DIR "${MUMPS_LIBRARY}" DIRECTORY)
+  get_filename_component(MUMPS_DIR "${MUMPS_DIR}" DIRECTORY)
+endif()
 
 mark_as_advanced(MUMPS_INCLUDE_DIR MUMPS_LIBRARY)
