@@ -22,6 +22,16 @@ if (NOT blis_tag)
   message(FATAL_ERROR "Git tag for BLIS version ${BLIS_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
 endif()
 
+# If a custom URL for blis is defined, use it.
+if (DEFINED BLIS_CUSTOM_URL)
+  set(blis_url ${BLIS_CUSTOM_URL})
+endif()
+
+# If a custom tag for blis is defined, use it.
+if (DEFINED BLIS_CUSTOM_TAG)
+  set(blis_tag ${BLIS_CUSTOM_TAG})
+endif()
+
 ExternalProject_Add(blis
   GIT_REPOSITORY ${blis_url}
   GIT_TAG ${blis_tag}

@@ -11,6 +11,16 @@ if (NOT scalapack_tag)
   message(FATAL_ERROR "Git tag for Ninja version ${Ninja_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
 endif()
 
+# If a custom URL for ninja is defined, use it.
+if (DEFINED NINJA_CUSTOM_URL)
+  set(ninja_url ${NINJA_CUSTOM_URL})
+endif()
+
+# If a custom tag for ninja is defined, use it.
+if (DEFINED NINJA_CUSTOM_TAG)
+  set(blis_tag ${NINJA_CUSTOM_TAG})
+endif()
+
 if(NOT NINJA)
   set(ninja_cmake_args
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/ninja/${NINJA_VERSION}

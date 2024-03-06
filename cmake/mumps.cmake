@@ -10,8 +10,8 @@ endif()
 set(mumps_cmake_args
   -D BUILD_SINGLE:BOOL=ON
   -D BUILD_DOUBLE:BOOL=ON
-  -D BUILD_COMPLEX:BOOL=${DEALII_WITH_COMPLEX}
-  -D BUILD_COMPLEX16:BOOL=${DEALII_WITH_COMPLEX}
+  -D BUILD_COMPLEX:BOOL=${TRILINOS_WITH_COMPLEX}
+  -D BUILD_COMPLEX16:BOOL=${TRILNIOS_WITH_COMPLEX}
   -D BUILD_SHARED_LIBS:BOOL=ON
   -D BUILD_TESTING:BOOL=OFF
   -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
@@ -30,6 +30,16 @@ string(JSON mumps_url GET ${json} mumps git)
 string(JSON mumps_tag GET ${json} mumps ${MUMPS_VERSION} tag)
 if (NOT mumps_tag)
   message(FATAL_ERROR "Git tag for MUMPS version ${MUMPS_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
+endif()
+
+# If a custom URL for mumps is defined, use it.
+if (DEFINED MUMPS_CUSTOM_URL)
+  set(mumps_url ${MUMPS_CUSTOM_URL})
+endif()
+
+# If a custom tag for mumps is defined, use it.
+if (DEFINED BLIS_CUSTOM_TAG)
+  set(mumps_tag ${MUMPS_CUSTOM_TAG})
 endif()
 
 ExternalProject_Add(mumps

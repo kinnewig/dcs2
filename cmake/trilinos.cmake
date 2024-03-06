@@ -77,7 +77,7 @@ if (DEFINED MUMPS_DIR)
 endif()
 
 # Complex number support
-if ( DEALII_WITH_COMPLEX )
+if ( TRILINOS_WITH_COMPLEX )
   list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_DOUBLE=ON")
   list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_FLOAT=ON")
   list(APPEND trilinos_cmake_args "-D Teuchos_ENABLE_COMPLEX:BOOL=ON")
@@ -87,6 +87,16 @@ endif()
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 string(JSON trilinos_url GET ${json} trilinos git)
 string(JSON trilinos_tag GET ${json} trilinos ${TRILINOS_VERSION} tag)
+
+# If a custom URL for trilinos is defined, use it.
+if (DEFINED TRILINOS_CUSTOM_URL)
+  set(trilinos_url ${TRILINOS_CUSTOM_URL})
+endif()
+
+# If a custom tag for trilinos is defined, use it.
+if (DEFINED TRILINOS_CUSTOM_TAG)
+  set(trilinos_tag ${TRILINOS_CUSTOM_TAG})
+endif()
 
 ExternalProject_Add(
     trilinos

@@ -9,8 +9,8 @@ include(ExternalProject)
 set(scalapack_cmake_args
   -D BUILD_SINGLE:BOOL=ON
   -D BUILD_DOUBLE:BOOL=ON
-  -D BUILD_COMPLEX:BOOL=${DEALII_WITH_COMPLEX}
-  -D BUILD_COMPLEX16:BOOL=${DEALII_WITH_COMPLEX}
+  -D BUILD_COMPLEX:BOOL=${TRILINIOS_WITH_COMPLEX}
+  -D BUILD_COMPLEX16:BOOL=${TRILINOS_WITH_COMPLEX}
   -D BUILD_SHARED_LIBS:BOOL=ON
   -D BUILD_TESTING:BOOL=OFF
   -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}
@@ -31,6 +31,15 @@ if (NOT scalapack_tag)
   message(FATAL_ERROR "Git tag for SCALAPACK version ${SCALAPACK_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
 endif()
 
+# If a custom URL for scalapack is defined, use it.
+if (DEFINED SCALAPACK_CUSTOM_URL)
+  set(scalapack_url ${SCALAPCK_CUSTOM_URL})
+endif()
+
+# If a custom tag for scalapack is defined, use it.
+if (DEFINED SCALAPACK_CUSTOM_TAG)
+  set(scalapack_tag ${SCALAPACK_CUSTOM_TAG})
+endif()
 
 if(BUILD_SHARED_LIBS)
   set(SCALAPACK_LIBRARIES ${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}scalapack${CMAKE_SHARED_LIBRARY_SUFFIX}

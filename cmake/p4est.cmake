@@ -23,6 +23,16 @@ if (NOT p4est_tag)
   message(FATAL_ERROR "Git tag for P4EST version ${P4EST_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
 endif()
 
+# If a custom URL for p4est is defined, use it.
+if (DEFINED P4EST_CUSTOM_URL)
+  set(p4est_url ${P4EST_CUSTOM_URL})
+endif()
+
+# If a custom tag for p4est is defined, use it.
+if (DEFINED P4EST_CUSTOM_TAG)
+  set(p4est_tag ${P4EST_CUSTOM_TAG})
+endif()
+
 ExternalProject_Add(
     p4est
     GIT_REPOSITORY ${p4est_url}

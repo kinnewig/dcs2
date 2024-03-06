@@ -2,18 +2,23 @@
 
 DCS simplifies the process of building and installing the **deal.II** library along with various third-party dependencies.
 
+
 ## Options
+
+### deal.II Itself
+- `DEALII_VERSION`: Specify the deal.II version (default: "master")
+- `DEALII_CUSTOM_URL`: If defined, this variable allows you to specify a custom Git URL for deal.II. You can use this to point to a different repository or a specific fork.
+- `DEALII_CUSTOM_TAG`: If defined, this variable sets a custom Git tag (commit hash, branch, or release) for deal.II. Use this to select a specific version or snapshot.
 
 ### Third-Party Libraries
 
-Activate third-party libraries using the following format:
-```bash
--D TPL_ENABLE_<PACKAGE>:BOOL=ON
-```
+- `-D TPL_ENABLE_<PACKAGE>:BOOL=ON`: Activate third-party librarie.
+- `-D <PACKAGE>_VERSION=x.x.x`: Specify the version to install. 
+- `<PACKAGE>_DIR=</path.to/folder>`: Provide the path to include already installed libraries.
+- `<PACKAGE>_CUSTOM_URL`: If defined, this variable allows you to specify a custom Git URL for <PACKAGE>. You can use this to point to a different repository or a specific fork.
+- `<PACKAGE>_CUSTOM_TAG`: If defined, this variable sets a custom Git tag (commit hash, branch, or release) for <PACKAGE>. Use this to select a specific version or snapshot.
 
-Specify the version to install with `-D <PACKAGE>_VERSION=x.x.x`.
-To include already installed libraries, provide the path via `<PACKAGE>_DIR=</path.to/folder>`.
-
+### Available Third-Party Libraries
 #### BLIS
 - `TPL_ENABLE_BLIS`: Enable or disable LAPACK as a third-party library (default: OFF)
 - `BLIS_VERSION`: Specify the BLIS version (default: "0.9.0")
@@ -35,10 +40,6 @@ To include already installed libraries, provide the path via `<PACKAGE>_DIR=</pa
 - `TRILINOS_VERSION`: Specify the Trilinos version (default: "15.1.0")
 - `TRILINOS_WITH_COMPLEX`: Build deal.II with complex number support (default: OFF)
 
-### deal.II Itself
-- `DEALII_VERSION`: Specify the deal.II version (default: "master")
-- `DEALII_CUSTOM_URL`: If defined, this variable allows you to specify a custom Git URL for deal.II. You can use this to point to a different repository or a specific fork.
-- `DEALII_CUSTOM_TAG`: If defined, this variable sets a custom Git tag (commit hash, branch, or release) for deal.II. Use this to select a specific version or snapshot.
 
 ## Usage
 
