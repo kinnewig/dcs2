@@ -30,6 +30,16 @@ if (NOT dealii_tag)
   message(FATAL_ERROR "Git tag for DEALII version ${DEALII_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
 endif()
 
+# If a custom URL for deal.II is defined, use it.
+if (DEFINED DEALII_CUSTOM_URL)
+  set(dealii_url ${DEALII_CUSTOM_URL})
+endif()
+
+# If a custom tag for deal.II is defined, use it.
+if (DEFINED DEALII_CUSTOM_TAG)
+  set(dealii_tag ${DEALII_CUSTOM_TAG})
+endif()
+
 ExternalProject_Add(
     dealii
     GIT_REPOSITORY ${dealii_url}

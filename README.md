@@ -37,6 +37,8 @@ To include already installed libraries, provide the path via `<PACKAGE>_DIR=</pa
 
 ### deal.II Itself
 - `DEALII_VERSION`: Specify the deal.II version (default: "master")
+- `DEALII_CUSTOM_URL`: If defined, this variable allows you to specify a custom Git URL for deal.II. You can use this to point to a different repository or a specific fork.
+- `DEALII_CUSTOM_TAG`: If defined, this variable sets a custom Git tag (commit hash, branch, or release) for deal.II. Use this to select a specific version or snapshot.
 
 ## Usage
 
