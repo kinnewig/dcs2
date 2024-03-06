@@ -12,22 +12,22 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Options
 option(TPL_ENABLE_BLIS       "Enable or disable the use of LAPACK as a third-party library"    OFF)
-option(BLIS_VERSION          "Specify the version of BLIS to be used"                          "0.9.0")
+set(BLIS_VERSION "0.9.0" CACHE STRING "Specify the version of BLIS to be used")
 
 option(TPL_ENABLE_SCALAPACK  "Enable or disable the use of ScaLAPACK as a third-party library" ON)
-option(SCALAPACK_VERSION     "Specify the version of ScaLAPACK to be used"                     "2.2.1")
+set(SCALAPACK_VERSION "2.2.1" CACHE STRING "Specify the version of ScaLAPACK to be used")
 
 option(TPL_ENABLE_SCALAPACK  "Enable or disable the use of MUMPS as a third-party library"     ON)
-option(MUMPS_VERSION         "Specify the version of MUMPS to be used"                         "5.6.2")
+set(MUMPS_VERSION "5.6.2" CACHE STRING "Specify the version of MUMPS to be used")
 
 option(TPL_ENABLE_P4EST      "Enable or disable the use of P4EST as a third-party library"     ON)
-option(P4EST_VERSION         "Specify the version of P4EST to be used"                         "2.8.5")
+set(P4EST_VERSION "2.8.5" CACHE STRING "Specify the version of P4EST to be used")
 
 option(TPL_ENABLE_TRILINOS   "Enable or disable the use of Trilinos as a third-party library"  ON)
-option(TRILINOS_VERSION      "Specify the version of Trilinos to be used"                      "15.1.0")
 option(TRILINOS_WITH_COMPLEX "Build deal.II with support for complex numbers"                  OFF)
+set(TRILINOS_VERSION "15.1.0" CACHE STRING "Specify the version of Trilinos to be used")
 
-option(DEALII_VERSION        "Specify the version of deal.II to be used"                       "master")
+set(DEALII_VERSION "master" CACHE STRING "Specify the version of deal.II to be used")
 
 #Compiler
 set(CMAKE_Fortran_COMPILER "mpifort")
@@ -35,7 +35,7 @@ set(CMAKE_C_COMPILER "mpicc")
 set(CMAKE_CXX_COMPILER "mpicxx")
 
 # Build Tool: Ninja
-option(NINJA_VERSION "Specify the version of Ninja to be used" "1.11.1")
+option(NINJA_VERSION "1.11.1" CACHE STRING "Specify the version of Ninja to be used")
 include(cmake/ninja.cmake)
 
 if(TPL_ENABLE_BLIS)
