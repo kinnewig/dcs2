@@ -17,7 +17,7 @@ set(BLIS_VERSION "0.9.0" CACHE STRING "Specify the version of BLIS to be used")
 option(TPL_ENABLE_SCALAPACK  "Enable or disable the use of ScaLAPACK as a third-party library" ON)
 set(SCALAPACK_VERSION "2.2.1" CACHE STRING "Specify the version of ScaLAPACK to be used")
 
-option(TPL_ENABLE_SCALAPACK  "Enable or disable the use of MUMPS as a third-party library"     ON)
+option(TPL_ENABLE_MUMPS  "Enable or disable the use of MUMPS as a third-party library"     ON)
 set(MUMPS_VERSION "5.6.2" CACHE STRING "Specify the version of MUMPS to be used")
 
 option(TPL_ENABLE_P4EST      "Enable or disable the use of P4EST as a third-party library"     ON)
@@ -35,8 +35,11 @@ set(CMAKE_C_COMPILER "mpicc")
 set(CMAKE_CXX_COMPILER "mpicxx")
 
 # Build Tool: Ninja
-option(NINJA_VERSION "1.11.1" CACHE STRING "Specify the version of Ninja to be used")
-include(cmake/ninja.cmake)
+# Check if Ninja is installed
+find_program(NINJA ninja)
+if(NINJA)
+  set(DEFAULT_GENERATOR "Ninja")
+endif()
 
 if(TPL_ENABLE_BLIS)
   include(cmake/blis.cmake)
