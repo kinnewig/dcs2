@@ -50,16 +50,19 @@ download_and_install_cmake() {
     ln -s "${PREFIX}/cmake/${CMAKE_VERSION}/bin/cmake" "${BIN_DIR}/cmake"
 
     cd $(dirname $0)
+
+    # Add CMake to the PATH
+    export PATH=${BIN_DIR}:${PATH}
 }
 
-make_cmake_available() {
+check_and_install_cmake() {
     echo "Check if CMake is installed"
     if command -v cmake &>/dev/null; then
         cecho ${GOOD} "Found CMake $(cmake --version)"
     else
-        install_cmake
-        if ! check_cmake_installed; then
-            echo ${ERROR} "ERROR: Failed to install CMake autmatically."
+        download_and_install_cmake
+        if ! command -v cmake &>/dev/null; then
+            echo ${ERROR} "ERROR: Failed to install CMake automatically."
             exit 1
         else
             cecho ${GOOD} "CMake ${CMAKE_VERSION} has been installed to ${PREFIX}/cmake/${CMAKE_VERSION}"
@@ -70,25 +73,76 @@ make_cmake_available() {
 
 
 # ++============================================================++
+# ||                           Ninja                            ||
+# ++============================================================++
+# Check if Ninja is installed and install if not
+check_and_install_ninja() {
+    echo "Check if Ninja is installed"
+    if command -v ninja &>/dev/null; then
+        cecho ${GOOD} "Found Ninja $(ninja --version)"
+    else
+        cecho ${WARN} "Ninja not found. Attempting to install..."
+        # Call the CMake script to install Ninja
+        cmake -P cmake/ninja.cmake -D BUILD_DIR=${BUILD_DIR} -D INSTALL_DIR=${PREFIX} -D BIN_DIR=${BIN_DIR}
+
+        # Check that ${BIN_DIR} is already in the path.
+        if [[ ":$PATH:" == *":${PATH}:"* ]]; then
+            echo "${BIN_DIR} is already in the path."
+        else
+            # Add Ninja to the PATH
+            export PATH=${BIN_DIR}:${PATH}
+        fi
+
+        if ! command -v ninja &>/dev/null; then
+            cecho ${ERROR} "ERROR: Failed to install Ninja automatically."
+            exit 1
+        else
+            cecho ${GOOD} "Ninja has been installed successfully."
+        fi
+    fi
+}
+
+
+
+# ++============================================================++
+# ||                    Add to path                             ||
+# ++============================================================++
+add_to_path() {
+    # Check if ~/.bashrc already contains BIN_DIR in the PATH
+    if grep -q "#BEGIN: ADDED BY DCS" ~/.bashrc; then
+        # If it does, remove the old lines
+        sed -i '/#BEGIN: ADDED BY DCS/,/#END: ADDED BY DCS/d' ~/.bashrc
+    fi
+
+    # Add BIN_DIR to the PATH in ~/.bashrc
+    echo -e "\n#BEGIN: ADDED BY DCS\nexport PATH=${BIN_DIR}:\$PATH\n#END: ADDED BY DCS" >> ~/.bashrc
+}
+
+
+
+
+# ++============================================================++
 # ||                       Parse arguments                      ||
 # ++============================================================++
 parse_arguments() {
     # Parse command line arguments
     while [[ $# -gt 0 ]]; do
         KEY="$1"
-        case $key in
+        case $KEY in
             # Help
             -h|--help)
               echo "deal.II CMake SuberBuild, Version $(cat VERSION)"
               echo "Usage: $0 [options]"
               echo "  -h, --help                   Print this message"
-              echo "  -p <path>, --prefix=<path>   Set a different prefix path (default ${DEFAULT_PATH})"
-              echo "  -b <path>, --build=<path>    Set a different build path (default ${DEFAULT_PATH}/tmp)$"
-              echo "  -d <path>, --build=<path>    Set a different binary path (default ${DEFAULT_PATH}/bin)$"
-              echo "  -j <path>, --parallel=<path> Set number of threads to use (default ${THREADS})"
-              echo "  -U                           Do not interupt"
-              echo "  -v, --version                Print the version number"
-              exit 0
+              echo "  -p <path>,    --prefix=<path>        Set a different prefix path (default ${DEFAULT_PATH})"
+              echo "  -b <path>,    --build=<path>         Set a different build path (default ${DEFAULT_PATH}/tmp)$"
+              echo "  -d <path>,    --bin-dir=<path>       Set a different binary path (default ${DEFAULT_PATH}/bin)$"
+              echo "  -j <threads>, --parallel=<threads>   Set number of threads to use (default ${THREADS})"
+              echo "  -A <ON|OFF>,  --add_to_path=<ON|OFF> Enable or disable to add deal.II permanently to the path"
+              echo "  -N <ON|OFF>,  --ninja=<ON|OFF>       Enable or disable the use of Ninja"
+              echo "  -U                                   Do not interupt"
+              echo "  -v,           --version              Print the version number"
+              exit 1
             ;;
 
             # prefix path
@@ -119,6 +173,20 @@ parse_arguments() {
                 shift
                 ;;
 
+            # Add to PATH
+            -A|--add_to_path)
+                ADD_TO_PATH="$2"
+                shift
+                shift
+                ;;
+
+            # Ninja
+            -N|--ninja)
+                USE_NINJA="$2"
+                shift
+                shift
+                ;;
+
             -U)
                 USER_INTERACTION=OFF
                 shift
@@ -130,10 +198,10 @@ parse_arguments() {
                 echo "$(cat VERSION)"
                 shift
                 shift
-                exit 0
+                exit 1
                 ;;
 
-            # unknwon flag
+            # unknown flag
             *)
                 cecho ${ERROR} "ERROR: Invalid command line option <$KEY>. See -h for more information."
                 exit 1
@@ -188,32 +256,54 @@ parse_arguments() {
     mkdir -p "${BUILD_DIR}/source"    || { echo "Failed to create: ${BUILD_DIR}/source"; exit 1; }
     mkdir -p "${BUILD_DIR}/extracted" || { echo "Failed to create: ${BUILD_DIR}/extracted"; exit 1; }
     mkdir -p "${BUILD_DIR}/build"     || { echo "Failed to create: ${BUILD_DIR}/build"; exit 1; }
+
+    # ADD TO PATH
+    if [ -z "${ADD_TO_PATH}" ]; then
+        ADD_TO_PATH=ON
+        echo "Default to add DEAL_II_DIR permanently to the path."
+        echo "Otherwise, disable add to path via -A=OFF or --add_to_path=OFF."
+    fi
+
+    # NINJA
+    if [ -z "${USE_NINJA}" ]; then
+        USE_NINJA=ON
+        echo "Default to use ninja."
+        echo "Otherwise, disable Ninja via -N OFF or --ninja=OFF."
+    fi
 }
 
 
 
-package_selection() {
-    # Read user selection from dcs.cfg
-    PACKAGES=""
-    source dcs.cfg
-
-    # List of all available packages
-    ALL_PACKAGES=""
-
-    # First disable all packages
-    #for PACKAGE in ${ALL_PACKAGES[@]}; do
-    #  sed -i "s/^list(APPEND INSTALL_TPLS \"${PACKAGE}\")/#list(APPEND INSTALL_TPLS \"${PACKAGE}\")/g" CMakeLists.txt
-    #done
-    
-    # Next reenable the selected packages
-    #for PACKAGE in ${PACKAGES[@]}; do
-    #  sed -i "s/#list(APPEND INSTALL_TPLS \"${PACKAGE}\")/list(APPEND INSTALL_TPLS \"${PACKAGE}\")/g" CMakeLists.txt
-    #done
-}
-
-
-
-if [ "$(pwd)" != "$(dirname $0)" ]; then
+# ++============================================================++
+# ||                    The actual program                      ||
+# ++============================================================++
+# Verify that dcs.sh is called from the directory where the script is located.
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+if [ "$(pwd)" != "${SCRIPT_DIR}" ]; then
     cecho ${ERROR} "ERROR: DCS has to be called from the directory where it is located."
     exit 1
+fi
+
+# Parse arguments
+if ! parse_arguments "$@"; then
+    exit 0
+fi
+
+# Check wether CMake is available.
+# If it not available install it.
+if ! check_and_install_cmake "$@"; then
+    exit 1
+fi
+
+if [ "${USE_NINJA}" = "ON" ]; then
+    if ! check_and_install_ninja "$@"; then
+        exit 1
+    fi
+fi
+
+cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX}
+cmake --build ${BUILD_DIR} -- -j ${THREADS}
+
+if [ "${ADD_TO_PATH}" = "YES" ]; then
+    add_to_path
 fi
