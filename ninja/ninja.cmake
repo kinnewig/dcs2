@@ -1,7 +1,5 @@
 include(ExternalProject)
 
-set(NINJA_VERSION "1.11.1" CACHE STRING "Specify the version of Ninja to be used")
-
 # get the download url for ninja:
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 string(JSON ninja_url GET ${json} ninja git)
@@ -20,8 +18,9 @@ if (DEFINED NINJA_CUSTOM_TAG)
   set(blis_tag ${NINJA_CUSTOM_TAG})
 endif()
 
+
 set(ninja_cmake_args
-  -D CMAKE_INSTALL_PREFIX:PATH=${INSTALL_DIR}/ninja/${NINJA_VERSION}
+  -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/ninja/${NINJA_VERSION}
   -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
   -D CMAKE_CXX_COMPILER:PATH=${CMAKE_CXX_COMPILER}
   -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
@@ -33,6 +32,5 @@ ExternalProject_Add(ninja
   GIT_SHALLOW true
   CMAKE_ARGS ${ninja_cmake_args}
   CONFIGURE_HANDLED_BY_BUILD true
-  TMP_DIR ${BUILD_DIR}
-  INSTALL_COMMAND ${CMAKE_COMMAND} -E create_symlink ${INSTALL_DIR}/ninja/${NINJA_VERSION}/ninja ${BIN_DIR}/ninja
+  INSTALL_COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/ninja/${NINJA_VERSION}/ninja ${BIN_DIR}/ninja
 )
