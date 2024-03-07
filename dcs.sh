@@ -32,13 +32,13 @@ cecho() {
 # Download and install CMake
 download_and_install_cmake() {
     # Read the CMake version from VERSIONS.cmake
-    CMAKE_VERSION=$(grep "CMAKE_VERSION" VERSIONS.cmake | cut -d "\"" -f 2)
+    CMAKE_VERSION=3.28.3
 
     # Download CMake
-    curl -L https://cmake.org/files/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
+    curl -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
 
     # Extract CMake
-    tar -xzf "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz" -C "${BUILD_DIR}/extracted"
+    tar -xf "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz" -C "${BUILD_DIR}/extracted"
 
     # Build CMake
     cd "${BUILD_DIR}/extracted/cmake-${CMAKE_VERSION}"
@@ -78,9 +78,9 @@ check_and_install_cmake() {
 # Check if Ninja is installed and install if not
 check_and_install_ninja() {
     echo "Check if Ninja is installed"
-    if command -v ninja &>/dev/null; then
-        cecho ${GOOD} "Found Ninja $(ninja --version)"
-    else
+    #if command -v ninja &>/dev/null; then
+    #    cecho ${GOOD} "Found Ninja $(ninja --version)"
+    #else
         cecho ${WARN} "Ninja not found. Attempting to install..."
         # Call the CMake script to install Ninja
         cmake -P cmake/ninja.cmake -D BUILD_DIR=${BUILD_DIR} -D INSTALL_DIR=${PREFIX} -D BIN_DIR=${BIN_DIR}
@@ -99,7 +99,7 @@ check_and_install_ninja() {
         else
             cecho ${GOOD} "Ninja has been installed successfully."
         fi
-    fi
+    #fi
 }
 
 
