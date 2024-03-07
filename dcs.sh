@@ -78,9 +78,9 @@ check_and_install_cmake() {
 # Check if Ninja is installed and install if not
 check_and_install_ninja() {
     echo "Check if Ninja is installed"
-    #if command -v ninja &>/dev/null; then
-    #    cecho ${GOOD} "Found Ninja $(ninja --version)"
-    #else
+    if command -v ninja &>/dev/null; then
+        cecho ${GOOD} "Found Ninja $(ninja --version)"
+    else
         cecho ${WARN} "Ninja not found. Attempting to install..."
         # Call the CMake script to install Ninja
         cmake -S ninja -B ${BUILD_DIR}/ninja -D CMAKE_INSTALL_PREFIX=${PREFIX} -D NINJA_VERSION=1.11.1 -D BIN_DIR=${BIN_DIR}
@@ -101,7 +101,7 @@ check_and_install_ninja() {
         else
             cecho ${GOOD} "Ninja has been installed successfully."
         fi
-    #fi
+    fi
 }
 
 
@@ -304,7 +304,7 @@ if [ "${USE_NINJA}" = "ON" ]; then
 fi
 
 cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX}
-cmake --build ${BUILD_DIR} -- -j ${THREADS}
+cmake --build ${BUILD_DIR} #-- -j ${THREADS}
 
 if [ "${ADD_TO_PATH}" = "YES" ]; then
     add_to_path
