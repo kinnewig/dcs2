@@ -13,7 +13,7 @@ set(dealii_cmake_args
   -D DEAL_II_COMPONENT_EXAMPLES=ON 
 )
 
-# TODO
+# deal.II with Boost
 if(DEFINED BOOST_DIR)
   list(APPEND dealii_cmake_args "-D BOOST_DIR=${BOOST_DIR}")
 endif()
@@ -32,6 +32,13 @@ endif()
 # deal.II with P4est
 if(DEFINED P4EST_DIR)
   list(APPEND dealii_cmake_args "-D P4EST_DIR=${P4EST_DIR}") 
+endif()
+
+if(DEFINED LAPACK_DIR)
+  list(APPEND dealii_cmake_args "-D DEAL_II_WITH_LAPACK:BOO=ON")
+  list(APPEND dealii_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib64/liblapack.so")
+elseif(DEFINED SCALAPACK_DIR)
+  list(APPEND dealii_cmake_args "-D DEAL_II_WITH_LAPACK:BOO=ON")
 endif()
 
 # deal.II with ScaLAPACK
