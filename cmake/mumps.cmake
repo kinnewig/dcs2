@@ -20,8 +20,13 @@ set(mumps_cmake_args
   -D CMAKE_BUILD_TYPE:STRING=Release
 )
 
-list(APPEND mumps_cmake_args -D LAPACK_ROOT=${LAPACK_DIR})
-list(APPEND mumps_cmake_args -D SCALAPACK_ROOT=${SCALAPACK_DIR})
+if(DEFINED LAPACK_DIR)
+  list(APPEND mumps_cmake_args -D LAPACK_ROOT=${LAPACK_DIR})
+endif()
+
+if(DEFINED SCALAPACK_DIR)
+  list(APPEND mumps_cmake_args -D SCALAPACK_ROOT=${SCALAPACK_DIR})
+endif()
 
 # get the download url for mumps:
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
@@ -61,3 +66,4 @@ add_dependencies(MUMPS::MUMPS mumps)
 set(MUMPS_DIR "${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}")
 set(MUMPS_LIBRARIES "${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}/lib64")
 set(MUMPS_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}/include")
+list(APPEND CMAKE_PREFIX_PATH "${MUMPS_DIR}")

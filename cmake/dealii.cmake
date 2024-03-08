@@ -14,7 +14,9 @@ set(dealii_cmake_args
 )
 
 # TODO
-list(APPEND dealii_cmake_args "-D BOOST_DIR=/opt/ifam/12.2.0-V3/lib64/boost-1.81.0")
+if(DEFINED BOOST_DIR)
+  list(APPEND dealii_cmake_args "-D BOOST_DIR=${BOOST_DIR}")
+endif()
 
 # deal.II with BLIS (as BLAS)
 if(DEFINED BLIS_DIR)
@@ -35,7 +37,7 @@ endif()
 # deal.II with ScaLAPACK
 if(DEFINED SCALAPACK_DIR)
   list(APPEND dealii_cmake_args "-D DEAL_II_WITH_SCALAPACK:BOOL=ON")
-  list(APPEND dealii_cmake_args "-D SCALAPACK_DIR=${ScaLAPACK_DIR}")
+  list(APPEND dealii_cmake_args "-D SCALAPACK_DIR=${SCALAPACK_DIR}")
 endif()
 
 # get the download url for dealii:

@@ -10,6 +10,8 @@ endif()
 # Add the Find<PACKAGE>.cmake files from dcs to CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
+set(BOOST_DIR "/opt/cit/13.2.0-V1/lib64/boost-1.84.0/")
+
 # Options
 option(TPL_ENABLE_BLIS       "Enable or disable the use of LAPACK as a third-party library"    ON)
 set(BLIS_VERSION "0.9.0" CACHE STRING "Specify the version of BLIS to be used")

@@ -41,7 +41,7 @@ set(trilinos_cmake_args
   -D Trilinos_ENABLE_Sacado:BOOL=ON 
   -D Trilinos_ENABLE_Sacado:BOOL=ON 
   -D Trilinos_ENABLE_ShyLU_DD:BOOL=ON 
-  -D   ShyLU_DD_ENABLE_TESTS:BOOL=ON 
+  -D   ShyLU_DD_ENABLE_TESTS:BOOL=OFF 
   -D Trilinos_ENABLE_Stratimikos:BOOL=ON 
   -D Trilinos_ENABLE_Thyra:BOOL=ON 
   -D Trilinos_ENABLE_Tpetra:BOOL=ON 
@@ -55,10 +55,24 @@ set(trilinos_cmake_args
   -D Kokkos_ENABLE_TESTS:BOOL=ON 
 )
 
+# Trilinos with BOOST
+if (DEFINED BOOST_DIR)
+  list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BOOST:BOOL=ON")
+  list(APPEND trilinos_cmake_args "-D Boost_LIBRARY_DIRS:PATH=${BOOST_DIR}/lib64")
+  list(APPEND trilinos_cmake_args "-D Boost_INCLUDE_DIRS:PATH=${BOOST_DIR}/include")
+endif()
+
 # Trilinos with BLIS as BLAS
 if (DEFINED BLIS_DIR)
   list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
-  list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:STRING=${BLIS_DIR}/lib")
+  list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_NAMES=blis")
+  list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLIS_DIR}/lib")
+endif()
+
+# Trilinos with LAPACK
+if (DEFINED LAPACK_DIR)
+  list(APPEND trilinos_cmake_args "-D TPL_ENABLE_LAPACK:BOOL=ON")
+  list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LAPACK_DIR}/lib64")
 endif()
 
 # Trilinos with ScaLAPACK
@@ -79,8 +93,8 @@ endif()
 
 # Complex number support
 if ( TRILINOS_WITH_COMPLEX )
-  list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_DOUBLE=ON")
-  list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_FLOAT=ON")
+  list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_DOUBLE:BOOL=ON")
+  list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_FLOAT:BOOL=ON")
   list(APPEND trilinos_cmake_args "-D Teuchos_ENABLE_COMPLEX:BOOL=ON")
 endif()
 
@@ -120,3 +134,4 @@ add_dependencies(TRILINOS::TRILINOS trilinos)
 set(TRILINOS_DIR "${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}")
 set(TRILINOS_LIBRARIES "${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}/lib64")
 set(TRILINOS_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINIOS_VERSION}/include")
+list(APPEND CMAKE_PREFIX_PATH "${TRILINOS_DIR}")

@@ -1,10 +1,18 @@
 include(ExternalProject)
 
-if(SCALAPACK_FOUND)
-  return()
+find_package(LAPACK)
+if(LAPACK_FOUND)
+  set(BUILD_LAPACK OFF)
 else()
-  message(STATUS "Building SCALAPACK")
+  set(BUILD_LAPACK ON)
 endif()
+
+#find_package(SCALAPACK)
+#if(SCALAPACK_FOUND)
+#  return()
+#else()
+#  message(STATUS "Building SCALAPACK")
+#endif()
 
 set(scalapack_cmake_args
   -D BUILD_SINGLE:BOOL=ON
@@ -20,7 +28,10 @@ set(scalapack_cmake_args
   -D CMAKE_TLS_VERIFY:BOOL=${CMAKE_TLS_VERIFY}
   -D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}
 )
-#list(APPEND scalapack_cmake_args "-D find_lapack=off")
+
+if(BUILD_LAPACK)
+  list(APPEND scalapack_cmake_args "-D find_lapack=off")
+endif()
 
 if(DEFINED BLIS_DIR)
   # Configure ScaLAPACK to use BLIS
@@ -76,3 +87,19 @@ add_dependencies(SCALAPACK::SCALAPACK scalapack)
 set(SCALAPACK_DIR "${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}")
 set(SCALAPACK_LIBRARIES "${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}/lib64")
 set(SCALAPACK_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}/include")
+list(APPEND CMAKE_PREFIX_PATH "${SCALAPACK_DIR}")
+
+
+# If we also build LAPACK, we can find LAPACK in the SCALAPACK_DIR
+if(BUILD_LAPACK)
+  add_library(LAPACK::LAPACK INTERFACE IMPORTED GLOBAL)
+  target_include_directories(LAPACK::LAPACK INTERFACE ${SCALAPACK_INCLUDE_DIRS})
+  target_link_libraries(LAPACK::LAPACK INTERFACE ${SCALAPACK_LIBRARIES})
+  
+  add_dependencies(SCALAPACK::SCALAPACK scalapack)
+  
+  # Populate the path
+  set(LAPACK_DIR "${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}")
+  set(LAPACK_LIBRARIES "${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}/lib64")
+  set(LAPACK_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}/include")
+endif()
