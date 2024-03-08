@@ -1,10 +1,10 @@
 include(ExternalProject)
 
-#if(SCALAPACK_FOUND)
-#  return()
-#else()
-#  message(STATUS "Building SCALAPACK")
-#endif()
+if(SCALAPACK_FOUND)
+  return()
+else()
+  message(STATUS "Building SCALAPACK")
+endif()
 
 set(scalapack_cmake_args
   -D BUILD_SINGLE:BOOL=ON
@@ -20,8 +20,7 @@ set(scalapack_cmake_args
   -D CMAKE_TLS_VERIFY:BOOL=${CMAKE_TLS_VERIFY}
   -D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}
 )
-
-list(APPEND scalapack_cmake_args "-D find_lapack=off")
+#list(APPEND scalapack_cmake_args "-D find_lapack=off")
 
 # get the download url for scalapack:
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)

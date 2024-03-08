@@ -83,18 +83,23 @@ check_and_install_ninja() {
     else
         cecho ${WARN} "Ninja not found. Attempting to install..."
         # Call the CMake script to install Ninja
-        cmake -S ninja -B ${BUILD_DIR}/ninja -D CMAKE_INSTALL_PREFIX=${PREFIX} -D NINJA_VERSION=1.11.1 -D BIN_DIR=${BIN_DIR}
+        NINJA_VERSION=1.11.1
+        cmake -S ninja -B ${BUILD_DIR}/ninja -D CMAKE_INSTALL_PREFIX=${PREFIX} -D NINJA_VERSION=${NINJA_VERSION} -D BIN_DIR=${BIN_DIR}
         cmake --build ${BUILD_DIR}/ninja -- -j ${THREADS}
         cmake --install ${BUILD_DIR}/ninja
 
+        # Link cmake binary to the bin folder
+        ln -s "${PREFIX}/ninja/${NINJA_VERSION}/bin/ninja" "${BIN_DIR}/ninja"
+
         # Check that ${BIN_DIR} is already in the path.
-        if [[ ":$PATH:" == *":${PATH}:"* ]]; then
+        if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
             echo "${BIN_DIR} is already in the path."
         else
             # Add Ninja to the PATH
             export PATH=${BIN_DIR}:${PATH}
         fi
 
+        echo $PATH
         if ! command -v ninja &>/dev/null; then
             cecho ${ERROR} "ERROR: Failed to install Ninja automatically."
             exit 1

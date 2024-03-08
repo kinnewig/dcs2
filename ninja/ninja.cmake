@@ -32,5 +32,4 @@ ExternalProject_Add(ninja
   GIT_SHALLOW true
   CMAKE_ARGS ${ninja_cmake_args}
   CONFIGURE_HANDLED_BY_BUILD true
-  INSTALL_COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/ninja/${NINJA_VERSION}/ninja ${BIN_DIR}/ninja
 )

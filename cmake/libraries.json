@@ -36,7 +36,11 @@
   "p4est": {
     "git": "https://github.com/cburstedde/p4est.git",
     "2.8.5": {
-      "tag": "5f0e2f34b377066e9ba453aadf26dbc5cded4963"
+      "tag": "5f0e2f34b377066e9ba453aadf26dbc5cded4963",
+      "libsc": {
+        "git": "https://github.com/cburstedde/libsc.git",
+        "tag": "7d30c6b6af813b6f3cd08b891ba417a832cd505f"
+      }
     }
   },
 
