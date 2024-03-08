@@ -16,11 +16,27 @@ set(dealii_cmake_args
 # TODO
 list(APPEND dealii_cmake_args "-D BOOST_DIR=/opt/ifam/12.2.0-V3/lib64/boost-1.81.0")
 
+# deal.II with BLIS (as BLAS)
+if(DEFINED BLIS_DIR)
+  list(APPEND dealii_cmake_args "-D DEAL_II_WITH_BLAS:BOOL=ON")
+  list(APPEND dealii_cmake_args "-D BLAS_DIR=${BLIS_DIR}")
+endif()
+
 # deal.II with Trilinos
-list(APPEND dealii_cmake_args "-D TRILINOS_DIR=${TRILINOS_DIR}") 
+if(DEFINED TRILINOS_DIR)
+  list(APPEND dealii_cmake_args "-D TRILINOS_DIR=${TRILINOS_DIR}") 
+endif()
 
 # deal.II with P4est
-list(APPEND dealii_cmake_args "-D P4EST_DIR=${P4EST_DIR}") 
+if(DEFINED P4EST_DIR)
+  list(APPEND dealii_cmake_args "-D P4EST_DIR=${P4EST_DIR}") 
+endif()
+
+# deal.II with ScaLAPACK
+if(DEFINED SCALAPACK_DIR)
+  list(APPEND dealii_cmake_args "-D DEAL_II_WITH_SCALAPACK:BOOL=ON")
+  list(APPEND dealii_cmake_args "-D SCALAPACK_DIR=${ScaLAPACK_DIR}")
+endif()
 
 # get the download url for dealii:
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)

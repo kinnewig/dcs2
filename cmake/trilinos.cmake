@@ -55,12 +55,13 @@ set(trilinos_cmake_args
   -D Kokkos_ENABLE_TESTS:BOOL=ON 
 )
 
-# Trilinos with ScaLAPACK
+# Trilinos with BLIS as BLAS
 if (DEFINED BLIS_DIR)
   list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
   list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:STRING=${BLIS_DIR}/lib")
 endif()
 
+# Trilinos with ScaLAPACK
 if (DEFINED SCALAPACK_DIR)
   list(APPEND trilinos_cmake_args "-D TPL_ENABLE_SCALAPACK:BOOL=ON")
   list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_NAMES='scalapack'")

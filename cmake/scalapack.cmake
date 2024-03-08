@@ -22,6 +22,12 @@ set(scalapack_cmake_args
 )
 #list(APPEND scalapack_cmake_args "-D find_lapack=off")
 
+if(DEFINED BLIS_DIR)
+  # Configure ScaLAPACK to use BLIS
+  list(APPEND SCALAPACK_DEPENDENCIES "BLIS")
+  list(APPEND SCALAPACK_CONFOPTS "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")
+endif()
+
 # get the download url for scalapack:
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 string(JSON scalapack_url GET ${json} scalapack git)
