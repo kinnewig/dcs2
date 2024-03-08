@@ -11,13 +11,13 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Options
-option(TPL_ENABLE_BLIS       "Enable or disable the use of LAPACK as a third-party library"    OFF)
+option(TPL_ENABLE_BLIS       "Enable or disable the use of LAPACK as a third-party library"    ON)
 set(BLIS_VERSION "0.9.0" CACHE STRING "Specify the version of BLIS to be used")
 
 option(TPL_ENABLE_SCALAPACK  "Enable or disable the use of ScaLAPACK as a third-party library" ON)
 set(SCALAPACK_VERSION "2.2.1" CACHE STRING "Specify the version of ScaLAPACK to be used")
 
-option(TPL_ENABLE_MUMPS  "Enable or disable the use of MUMPS as a third-party library"     ON)
+option(TPL_ENABLE_MUMPS      "Enable or disable the use of MUMPS as a third-party library"     ON)
 set(MUMPS_VERSION "5.6.2" CACHE STRING "Specify the version of MUMPS to be used")
 
 option(TPL_ENABLE_P4EST      "Enable or disable the use of P4EST as a third-party library"     ON)
