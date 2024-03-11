@@ -18,10 +18,16 @@ if(DEFINED BOOST_DIR)
   list(APPEND dealii_cmake_args "-D BOOST_DIR=${BOOST_DIR}")
 endif()
 
-# deal.II with BLIS (as BLAS)
+# TODO: To use BLIS, we also need to use libflame instead of LAPACK
+# deal.II with BLIS as BLAS
 if(DEFINED BLIS_DIR)
   list(APPEND dealii_cmake_args "-D DEAL_II_WITH_BLAS:BOOL=ON")
   list(APPEND dealii_cmake_args "-D BLAS_DIR=${BLIS_DIR}")
+endif()
+
+if(DEFINED BLAS_DIR)
+  list(APPEND dealii_cmake_args "-D DEAL_II_WITH_BLAS:BOOL=ON")
+  list(APPEND dealii_cmake_args "-D BLAS_DIR=${BLAS_DIR}")
 endif()
 
 # deal.II with Trilinos
@@ -70,6 +76,20 @@ ExternalProject_Add(
     GIT_REPOSITORY ${dealii_url}
     GIT_TAG ${dealii_tag}
     CMAKE_ARGS ${dealii_cmake_args}
+    INSTALL_DIR {CMAKE_INSTALL_PREFIX}/dealii/${DEALII_VERSION}
     BUILD_BYPRODUCTS ${DEALII_LIBRARIES}
     CMAKE_GENERATOR ${DEFAULT_GENERATOR}
 )
+
+ExternalProject_Get_Property(dealii INSTALL_DIR)
+
+# Populate the path
+set(DEALII_DIR ${INSTALL_DIR})
+list(APPEND CMAKE_PREFIX_PATH "${DEALII_DIR}")
+
+# Linking
+link_directories(${DEALII_DIR})
+
+message("DEALII: ${DEALII_INCLUDE_DIRS}")
+message("DEALII: ${DEALII_LIBRARIES}")
+message("DEALII: ${DEALII_DIR}")

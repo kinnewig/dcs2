@@ -43,9 +43,10 @@ if(NINJA)
   set(DEFAULT_GENERATOR "Ninja")
 endif()
 
-if(TPL_ENABLE_BLIS)
-  include(cmake/blis.cmake)
-endif()
+# TODO: To use BLIS, we also need to use libflame instead of LAPACK
+#if(TPL_ENABLE_BLIS)
+#  include(cmake/blis.cmake)
+#endif()
 
 if(TPL_ENABLE_SCALAPACK)
 include(cmake/scalapack.cmake)

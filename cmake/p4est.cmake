@@ -68,17 +68,22 @@ ExternalProject_Add(
   GIT_REPOSITORY ${p4est_url}
   GIT_TAG ${p4est_tag}
   CMAKE_ARGS ${p4est_cmake_args}
+  INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION} 
   CMAKE_GENERATOR ${DEFAULT_GENERATOR}
 )
 
-add_library(P4EST::P4EST INTERFACE IMPORTED GLOBAL)
-target_include_directories(P4EST::P4EST INTERFACE ${P4EST_INCLUDE_DIRS})
-target_link_libraries(P4EST::P4EST INTERFACE ${P4EST_LIBRARIES})
-
-add_dependencies(P4EST::P4EST p4est)
+ExternalProject_Get_Property(p4est INSTALL_DIR)
 
 # Populate the path
-set(P4EST_DIR "${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION}")
-set(P4EST_LIBRARIES "${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION}/lib64")
-set(P4EST_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION}/include")
+set(P4EST_DIR ${INSTALL_DIR})
 list(APPEND CMAKE_PREFIX_PATH "${P4EST_DIR}")
+
+# Linking
+# TODO: This is old method rework this to be more similar 
+#       to ScaLAPACK and MUMPS
+link_directories(${P4EST_DIR})
+
+message("P4EST: ${P4EST_INCLUDE_DIRS}")
+message("P4EST: ${P4EST_LIBRARIES}")
+message("P4EST: ${P4EST_DIR}")
+

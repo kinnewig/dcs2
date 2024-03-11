@@ -62,11 +62,18 @@ if (DEFINED BOOST_DIR)
   list(APPEND trilinos_cmake_args "-D Boost_INCLUDE_DIRS:PATH=${BOOST_DIR}/include")
 endif()
 
+# TODO: To use BLIS, we also need to use libflame instead of LAPACK
 # Trilinos with BLIS as BLAS
 if (DEFINED BLIS_DIR)
   list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
   list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_NAMES=blis")
   list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLIS_DIR}/lib")
+endif()
+
+# Trilinos with BLAS 
+if (DEFINED BLAS_DIR)
+  list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
+  list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLAS_DIR}/lib64")
 endif()
 
 # Trilinos with LAPACK
@@ -118,20 +125,21 @@ ExternalProject_Add(
     GIT_REPOSITORY ${trilinos_url}
     GIT_TAG ${trilinos_tag}
     CMAKE_ARGS ${trilinos_cmake_args}
-    BUILD_BYPRODUCTS ${TRILINOS_LIBRARIES}
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
     CMAKE_GENERATOR ${DEFAULT_GENERATOR}
 )
 
-set(TRILINOS_DIR "${trilinos_DIR}")
-
-add_library(TRILINOS::TRILINOS INTERFACE IMPORTED GLOBAL)
-target_include_directories(TRILINOS::TRILINOS INTERFACE ${TRILINOS_INCLUDE_DIRS})
-target_link_libraries(TRILINOS::TRILINOS INTERFACE ${TRILINOS_LIBRARIES})
-
-add_dependencies(TRILINOS::TRILINOS trilinos)
+ExternalProject_Get_Property(trilinos INSTALL_DIR)
 
 # Populate the path
-set(TRILINOS_DIR "${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}")
-set(TRILINOS_LIBRARIES "${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}/lib64")
-set(TRILINOS_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINIOS_VERSION}/include")
+set(TRILINOS_DIR ${INSTALL_DIR})
 list(APPEND CMAKE_PREFIX_PATH "${TRILINOS_DIR}")
+
+# Linking
+# TODO: This is old method rework this to be more similar 
+#       to ScaLAPACK and MUMPS
+link_directories(${TRILINOS_DIR})
+
+message("TRILINOS: ${TRILINOS_INCLUDE_DIRS}")
+message("TRILINOS: ${TRILINOS_LIBRARIES}")
+message("TRILINOS: ${TRILINOS_DIR}")
