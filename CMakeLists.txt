@@ -60,8 +60,8 @@ if(TPL_ENABLE_TRILINOS)
 include(cmake/trilinos.cmake)
 endif()
 
-if(TPL_ENABLE_P4EST)
-include(cmake/p4est.cmake)
-endif()
+#if(TPL_ENABLE_P4EST)
+#include(cmake/p4est.cmake)
+#endif()
 
-include(cmake/dealii.cmake)
+#include(cmake/dealii.cmake)

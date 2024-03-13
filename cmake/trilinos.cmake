@@ -74,6 +74,8 @@ endif()
 if (DEFINED BLAS_DIR)
   list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
   list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLAS_DIR}/lib64")
+
+  list(APPEND trilinos_cmake_args "-D BLAS_ROOT:PATH=${BLAS_DIR}")
 endif()
 
 # Trilinos with LAPACK
