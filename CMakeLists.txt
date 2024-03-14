@@ -44,9 +44,9 @@ if(NINJA)
 endif()
 
 # TODO: To use BLIS, we also need to use libflame instead of LAPACK
-#if(TPL_ENABLE_BLIS)
-#  include(cmake/blis.cmake)
-#endif()
+if(TPL_ENABLE_BLIS)
+  include(cmake/blis.cmake)
+endif()
 
 if(TPL_ENABLE_SCALAPACK)
 include(cmake/scalapack.cmake)
@@ -60,8 +60,8 @@ if(TPL_ENABLE_TRILINOS)
 include(cmake/trilinos.cmake)
 endif()
 
-#if(TPL_ENABLE_P4EST)
-#include(cmake/p4est.cmake)
-#endif()
+if(TPL_ENABLE_P4EST)
+include(cmake/p4est.cmake)
+endif()
 
-#include(cmake/dealii.cmake)
+include(cmake/dealii.cmake)
