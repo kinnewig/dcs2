@@ -10,7 +10,7 @@ endif()
 # Add the Find<PACKAGE>.cmake files from dcs to CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-set(BOOST_DIR "/opt/cit/13.2.0-V1/lib64/boost-1.84.0/")
+#set(BOOST_DIR "/opt/cit/13.2.0-V1/lib64/boost-1.84.0/")
 
 # Options
 option(TPL_ENABLE_BLIS       "Enable or disable the use of LAPACK as a third-party library"    ON)
@@ -43,10 +43,9 @@ if(NINJA)
   set(DEFAULT_GENERATOR "Ninja")
 endif()
 
-# TODO: To use BLIS, we also need to use libflame instead of LAPACK
-if(TPL_ENABLE_BLIS)
-  include(cmake/blis.cmake)
-endif()
+#if(TPL_ENABLE_BLIS)
+#  include(cmake/blis.cmake)
+#endif()
 
 if(TPL_ENABLE_SCALAPACK)
 include(cmake/scalapack.cmake)

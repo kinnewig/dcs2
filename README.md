@@ -19,6 +19,9 @@ DCS simplifies the process of building and installing the **deal.II** library al
 - `<PACKAGE>_CUSTOM_TAG`: If defined, this variable sets a custom Git tag (commit hash, branch, or release) for <PACKAGE>. Use this to select a specific version or snapshot.
 
 ### Available Third-Party Libraries
+#### BOOST
+- `BOOST_DIR`: If Boost is installed on a custom path, the path has to be provided, otherwise deal.II will not find BOOST.
+
 #### BLIS
 - `TPL_ENABLE_BLIS`: Enable or disable LAPACK as a third-party library (default: OFF)
 - `BLIS_VERSION`: Specify the BLIS version (default: "0.9.0")
@@ -53,5 +56,5 @@ To use DCS, follow these steps:
 2. Create a new build directory:
    ```bash
    cd dcs2
-   cmake -S . -B </path/to/build> -D CMAKE_INSTALL_PREFIX=<path/to/install>
+   ./dcs -p <path/to/install> -j <Number of threads>
    ```

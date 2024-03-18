@@ -43,7 +43,7 @@ ExternalProject_Add(
     GIT_TAG ${dealii_tag}
     CMAKE_ARGS ${dealii_cmake_args}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/dealii/${DEALII_VERSION}
-    BUILD_COMMAND cmake --build . --parallel 8
+    BUILD_COMMAND cmake --build . --parallel ${THREADS}
     BUILD_BYPRODUCTS ${DEALII_LIBRARIES}
     CMAKE_GENERATOR ${DEFAULT_GENERATOR}
     DEPENDS ${dealii_dependencies}

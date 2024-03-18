@@ -266,9 +266,9 @@ parse_arguments() {
 
     # ADD TO PATH
     if [ -z "${ADD_TO_PATH}" ]; then
-        ADD_TO_PATH=ON
-        echo "Default to add DEAL_II_DIR permanently to the path."
-        echo "Otherwise, disable add to path via -A=OFF or --add_to_path=OFF."
+        ADD_TO_PATH=OFF
+        echo "Default is not to add DEAL_II_DIR permanently to the path."
+        echo "Otherwise, enable add to path via -A=OFF or --add_to_path=ON."
     fi
 
     # NINJA
@@ -308,7 +308,7 @@ if [ "${USE_NINJA}" = "ON" ]; then
     fi
 fi
 
-cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX}
+cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS}
 cmake --build ${BUILD_DIR} -- -j ${THREADS}
 
 if [ "${ADD_TO_PATH}" = "YES" ]; then
