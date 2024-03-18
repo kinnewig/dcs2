@@ -173,6 +173,13 @@ parse_arguments() {
                 shift
                 ;;
 
+            # Additional CMake flags    
+            -c|--cmake-flags)
+                CMAKE_FLAGS="$2"
+                shift
+                shift
+                ;;
+
             # Threads
             -j)
                 THREADS="${1}"
@@ -308,7 +315,7 @@ if [ "${USE_NINJA}" = "ON" ]; then
     fi
 fi
 
-cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS}
+cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS} ${CMAKE_FLAGS}
 cmake --build ${BUILD_DIR} -- -j ${THREADS}
 
 if [ "${ADD_TO_PATH}" = "YES" ]; then
