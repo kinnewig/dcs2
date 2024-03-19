@@ -60,11 +60,13 @@ else()
   # If a custom URL for p4est is defined, use it.
   if (DEFINED P4EST_CUSTOM_URL)
     set(p4est_url ${P4EST_CUSTOM_URL})
+    message("Using custom download URL for P4EST: ${P4EST_CUSTOM_URL}")
   endif()
   
   # If a custom tag for p4est is defined, use it.
   if (DEFINED P4EST_CUSTOM_TAG)
     set(p4est_tag ${P4EST_CUSTOM_TAG})
+    message("Using custom git tag for P4EST: ${P4EST_CUSTOM_TAG}")
   endif()
   
   ExternalProject_Add(

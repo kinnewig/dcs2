@@ -48,19 +48,19 @@ endif()
 #endif()
 
 if(TPL_ENABLE_SCALAPACK)
-include(cmake/scalapack.cmake)
+  include(cmake/scalapack.cmake)
 endif()
 
 if(TPL_ENABLE_MUMPS)
-include(cmake/mumps.cmake)
+  include(cmake/mumps.cmake)
 endif()
 
 if(TPL_ENABLE_TRILINOS)
-include(cmake/trilinos.cmake)
+  include(cmake/trilinos.cmake)
 endif()
 
 if(TPL_ENABLE_P4EST)
-include(cmake/p4est.cmake)
+  include(cmake/p4est.cmake)
 endif()
 
 include(cmake/dealii.cmake)

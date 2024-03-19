@@ -44,11 +44,13 @@ endif()
   # If a custom URL for scalapack is defined, use it.
   if (DEFINED SCALAPACK_CUSTOM_URL)
     set(scalapack_url ${SCALAPCK_CUSTOM_URL})
+    message("Using custom download URL for ScaLAPACK: ${SCALAPACK_CUSTOM_URL}")
   endif()
   
   # If a custom tag for scalapack is defined, use it.
   if (DEFINED SCALAPACK_CUSTOM_TAG)
     set(scalapack_tag ${SCALAPACK_CUSTOM_TAG})
+    message("Using custom git tag for ScaLAPACK: ${SCALAPACK_CUSTOM_TAG}")
   endif()
   
   if(BUILD_SHARED_LIBS)

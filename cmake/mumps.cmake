@@ -31,11 +31,13 @@ else()
   # If a custom URL for mumps is defined, use it.
   if (DEFINED MUMPS_CUSTOM_URL)
     set(mumps_url ${MUMPS_CUSTOM_URL})
+    message("Using custom download URL for MUMPS: ${MUMPS_CUSTOM_URL}")
   endif()
   
   # If a custom tag for mumps is defined, use it.
   if (DEFINED MUMPS_CUSTOM_TAG)
     set(mumps_tag ${MUMPS_CUSTOM_TAG})
+    message("Using custom git tag for MUMPS: ${MUMPS_CUSTOM_TAG}")
   endif()
   
   ExternalProject_Add(mumps

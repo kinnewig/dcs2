@@ -80,11 +80,13 @@ else()
   # If a custom URL for trilinos is defined, use it.
   if (DEFINED TRILINOS_CUSTOM_URL)
     set(trilinos_url ${TRILINOS_CUSTOM_URL})
+    message("Using custom download URL for Trilinos: ${TRILINOS_CUSTOM_URL}")
   endif()
   
   # If a custom tag for trilinos is defined, use it.
   if (DEFINED TRILINOS_CUSTOM_TAG)
     set(trilinos_tag ${TRILINOS_CUSTOM_TAG})
+    message("Using custom git tag for Trilinos: ${TRILINOS_CUSTOM_TAG}")
   endif()
   
   ExternalProject_Add(

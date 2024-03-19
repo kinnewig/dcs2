@@ -24,11 +24,13 @@ else()
   # If a custom URL for blis is defined, use it.
   if (DEFINED BLIS_CUSTOM_URL)
     set(blis_url ${BLIS_CUSTOM_URL})
+    message("Using custom download URL for BLIS: ${BLIS_CUSTOM_URL}")
   endif()
   
   # If a custom tag for blis is defined, use it.
   if (DEFINED BLIS_CUSTOM_TAG)
     set(blis_tag ${BLIS_CUSTOM_TAG})
+    message("Using custom git tag for BLIS: ${BLIS_CUSTOM_URL}")
   endif()
   
   ExternalProject_Add(blis

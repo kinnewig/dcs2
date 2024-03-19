@@ -30,12 +30,16 @@ endif()
 # If a custom URL for deal.II is defined, use it.
 if (DEFINED DEALII_CUSTOM_URL)
   set(dealii_url ${DEALII_CUSTOM_URL})
+  message("Using custom download URL for deal.II: ${DEALII_CUSTOM_URL}")
 endif()
 
 # If a custom tag for deal.II is defined, use it.
 if (DEFINED DEALII_CUSTOM_TAG)
   set(dealii_tag ${DEALII_CUSTOM_TAG})
+  message("Using custom git tag for deal.II: ${DEALII_CUSTOM_TAG}")
 endif()
+
+message("${dealii_dependencies}")
 
 ExternalProject_Add(
     dealii

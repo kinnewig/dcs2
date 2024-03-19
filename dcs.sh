@@ -316,7 +316,7 @@ if [ "${USE_NINJA}" = "ON" ]; then
 fi
 
 cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS} ${CMAKE_FLAGS}
-cmake --build ${BUILD_DIR} -- -j ${THREADS}
+cmake --build ${BUILD_DIR} #-- -j ${THREADS}
 
 if [ "${ADD_TO_PATH}" = "YES" ]; then
     add_to_path
