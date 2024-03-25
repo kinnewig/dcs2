@@ -13,7 +13,7 @@ pkg_check_modules(PC_BLIS QUIET BLIS)
 set(BLIS_DIR "" CACHE PATH "The directory of the BLIS installation")
 
 find_path(BLIS_INCLUDE_DIR NAMES blis.h
-          HINTS ${BLIS_DIR}/include ${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}/include
+          HINTS ${BLIS_DIR}/include ${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}/include/blis
           PATHS ${PC_BLIS_INCLUDEDIR} ${PC_BLIS_INCLUDE_DIRS})
 
 find_library(BLIS_LIBRARY NAMES blis
