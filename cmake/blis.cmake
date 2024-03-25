@@ -2,7 +2,8 @@ include(ExternalProject)
 
 find_package(BLIS)
 if(BLIS_FOUND)
-  return()
+  message(STATUS "BLIS found: ${BLIS_DIR}")
+  
 else()
   message(STATUS "Building BLIS")
 
@@ -59,19 +60,27 @@ else()
     IMPORTED_LOCATION ${BLIS_DIR}/lib/libblis.so
     INTERFACE_INCLUDE_DIRECTORIES ${BLIS_DIR}/include
   )
+
+  # Dependencies:
+  # Add blis as dependecie to deal.II
+  list(APPEND dealii_dependencies "blis")
+
+  # Add blis as dependecie to trilinos
+  list(APPEND trilinos_dependencies "blis")
+
+  # Add blis as dependecie to ScaLAPACK
+  list(APPEND scalapack_dependencies "blis")
+
 endif()
 
 # Add blis to deal.II
-list(APPEND dealii_dependencies "blis")
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_BLAS:BOOL=ON")
 list(APPEND dealii_cmake_args "-D BLAS_DIR=${BLIS_DIR}")
 
 # Add blis to trilinos
-list(APPEND trilinos_dependencies "blis")
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
 list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_NAMES=blis")
 list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLIS_DIR}/lib")
 
 # Add blis to ScaLAPACK
-list(APPEND scalapack_dependencies "blis")
 list(APPEND scalapack_cmake_args "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")

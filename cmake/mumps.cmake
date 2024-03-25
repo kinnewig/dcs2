@@ -2,7 +2,7 @@ include(ExternalProject)
 
 find_package(MUMPS)
 if(MUMPS_FOUND)
-  return()
+
 else()
   message(STATUS "Building MUMPS")
   
@@ -64,10 +64,13 @@ else()
     IMPORTED_LOCATION ${MUMPS_DIR}/lib64/libsmumps.so
     INTERFACE_INCLUDE_DIRECTORIES ${MUMPS_DIR}/include
   )
+
+  # Dependencies:
+  # add MUMPS as dependencie to trilinos
+  list(APPEND trilinos_dependencies "mumps")
 endif()
 
 # add MUMPS to trilinos
-list(APPEND trilinos_dependencies "mumps")
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_MUMPS=ON")
 list(APPEND trilinos_cmake_args "-D MUMPS_LIBRARY_DIRS:PATH=${MUMPS_DIR}/lib")
 list(APPEND trilinos_cmake_args "-D MUMPS_INCLUDE_DIRS:PATH=${MUMPS_DIR}/include")

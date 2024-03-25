@@ -39,7 +39,7 @@ if (DEFINED DEALII_CUSTOM_TAG)
   message("Using custom git tag for deal.II: ${DEALII_CUSTOM_TAG}")
 endif()
 
-message("${dealii_dependencies}")
+message("TRILINOS_DIR (in deal.II): ${dealii_cmake_args}")
 
 ExternalProject_Add(
     dealii

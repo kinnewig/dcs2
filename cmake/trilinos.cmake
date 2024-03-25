@@ -3,7 +3,6 @@ include(ExternalProject)
 find_package(TRILINOS)
 if(TRILINOS_FOUND)
   message(STATUS "TRILINOS found: ${TRILINOS_DIR}")
-  return()
 
 else()
   message(STATUS "Build TRILINOS")
@@ -109,8 +108,11 @@ else()
   # TODO: This is old method rework this to be more similar 
   #       to ScaLAPACK and MUMPS
   link_directories(${TRILINOS_DIR})
+
+  # Dependencies:
+  # Add trilinos as dependencie to deal.II 
+  list(APPEND dealii_dependencies "trilinos")
 endif()
 
 # Add trilinos to deal.II
-list(APPEND dealii_dependencies "trilinos")
 list(APPEND dealii_cmake_args "-D TRILINOS_DIR=${TRILINOS_DIR}") 

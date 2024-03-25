@@ -3,7 +3,7 @@ include(ExternalProject)
 find_package(P4EST)
 if(P4EST_FOUND)
   message(STATUS "P4EST found: ${P4EST_DIR}")
-  return()
+
 else()
 
   # First we need to install libsc
@@ -89,8 +89,11 @@ else()
   # TODO: This is old method rework this to be more similar 
   #       to ScaLAPACK and MUMPS
   link_directories(${P4EST_DIR})
+
+  # Dependencies:
+  # Add P4est as dependencies to deal.II
+  list(APPEND dealii_dependencies "p4est")
 endif()
 
 # Add P4est to deal.II
 list(APPEND dealii_cmake_args "-D P4EST_DIR=${P4EST_DIR}") 
-list(APPEND dealii_dependencies "p4est")
