@@ -33,6 +33,13 @@
     }
   },
 
+  "suitesparse": {
+    "git": "https://github.com/DrTimothyAldenDavis/SuiteSparse.git",
+    "7.7.0": {
+      "tag": "13806726cbf470914d012d132a85aea1aff9ee77"
+    }
+  },
+
   "p4est": {
     "git": "https://github.com/cburstedde/p4est.git",
     "2.8.5": {

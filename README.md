@@ -34,6 +34,10 @@ DCS simplifies the process of building and installing the **deal.II** library al
 - `TPL_ENABLE_MUMPS`: Enable or disable MUMPS (default: ON)
 - `MUMPS_VERSION`: Specify the MUMPS version (default: "5.6.2")
 
+#### SuiteSparse
+- `TPL_ENABLE_SUITESPARSE`: Enable or disable SuiteSparse (default: ON)
+- `SUITESPARSE_VERSION`: Specify the SuiteSparse version (default: "5.6.2")
+
 #### P4EST
 - `TPL_ENABLE_P4EST`: Enable or disable P4EST (default: ON)
 - `P4EST_VERSION`: Specify the P4EST version (default: "2.8.5")
