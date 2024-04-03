@@ -26,7 +26,7 @@
   "mumps": {
     "git": "https://github.com/scivision/mumps.git",
     "5.6.2": {
-      "tag": "80fe9ac3e935a817923d8d5da0f38034ff0073bf"
+      "tag": "47ba5ef2b67595b8d0d92bae1d485d6713bf3337"
     },
     "5.6.1": {
       "tag": "477ab2ce4450cfe357acbfbc3cfd61d1e41dd391"
