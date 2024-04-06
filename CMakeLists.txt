@@ -19,11 +19,17 @@ set(BLIS_VERSION "0.9.0" CACHE STRING "Specify the version of BLIS to be used")
 option(TPL_ENABLE_SCALAPACK   "Enable or disable the use of ScaLAPACK as a third-party library"   ON)
 set(SCALAPACK_VERSION "2.2.1" CACHE STRING "Specify the version of ScaLAPACK to be used")
 
-option(TPL_ENABLE_SUITESPARSE "Enable or disable the use of MUMPS as a third-party library"       ON)
-set(SUITESPARSE_VERSION "7.7.0" CACHE STRING "Specify the version of SuiteSparse to be used")
-
-option(TPL_ENABLE_MUMPS       "Enable or disable the use of SuiteSparse as a third-party library" ON)
+option(TPL_ENABLE_MUMPS       "Enable or disable the use of MUMPS as a third-party library"       ON)
 set(MUMPS_VERSION "5.6.2" CACHE STRING "Specify the version of MUMPS to be used")
+
+option(TPL_ENABLE_GMP         "Enable or disable the use of GMP as a third-party library"         ON)
+set(GMP_VERSION "6.2.1" CACHE STRING "Specify the version of GMP to be used")
+
+option(TPL_ENABLE_MPFR        "Enable or disable the use of MMPFR as a third-party library"       ON)
+set(MPFR_VERSION "4.2.1" CACHE STRING "Specify the version of MPFR to be used")
+
+option(TPL_ENABLE_SUITESPARSE "Enable or disable the use of SuiteSparse as a third-party library" ON)
+set(SUITESPARSE_VERSION "7.7.0" CACHE STRING "Specify the version of SuiteSparse to be used")
 
 option(TPL_ENABLE_P4EST       "Enable or disable the use of P4EST as a third-party library"       ON)
 set(P4EST_VERSION "2.8.5" CACHE STRING "Specify the version of P4EST to be used")
@@ -56,6 +62,14 @@ endif()
 
 if(TPL_ENABLE_MUMPS)
   include(cmake/mumps.cmake)
+endif()
+
+if(TPL_ENABLE_GMP)
+  include(cmake/gmp.cmake)
+endif()
+
+if(TPL_ENABLE_MPFR)
+  include(cmake/mpfr.cmake)
 endif()
 
 if(TPL_ENABLE_SUITESPARSE)
