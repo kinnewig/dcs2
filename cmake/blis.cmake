@@ -12,7 +12,7 @@ else()
     set(BLIS_ARCHITECTURE auto)
   endif()
   
-  set(blis_autotool_args '--enable-cblas CFLAGS="-DAOCL_F2C -fPIC" CXXFLAGS="-DAOCL_F2C -fPIC" ${BLIS_ARCHITECTURE}')
+  set(blis_autotool_args '--prefix=${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION} --enable-cblas CFLAGS="-DAOCL_F2C -fPIC" CXXFLAGS="-DAOCL_F2C -fPIC" ${BLIS_ARCHITECTURE} ${blis_autotool_args}')
   
   # get the download url for blis:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
@@ -40,7 +40,7 @@ else()
     GIT_SHALLOW true
     BUILD_COMMAND make
     INSTALL_COMMAND make install
-    CONFIGURE_COMMAND ./configure --prefix=${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION} --enable-cblas CFLAGS="-DAOCL_F2C -fPIC" CXXFLAGS="-DAOCL_F2C -fPIC" ${BLIS_ARCHITECTURE}
+    CONFIGURE_COMMAND ./configure ${blis_autotool_args}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}
     BUILD_IN_SOURCE ON
     BUILD_BYPRODUCTS ${BLIS_LIBRARIES}
@@ -84,3 +84,6 @@ list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLIS_DIR}/lib")
 
 # Add blis to ScaLAPACK
 list(APPEND scalapack_cmake_args "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+# Add blis to SuiteSparse
+list(APPEND suitesparse_cmake_args "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")

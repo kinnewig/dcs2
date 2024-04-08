@@ -22,9 +22,13 @@ DCS simplifies the process of building and installing the **deal.II** library al
 #### BOOST
 - `BOOST_DIR`: If Boost is installed on a custom path, the path has to be provided, otherwise deal.II will not find BOOST.
 
-#### BLIS
-- `TPL_ENABLE_BLIS`: Enable or disable LAPACK as a third-party library (default: OFF)
+#### (FLAME) BLIS
+- `TPL_ENABLE_BLIS`: Enable or disable BLIS (default: OFF)
 - `BLIS_VERSION`: Specify the BLIS version (default: "0.9.0")
+
+#### (FLAME) LIBFLAME
+- `TPL_ENABLE_LIBFLAME`: Enable or disable LIBFLAME (as LAPACK) (default: OFF)
+- `LIBFLAME_VERSION`: Specify the LIBFLAME version (default: "5.2.0")
 
 #### ScaLAPACK
 - `TPL_ENABLE_SCALAPACK`: Enable or disable ScaLAPACK (default: ON)

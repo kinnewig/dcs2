@@ -13,8 +13,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 #set(BOOST_DIR "/opt/cit/13.2.0-V1/lib64/boost-1.84.0/")
 
 # Options
-option(TPL_ENABLE_BLIS        "Enable or disable the use of LAPACK as a third-party library"      ON)
+option(TPL_ENABLE_BLIS        "Enable or disable the use of BLIS as a third-party library"        ON)
 set(BLIS_VERSION "0.9.0" CACHE STRING "Specify the version of BLIS to be used")
+
+option(TPL_ENABLE_LIBFLAME    "Enable or disable the use of LIBFLAME as a third-party library"    ON)
+set(LIBFLAME_VERSION "5.2.0" CACHE STRING "Specify the version of BLIS to be used")
 
 option(TPL_ENABLE_SCALAPACK   "Enable or disable the use of ScaLAPACK as a third-party library"   ON)
 set(SCALAPACK_VERSION "2.2.1" CACHE STRING "Specify the version of ScaLAPACK to be used")
@@ -54,6 +57,10 @@ endif()
 
 if(TPL_ENABLE_BLIS)
   include(cmake/blis.cmake)
+endif()
+
+if(TPL_ENABLE_LIBFLAME)
+  include(cmake/libflame.cmake)
 endif()
 
 if(TPL_ENABLE_SCALAPACK)

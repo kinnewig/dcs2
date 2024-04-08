@@ -13,6 +13,16 @@
     }
   },
 
+  "libflame": {
+    "git": "https://github.com/flame/libflame.git",
+    "master":{
+      "tag": "master"
+    },
+    "5.2.0": {
+      "tag": "53bd60c50bf057715da59fd2b570c26ef854e25e"
+    }
+  },
+
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
     "2.2.1": {
