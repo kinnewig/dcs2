@@ -38,6 +38,14 @@ DCS simplifies the process of building and installing the **deal.II** library al
 - `TPL_ENABLE_SUITESPARSE`: Enable or disable SuiteSparse (default: ON)
 - `SUITESPARSE_VERSION`: Specify the SuiteSparse version (default: "5.6.2")
 
+##### MPFR (Dependencie for Suitesparse)
+- `TPL_ENABLE_MPFR`: Enable or disable MPFR (default: ON)
+- `MPFR_VERSION`: Specify the MPFR version (default: "4.2.1")
+
+##### GMP (Dependencie for Suitesparse)
+- `TPL_ENABLE_GMP`: Enable or disable MPFR (default: ON)
+- `GMP_VERSION`: Specify the GMP version (default: "6.2.1")
+
 #### P4EST
 - `TPL_ENABLE_P4EST`: Enable or disable P4EST (default: ON)
 - `P4EST_VERSION`: Specify the P4EST version (default: "2.8.5")
