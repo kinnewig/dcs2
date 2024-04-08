@@ -13,6 +13,16 @@
     }
   },
 
+  "libflame": {
+    "git": "https://github.com/flame/libflame.git",
+    "master":{
+      "tag": "master"
+    },
+    "5.2.0": {
+      "tag": "53bd60c50bf057715da59fd2b570c26ef854e25e"
+    }
+  },
+
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
     "2.2.1": {
@@ -31,6 +41,20 @@
     "5.6.1": {
       "tag": "477ab2ce4450cfe357acbfbc3cfd61d1e41dd391"
     }
+  },
+
+  "gmp": {
+    "git": "https://github.com/alisw/GMP.git",
+    "6.2.1": {
+      "tag": "2bbd52703e5af82509773264bfbd20ff8464804f"
+    },
+  },
+
+  "mpfr": {
+    "git": "https://gitlab.inria.fr/mpfr/mpfr.git",
+    "4.2.1": {
+      "tag": "53b7b847c406376b10cdd0ddcd46482dbd715363"
+    },
   },
 
   "suitesparse": {

@@ -22,9 +22,13 @@ DCS simplifies the process of building and installing the **deal.II** library al
 #### BOOST
 - `BOOST_DIR`: If Boost is installed on a custom path, the path has to be provided, otherwise deal.II will not find BOOST.
 
-#### BLIS
-- `TPL_ENABLE_BLIS`: Enable or disable LAPACK as a third-party library (default: OFF)
+#### (FLAME) BLIS
+- `TPL_ENABLE_BLIS`: Enable or disable BLIS (default: OFF)
 - `BLIS_VERSION`: Specify the BLIS version (default: "0.9.0")
+
+#### (FLAME) LIBFLAME
+- `TPL_ENABLE_LIBFLAME`: Enable or disable LIBFLAME (as LAPACK) (default: OFF)
+- `LIBFLAME_VERSION`: Specify the LIBFLAME version (default: "5.2.0")
 
 #### ScaLAPACK
 - `TPL_ENABLE_SCALAPACK`: Enable or disable ScaLAPACK (default: ON)
@@ -37,6 +41,14 @@ DCS simplifies the process of building and installing the **deal.II** library al
 #### SuiteSparse
 - `TPL_ENABLE_SUITESPARSE`: Enable or disable SuiteSparse (default: ON)
 - `SUITESPARSE_VERSION`: Specify the SuiteSparse version (default: "5.6.2")
+
+##### MPFR (Dependencie for Suitesparse)
+- `TPL_ENABLE_MPFR`: Enable or disable MPFR (default: ON)
+- `MPFR_VERSION`: Specify the MPFR version (default: "4.2.1")
+
+##### GMP (Dependencie for Suitesparse)
+- `TPL_ENABLE_GMP`: Enable or disable MPFR (default: ON)
+- `GMP_VERSION`: Specify the GMP version (default: "6.2.1")
 
 #### P4EST
 - `TPL_ENABLE_P4EST`: Enable or disable P4EST (default: ON)

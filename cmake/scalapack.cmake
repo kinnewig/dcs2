@@ -1,11 +1,12 @@
 include(ExternalProject)
 
-find_package(LAPACK)
-if(LAPACK_FOUND)
-  set(BUILD_LAPACK OFF)
-else()
-  set(BUILD_LAPACK ON)
-endif()
+# TODO: Remove, always use the lapack provided by the blas (libflame, reference LAPACK, OpenBLAS, MKL, etc...)
+#find_package(LAPACK)
+#if(LAPACK_FOUND)
+#  set(BUILD_LAPACK OFF)
+#else()
+#  set(BUILD_LAPACK ON)
+#endif()
 
 #find_package(SCALAPACK)
 #if(SCALAPACK_FOUND)
@@ -29,9 +30,10 @@ endif()
     ${scalapack_cmake_args}
   )
   
-  if(BUILD_LAPACK)
-    list(APPEND scalapack_cmake_args "-D find_lapack=off")
-  endif()
+  # TODO: Remove, always use the lapack provided by the blas (libflame, reference LAPACK, OpenBLAS, MKL, etc...)
+  #if(BUILD_LAPACK)
+  #  list(APPEND scalapack_cmake_args "-D find_lapack=off")
+  #endif()
   
   # get the download url for scalapack:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
@@ -96,11 +98,11 @@ endif()
     set(LAPACK_DIR ${INSTALL_DIR})
   
     # Linking
-    add_library(LAPACK::LAPACK INTERFACE IMPORTED GLOBAL)
-    set_target_properties(LAPACK::LAPACK PROPERTIES
-      IMPORTED_LOCATION ${SCALAPACK_DIR}/lib64/liblapack.so
-      INTERFACE_INCLUDE_DIRECTORIES ${SCALAPACK_DIR}/include
-    )
+    #add_library(LAPACK::LAPACK INTERFACE IMPORTED GLOBAL)
+    #set_target_properties(LAPACK::LAPACK PROPERTIES
+    #  IMPORTED_LOCATION ${SCALAPACK_DIR}/lib64/liblapack.so
+    #  INTERFACE_INCLUDE_DIRECTORIES ${SCALAPACK_DIR}/include
+    #)
   
     # BLAS
     # Populate the path
@@ -160,14 +162,19 @@ if(BUILD_LAPACK)
   # BLAS
   #list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
   #list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLAS_DIR}/lib64")
-  #list(APPEND trilinos_cmake_args "-D KokkosKernel_BLAS_ROOT:PATH=${BLAS_DIR}") #<-- probably not needed at all
 endif()
 
 
 # Add scalapack to mumps
 list(APPEND mumps_dependencies "scalapack")
-list(APPEND mumps_cmake_args -D LAPACK_ROOT=${LAPACK_DIR})
+list(APPEND mumps_cmake_args -D SCALAPACK_ROOT=${SCALAPACK_DIR})
 
 if(BUILD_LAPACK)
-  list(APPEND mumps_cmake_args -D SCALAPACK_ROOT=${SCALAPACK_DIR})
+  list(APPEND mumps_cmake_args -D LAPACK_ROOT=${LAPACK_DIR})
 endif()
+
+# Add ScaLAPACK to SuiteSparse
+if(BUILD_LAPACK)
+  list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib64/liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
+endif()
+

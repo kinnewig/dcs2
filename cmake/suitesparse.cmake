@@ -66,7 +66,11 @@ else()
   list(APPEND trilinos_dependencies "suitesparse")
 endif()
 
-# add SuiteSparse to trilinos
+# add SuiteSparse to deal.II
+list(APPEND dealii_cmake_args "-D DEAL_II_WITH_UMFPACK:BOO=ON")
+list(APPEND dealii_cmake_args "-D UMFPACK_DIR=${UMFPACK_DIR}")
+
+# add SuiteSparse to Trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_UMFPACK=ON")
 list(APPEND trilinos_cmake_args "-D UMFPACK_LIBRARY_DIRS:PATH=${SUITESPARSE_DIR}/lib64")
 list(APPEND trilinos_cmake_args "-D UMFPACK_INCLUDE_DIRS:PATH=${SUITESPARSE_DIR}/include/suitesparse")
