@@ -1,9 +1,8 @@
 include(ExternalProject)
 
-#find_package(GMP)
-set(GMP_FOUND OFF)
+find_package(GMP)
 if(GMP_FOUND)
-
+  
 else()
   message(STATUS "Building GMP")
   
@@ -63,6 +62,9 @@ else()
     IMPORTED_LOCATION ${GMP_DIR}/lib64/libumfpack.so
     INTERFACE_INCLUDE_DIRECTORIES ${GMP_DIR}/include/gmp
   )
+  
+  set(GMP_LIBRARY "${GMP_DIR}/lib")
+  set(GMP_INCLUDE_DIRS "${GMP_DIR}/include")
 
   # Dependencies:
   # add GMP as dependencie to SuiteSparse
@@ -70,11 +72,12 @@ else()
 
   # add GMP as dependencie to LibFLAME
   list(APPEND libflame_dependencies "gmp")
+
 endif()
 
 # add GMP to SuiteSparse
-list(APPEND suitesparse_cmake_args "-D GMP_INCLUDE_DIR=${GMP_DIR}/include")
-list(APPEND suitesparse_cmake_args "-D GMP_LIBRARIES=${GMP_DIR}/lib")
+list(APPEND suitesparse_cmake_args "-D GMP_INCLUDE_DIR=${GMP_INCLUDE_DIRS}")
+list(APPEND suitesparse_cmake_args "-D GMP_LIBRARIES=${GMP_LIBRARY}")
 
 # add GMP to LibFLAME
-list(APPEND libflame_autotools_args "--with-gmp=${GMP_DIR}/lib")
+list(APPEND libflame_autotools_args "--with-gmp=${GMP_LIBRARY}")

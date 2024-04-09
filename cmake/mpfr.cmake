@@ -1,7 +1,6 @@
 include(ExternalProject)
 
-#find_package(MPFR)
-set(MPFR_FOUND OFF)
+find_package(MPFR)
 if(MPFR_FOUND)
 
 else()
@@ -64,11 +63,14 @@ else()
     INTERFACE_INCLUDE_DIRECTORIES ${MPFR_DIR}/include/mpfr
   )
 
+  set(MPFR_LIBRARY "${MPFR_DIR}/lib")
+  set(MPFR_INCLUDE_DIR "${MPFR_DIR}/include")
+
   # Dependencies:
-  # add MPFR as dependencie to suitesparse
+  # add MPFR as dependencie to SuiteSparse
   list(APPEND suitesparse_dependencies "mpfr")
 endif()
 
-# add MPFR to deal.II
-list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR=${MPFR_DIR}/include")
-list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARIES=${MPFR_DIR}/lib")
+# add MPFR to SuiteSparse
+list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR=${MPFR_INCLUDE_DIR}")
+list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARIES=${MPFR_LIBRARY}")

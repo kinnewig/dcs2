@@ -65,6 +65,7 @@ include(ExternalProject)
     )
   endif()
   
+  message("ScaLAPACK Depnedencies: ${scalapack_dependencies}")
   ExternalProject_Add(scalapack
     GIT_REPOSITORY ${scalapack_url}
     GIT_TAG ${scalapack_tag}

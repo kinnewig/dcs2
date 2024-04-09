@@ -55,6 +55,14 @@ if(NINJA)
   set(DEFAULT_GENERATOR "Ninja")
 endif()
 
+if(TPL_ENABLE_GMP)
+  include(cmake/gmp.cmake)
+endif()
+
+if(TPL_ENABLE_MPFR)
+  include(cmake/mpfr.cmake)
+endif()
+
 if(TPL_ENABLE_BLIS)
   include(cmake/blis.cmake)
 endif()
@@ -69,14 +77,6 @@ endif()
 
 if(TPL_ENABLE_MUMPS)
   include(cmake/mumps.cmake)
-endif()
-
-if(TPL_ENABLE_GMP)
-  include(cmake/gmp.cmake)
-endif()
-
-if(TPL_ENABLE_MPFR)
-  include(cmake/mpfr.cmake)
 endif()
 
 if(TPL_ENABLE_SUITESPARSE)
