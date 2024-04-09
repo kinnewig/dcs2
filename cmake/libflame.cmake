@@ -7,7 +7,15 @@ if(LIBFLAME_FOUND)
 else()
   message(STATUS "Building LIBFLAME")
 
-  set(libflame_autotool_args '--prefix=${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION} --enable-lapack2flame --enable-external-lapack-interfaces --enable-dynamic-build --enable-max-arg-list-hack --enable-f2c-dotc ${libflame_autotool_args}')
+  list(APPEND libflame_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}")
+  list(APPEND libflame_autotool_args "--enable-lapack2flame")
+  list(APPEND libflame_autotool_args "--enable-external-lapack-interfaces")
+  #list(APPEND libflame_autotool_args "--enable-dynamic-build")
+  list(APPEND libflame_autotool_args "--enable-f2c-dotc")
+  list(APPEND libflame_autotool_args "--enable-max-arg-list-hack")
+  list(APPEND libflame_autotool_args "--disable-builtin-blas")
+  list(APPEND libflame_autotool_args "CFLAGS=-fPIC")
+  list(APPEND libflame_autotool_args "CXXFLAGS=-fPIC")
   
   # get the download url for libflame:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
@@ -33,7 +41,7 @@ else()
     GIT_REPOSITORY ${libflame_url}
     GIT_TAG ${libflame_tag}
     GIT_SHALLOW true
-    BUILD_COMMAND make
+    BUILD_COMMAND make -j ${THREADS}
     INSTALL_COMMAND make install
     CONFIGURE_COMMAND ./configure ${libflame_autotool_args}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}

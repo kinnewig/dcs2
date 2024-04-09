@@ -12,7 +12,10 @@ else()
     set(BLIS_ARCHITECTURE auto)
   endif()
   
-  set(blis_autotool_args '--prefix=${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION} --enable-cblas CFLAGS="-DAOCL_F2C -fPIC" CXXFLAGS="-DAOCL_F2C -fPIC" ${BLIS_ARCHITECTURE} ${blis_autotool_args}')
+  list(APPEND blis_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}")
+  list(APPEND blis_autotool_args "--enable-cblas")
+  list(APPEND blis_autotool_args "CFLAGS='-DAOCL_F2C -fPIC'")
+  list(APPEND blis_autotool_args "CXXFLAGS='-DAOCL_F2C -fPIC'")
   
   # get the download url for blis:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
@@ -38,9 +41,9 @@ else()
     GIT_REPOSITORY ${blis_url}
     GIT_TAG ${blis_tag}
     GIT_SHALLOW true
-    BUILD_COMMAND make
+    BUILD_COMMAND make -j ${THREADS}
     INSTALL_COMMAND make install
-    CONFIGURE_COMMAND ./configure ${blis_autotool_args}
+    CONFIGURE_COMMAND ./configure ${blis_autotool_args} ${BLIS_ARCHITECTURE}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}
     BUILD_IN_SOURCE ON
     BUILD_BYPRODUCTS ${BLIS_LIBRARIES}
@@ -71,6 +74,8 @@ else()
   # Add blis as dependecie to ScaLAPACK
   list(APPEND scalapack_dependencies "blis")
 
+  # Add blis as dependecie to LibFLAME
+  list(APPEND libflame_dependencies "blis")
 endif()
 
 # Add blis to deal.II

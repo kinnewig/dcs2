@@ -10,7 +10,9 @@ else()
   set(trilinos_cmake_args
     -D BUILD_SHARED_LIBS:BOOL=ON 
     -D CMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+    -D CMAKE_C_FLAGS="${CMAKE_C_FLAGS}-Wno-error=implicit-function-declaration"
     -D CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+    -D CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}-Wno-error=implicit-function-declaration"
     -D CMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER}
     -D CMAKE_BUILD_TYPE:STRING=RELEASE 
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
