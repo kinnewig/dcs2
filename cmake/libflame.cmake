@@ -74,6 +74,9 @@ else()
   # Add libflame as dependecie to ScaLAPACK
   list(APPEND scalapack_dependencies "libflame")
 
+  # Add libflame as dependecie to MUMPS
+  list(APPEND mumps_dependencies "libflame")
+
 endif()
 
 # Add libflame to deal.II
@@ -87,6 +90,9 @@ list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LIBFLAME_DIR}/lib
 
 # Add libflame to ScaLAPACK
 list(APPEND scalapack_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
+
+# Add libflame to ScaLAPACK
+list(APPEND mumps_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
 
 # Add libflame to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES:PATH=${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
