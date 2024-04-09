@@ -10,12 +10,14 @@ else()
   list(APPEND libflame_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}")
   list(APPEND libflame_autotool_args "--enable-lapack2flame")
   list(APPEND libflame_autotool_args "--enable-external-lapack-interfaces")
-  #list(APPEND libflame_autotool_args "--enable-dynamic-build")
+  list(APPEND libflame_autotool_args "--enable-dynamic-build")
   list(APPEND libflame_autotool_args "--enable-f2c-dotc")
   list(APPEND libflame_autotool_args "--enable-max-arg-list-hack")
   list(APPEND libflame_autotool_args "--disable-builtin-blas")
   list(APPEND libflame_autotool_args "CFLAGS=-fPIC")
   list(APPEND libflame_autotool_args "CXXFLAGS=-fPIC")
+  list(APPEND libflame_autotool_args "FFLAGS=-fPIC")
+  list(APPEND libflame_autotool_args "FCFLAGS=-fPIC")
   
   # get the download url for libflame:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
@@ -85,7 +87,7 @@ list(APPEND dealii_cmake_args "-D LAPACK_DIR=${LIBFLAME_DIR}")
 
 # Add libflame to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_LAPACK:BOOL=ON")
-list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_NAMES=libflame")
+list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_NAMES=libflame.a") # TODO
 list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LIBFLAME_DIR}/lib")
 
 # Add libflame to ScaLAPACK
@@ -95,4 +97,4 @@ list(APPEND scalapack_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
 list(APPEND mumps_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
 
 # Add libflame to SuiteSparse
-list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES:PATH=${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
+list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES:PATH=${LIBFLAME_DIR}/lib/libflame.a") # TODO
