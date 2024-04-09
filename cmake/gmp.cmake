@@ -65,10 +65,16 @@ else()
   )
 
   # Dependencies:
-  # add GMP as dependencie to suitesparse
+  # add GMP as dependencie to SuiteSparse
   list(APPEND suitesparse_dependencies "gmp")
+
+  # add GMP as dependencie to LibFLAME
+  list(APPEND libflame_dependencies "gmp")
 endif()
 
-# add GMP to deal.II
+# add GMP to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D GMP_INCLUDE_DIR=${GMP_DIR}/include")
 list(APPEND suitesparse_cmake_args "-D GMP_LIBRARIES=${GMP_DIR}/lib")
+
+# add GMP to LibFLAME
+list(APPEND libflame_autotools_args "--with-gmp=${GMP_DIR}/lib")
