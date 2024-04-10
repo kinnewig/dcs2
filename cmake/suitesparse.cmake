@@ -1,7 +1,6 @@
 include(ExternalProject)
 
-#find_package(SUITESPARSE)
-set(SUITESPARSE_FOUND OFF)
+find_package(SUITESPARSE)
 if(SUITESPARSE_FOUND)
 
 else()
@@ -74,5 +73,3 @@ list(APPEND dealii_cmake_args "-D UMFPACK_DIR=${UMFPACK_DIR}")
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_UMFPACK=ON")
 list(APPEND trilinos_cmake_args "-D UMFPACK_LIBRARY_DIRS:PATH=${SUITESPARSE_DIR}/lib64")
 list(APPEND trilinos_cmake_args "-D UMFPACK_INCLUDE_DIRS:PATH=${SUITESPARSE_DIR}/include/suitesparse")
-
-message(SUITESPARSE_DIR ${SUITESPARSE_DIR})
