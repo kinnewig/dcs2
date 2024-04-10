@@ -67,7 +67,7 @@ else()
 
   
   # Complex number support
-  if ( TRILINOS_WITH_COMPLEX )
+  if ( DEALII_WITH_COMPLEX )
     list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_DOUBLE:BOOL=ON")
     list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_FLOAT:BOOL=ON")
     list(APPEND trilinos_cmake_args "-D Teuchos_ENABLE_COMPLEX:BOOL=ON")
@@ -117,4 +117,5 @@ else()
 endif()
 
 # Add trilinos to deal.II
-list(APPEND dealii_cmake_args "-D TRILINOS_DIR=${TRILINOS_DIR}") 
+list(APPEND dealii_cmake_args "-D DEAL_II_WITH_TRILINOS:BOOL=ON")
+list(APPEND dealii_cmake_args "-D TRILINOS_DIR=${TRILINOS_DIR}")

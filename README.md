@@ -9,6 +9,8 @@ DCS simplifies the process of building and installing the **deal.II** library al
 - `DEALII_VERSION`: Specify the deal.II version (default: "master")
 - `DEALII_CUSTOM_URL`: If defined, this variable allows you to specify a custom Git URL for deal.II. You can use this to point to a different repository or a specific fork.
 - `DEALII_CUSTOM_TAG`: If defined, this variable sets a custom Git tag (commit hash, branch, or release) for deal.II. Use this to select a specific version or snapshot.
+- `DEALII_WITH_64BIT`: Build deal.II with 64bit indice support (default: OFF)
+- `DEALII_WITH_COMPLEX`: Build deal.II with complex number support (default: OFF)
 
 ### Third-Party Libraries
 
@@ -57,7 +59,6 @@ DCS simplifies the process of building and installing the **deal.II** library al
 #### Trilinos
 - `TPL_ENABLE_TRILINOS`: Enable or disable Trilinos (default: ON)
 - `TRILINOS_VERSION`: Specify the Trilinos version (default: "15.1.0")
-- `TRILINOS_WITH_COMPLEX`: Build deal.II with complex number support (default: OFF)
 
 
 ## Usage

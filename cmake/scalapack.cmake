@@ -16,9 +16,8 @@ include(ExternalProject)
 
   set(scalapack_cmake_args
     -D BUILD_SINGLE:BOOL=ON
-    -D BUILD_DOUBLE:BOOL=ON
-    -D BUILD_COMPLEX:BOOL=${TRILINIOS_WITH_COMPLEX}
-    -D BUILD_COMPLEX16:BOOL=${TRILINOS_WITH_COMPLEX}
+    -D BUILD_DOUBLE:BOOL=${DEALII_WITH_64BIT}
+    -D BUILD_COMPLEX:BOOL=${DEALII_WITH_COMPLEX}
     -D BUILD_SHARED_LIBS:BOOL=ON
     -D BUILD_TESTING:BOOL=OFF
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}
@@ -29,6 +28,10 @@ include(ExternalProject)
     -D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}
     ${scalapack_cmake_args}
   )
+
+  if (${DEALII_WITH_64BIT} AND ${DEALII_WITH_COMPLEX})
+    list(APPEND scalapack_cmake_args "-D BUILD_COMPLEX16:BOOL=ON")
+  endif()
   
   # TODO: Remove, always use the lapack provided by the blas (libflame, reference LAPACK, OpenBLAS, MKL, etc...)
   #if(BUILD_LAPACK)
