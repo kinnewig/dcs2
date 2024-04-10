@@ -2,7 +2,6 @@ include(ExternalProject)
 
 find_package(TRILINOS)
 if(TRILINOS_FOUND)
-  message(STATUS "TRILINOS found: ${TRILINOS_DIR}")
 
 else()
   message(STATUS "Build TRILINOS")
@@ -47,7 +46,6 @@ else()
     -D Trilinos_ENABLE_Thyra:BOOL=ON 
     -D Trilinos_ENABLE_Tpetra:BOOL=ON 
     -D   Tpetra_ENABLE_DEPRECATED_CODE:BOOL=ON 
-    -D   Tpetra_INST_INT_LONG_LONG:BOOL=ON 
     -D Trilinos_ENABLE_ROL:BOOL=ON 
     -D Trilinos_ENABLE_Xpetra:BOOL=ON 
     -D   Xpetra_ENABLE_DEPRECATED_CODE:BOOL=ON 
@@ -56,7 +54,15 @@ else()
     -D Kokkos_ENABLE_TESTS:BOOL=OFF
     ${trilinos_cmake_args}
   )
+
+  # Trilinos index
+  if(${DEALII_WITH_64BIT})
+    list(APPEND trilinos_cmake_args "-D Tpetra_INST_INT_LONG_LONG:BOOL=ON")
+  else()
+    list(APPEND trilinos_cmake_args "-D TPETRA_INST_INT_INT:BOOL=ON")
+  endif()
   
+
   # Trilinos with BOOST
   if (DEFINED BOOST_DIR)
     #list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BOOST:BOOL=ON")

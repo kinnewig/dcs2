@@ -2,7 +2,6 @@ include(ExternalProject)
 
 find_package(LIBFLAME)
 if(LIBFLAME_FOUND)
-  message(STATUS "LIBFLAME found: ${LIBFLAME_DIR}")
   
 else()
   message(STATUS "Building LIBFLAME")
@@ -59,10 +58,19 @@ else()
   set(LIBFLAME_DIR ${INSTALL_DIR})
   list(APPEND CMAKE_PREFIX_PATH "${LIBFLAME_DIR}")
 
+  ExternalProject_Add_Step(
+    libflame libflame_symlink
+    COMMAND ln -s libflame.a liblapack.a
+    COMMAND ln -s libflame.so liblapack.so
+    WORKING_DIRECTORY ${LIBFLAME_DIR}/lib
+    DEPENDEES install
+  )
+
+
   # Linking
   add_library(LIBFLAME::LIBFLAME INTERFACE IMPORTED GLOBAL)
   set_target_properties(LIBFLAME::LIBFLAME PROPERTIES
-    IMPORTED_LOCATION ${LIBFLAME_DIR}/lib/liblibflame.so
+    IMPORTED_LOCATION ${LIBFLAME_DIR}/lib/libflame.a
     INTERFACE_INCLUDE_DIRECTORIES ${LIBFLAME_DIR}/include
   )
 

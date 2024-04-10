@@ -60,7 +60,3 @@ list(APPEND CMAKE_PREFIX_PATH "${DEALII_DIR}")
 
 # Linking
 link_directories(${DEALII_DIR})
-
-message("DEALII: ${DEALII_INCLUDE_DIRS}")
-message("DEALII: ${DEALII_LIBRARIES}")
-message("DEALII: ${DEALII_DIR}")

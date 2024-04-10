@@ -8,8 +8,9 @@ else()
   
   set(mumps_cmake_args
     -D BUILD_SINGLE:BOOL=ON
-    -D BUILD_DOUBLE:BOOL=${DEALII_WITH_64BIT}
+    -D BUILD_DOUBLE:BOOL=ON
     -D BUILD_COMPLEX:BOOL=${DEALII_WITH_COMPLEX}
+    -D BUILD_COMPLEX16:BOOL=${DEALII_WITH_COMPLEX}
     -D BUILD_SHARED_LIBS:BOOL=ON
     -D BUILD_TESTING:BOOL=OFF
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
@@ -19,10 +20,6 @@ else()
     ${mumps_cmake_args}
   )
 
-  if (${DEALII_WITH_64BIT} AND ${DEALII_WITH_COMPLEX})
-    list(APPEND mumps_cmake_args "-D BUILD_COMPLEX16:BOOL=ON")
-  endif()
-  
   # get the download url for mumps:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
   string(JSON mumps_url GET ${json} mumps git)

@@ -57,6 +57,13 @@ else()
   set(BLIS_DIR ${INSTALL_DIR})
   list(APPEND CMAKE_PREFIX_PATH "${BLIS_DIR}")
 
+  ExternalProject_Add_Step(
+    blis blis_symlink
+    COMMAND ln -s libblis.so libblas.so
+    WORKING_DIRECTORY ${BLIS_DIR}/lib
+    DEPENDEES install
+  )
+
   # Linking
   add_library(BLIS::BLIS INTERFACE IMPORTED GLOBAL)
   set_target_properties(BLIS::BLIS PROPERTIES
@@ -88,7 +95,10 @@ list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_NAMES=blis")
 list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLIS_DIR}/lib")
 
 # Add blis to ScaLAPACK
-list(APPEND scalapack_cmake_args "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")
+list(APPEND scalapack_cmake_args "-D BLAS_LIBRARY:PATH=${BLIS_DIR}/lib/libblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+# Add blis to MUMPS
+list(APPEND mumps_cmake_args "-D BLAS_LIBRARY:PATH=${BLIS_DIR}/lib/libblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add blis to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")

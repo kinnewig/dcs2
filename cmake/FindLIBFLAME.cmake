@@ -12,11 +12,11 @@ pkg_check_modules(PC_LIBFLAME QUIET LIBFLAME)
 
 set(LIBFLAME_DIR "" CACHE PATH "The directory of the LIBFLAME installation")
 
-find_path(LIBFLAME_INCLUDE_DIR NAMES libflame.h
-          HINTS ${LIBFLAME_DIR}/include ${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}/include/libflame
+find_path(LIBFLAME_INCLUDE_DIR NAMES FLAME.h
+          HINTS ${LIBFLAME_DIR}/include ${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}/include
           PATHS ${PC_LIBFLAME_INCLUDEDIR} ${PC_LIBFLAME_INCLUDE_DIRS})
 
-find_library(LIBFLAME_LIBRARY NAMES libflame
+find_library(LIBFLAME_LIBRARY NAMES libflame${CMAKE_SHARED_LIBRARY_SUFFIX}
              HINTS ${LIBFLAME_DIR}/lib ${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}/lib
              PATHS ${PC_LIBFLAME_LIBDIR} ${PC_LIBFLAME_LIBRARY_DIRS})
 
