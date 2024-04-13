@@ -21,44 +21,27 @@ DCS simplifies the process of building and installing the **deal.II** library al
 - `<PACKAGE>_CUSTOM_TAG`: If defined, this variable sets a custom Git tag (commit hash, branch, or release) for <PACKAGE>. Use this to select a specific version or snapshot.
 
 ### Available Third-Party Libraries
+
 #### BOOST
 - `BOOST_DIR`: If Boost is installed on a custom path, the path has to be provided, otherwise deal.II will not find BOOST.
 
-#### (FLAME) BLIS
-- `TPL_ENABLE_BLIS`: Enable or disable BLIS (default: OFF)
-- `BLIS_VERSION`: Specify the BLIS version (default: "0.9.0")
+#### Dependencies:
+- `MPFR` (default version: "4.2.1")
+- `GMP` (default version: "6.2.1")
 
-#### (FLAME) LIBFLAME
-- `TPL_ENABLE_LIBFLAME`: Enable or disable LIBFLAME (as LAPACK) (default: OFF)
-- `LIBFLAME_VERSION`: Specify the LIBFLAME version (default: "5.2.0")
+#### BLAS/LAPACK Packages
+- `FLAME`: i.e.: `BLIS` (default version: "0.9.0") and `LIBFLAME` (default version: "5.2.0")
+- `ScaLAPACK` (default version: "2.2.1")
 
-#### ScaLAPACK
-- `TPL_ENABLE_SCALAPACK`: Enable or disable ScaLAPACK (default: ON)
-- `SCALAPACK_VERSION`: Specify the ScaLAPACK version (default: "2.2.1")
+#### Direct Solver
+- `MUMPS` (default version: "5.6.2")
+- `SUITESPARSE` (default version: "5.6.2")
 
-#### MUMPS
-- `TPL_ENABLE_MUMPS`: Enable or disable MUMPS (default: ON)
-- `MUMPS_VERSION`: Specify the MUMPS version (default: "5.6.2")
+#### Graph partitioning
+- `P4EST` (default version: "2.8.5")
 
-#### SuiteSparse
-- `TPL_ENABLE_SUITESPARSE`: Enable or disable SuiteSparse (default: ON)
-- `SUITESPARSE_VERSION`: Specify the SuiteSparse version (default: "5.6.2")
-
-##### MPFR (Dependencie for Suitesparse)
-- `TPL_ENABLE_MPFR`: Enable or disable MPFR (default: ON)
-- `MPFR_VERSION`: Specify the MPFR version (default: "4.2.1")
-
-##### GMP (Dependencie for Suitesparse)
-- `TPL_ENABLE_GMP`: Enable or disable MPFR (default: ON)
-- `GMP_VERSION`: Specify the GMP version (default: "6.2.1")
-
-#### P4EST
-- `TPL_ENABLE_P4EST`: Enable or disable P4EST (default: ON)
-- `P4EST_VERSION`: Specify the P4EST version (default: "2.8.5")
-
-#### Trilinos
-- `TPL_ENABLE_TRILINOS`: Enable or disable Trilinos (default: ON)
-- `TRILINOS_VERSION`: Specify the Trilinos version (default: "15.1.0")
+#### Algebra Packages
+- `TRILINOS` (default version: "15.1.0")
 
 
 ## Usage
