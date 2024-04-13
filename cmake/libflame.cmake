@@ -61,7 +61,7 @@ else()
   ExternalProject_Add_Step(
     libflame libflame_symlink
     COMMAND ln -s libflame.a liblapack.a
-    COMMAND ln -s libflame.so liblapack.so
+    COMMAND ln -s libflame${CMAKE_SHARED_LIBRARY_SUFFIX} liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}
     WORKING_DIRECTORY ${LIBFLAME_DIR}/lib
     DEPENDEES install
   )
@@ -70,7 +70,7 @@ else()
   # Linking
   add_library(LIBFLAME::LIBFLAME INTERFACE IMPORTED GLOBAL)
   set_target_properties(LIBFLAME::LIBFLAME PROPERTIES
-    IMPORTED_LOCATION ${LIBFLAME_DIR}/lib/libflame.a
+    IMPORTED_LOCATION ${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}
     INTERFACE_INCLUDE_DIRECTORIES ${LIBFLAME_DIR}/include
   )
 
@@ -95,7 +95,7 @@ list(APPEND dealii_cmake_args "-D LAPACK_DIR=${LIBFLAME_DIR}")
 
 # Add libflame to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_LAPACK:BOOL=ON")
-list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_NAMES=libflame.a") # TODO
+list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_NAMES=libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
 list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LIBFLAME_DIR}/lib")
 
 # Add libflame to ScaLAPACK
@@ -105,4 +105,4 @@ list(APPEND scalapack_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
 list(APPEND mumps_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
 
 # Add libflame to SuiteSparse
-list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES:PATH=${LIBFLAME_DIR}/lib/libflame.a") # TODO
+list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES:PATH=${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")

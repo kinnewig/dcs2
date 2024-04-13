@@ -59,7 +59,7 @@ else()
 
   ExternalProject_Add_Step(
     blis blis_symlink
-    COMMAND ln -s libblis.so libblas.so
+    COMMAND ln -s libblis${CMAKE_SHARED_LIBRARY_SUFFIX} libblas${CMAKE_SHARED_LIBRARY_SUFFIX}
     WORKING_DIRECTORY ${BLIS_DIR}/lib
     DEPENDEES install
   )
@@ -67,7 +67,7 @@ else()
   # Linking
   add_library(BLIS::BLIS INTERFACE IMPORTED GLOBAL)
   set_target_properties(BLIS::BLIS PROPERTIES
-    IMPORTED_LOCATION ${BLIS_DIR}/lib/libblis.so
+    IMPORTED_LOCATION ${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}
     INTERFACE_INCLUDE_DIRECTORIES ${BLIS_DIR}/include
   )
 
