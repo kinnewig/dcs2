@@ -40,17 +40,30 @@ endif()
 
 message("TRILINOS_DIR (in deal.II): ${dealii_cmake_args}")
 
-ExternalProject_Add(
-    dealii
-    GIT_REPOSITORY ${dealii_url}
-    GIT_TAG ${dealii_tag}
-    CMAKE_ARGS ${dealii_cmake_args}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/dealii/${DEALII_VERSION}
-    BUILD_COMMAND cmake --build . --parallel ${THREADS}
-    BUILD_BYPRODUCTS ${DEALII_LIBRARIES}
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${dealii_dependencies}
-)
+if (DEFINED DEALII_SOURCE_DIR)
+  ExternalProject_Add(
+      dealii
+      SOURCE_DIR ${DEALII_SOURCE_DIR}
+      CMAKE_ARGS ${dealii_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/dealii/${DEALII_VERSION}
+      BUILD_COMMAND cmake --build . --parallel ${THREADS}
+      BUILD_BYPRODUCTS ${DEALII_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${dealii_dependencies}
+  )
+else()
+  ExternalProject_Add(
+      dealii
+      GIT_REPOSITORY ${dealii_url}
+      GIT_TAG ${dealii_tag}
+      CMAKE_ARGS ${dealii_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/dealii/${DEALII_VERSION}
+      BUILD_COMMAND cmake --build . --parallel ${THREADS}
+      BUILD_BYPRODUCTS ${DEALII_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${dealii_dependencies}
+  )
+endif()
 
 ExternalProject_Get_Property(dealii INSTALL_DIR)
 

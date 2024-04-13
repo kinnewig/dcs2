@@ -12,6 +12,9 @@ DCS simplifies the process of building and installing the **deal.II** library al
 - `DEALII_WITH_64BIT`: Build deal.II with 64bit indice support (default: OFF)
 - `DEALII_WITH_COMPLEX`: Build deal.II with complex number support (default: OFF)
 
+#### Develping deal.II: 
+To build deal.II from a local source folder use: `DEALII_SOURCE_DIR=</path/to/local/development-dealii>` 
+
 ### Third-Party Libraries
 
 - `-D TPL_ENABLE_<PACKAGE>:BOOL=ON`: Activate third-party librarie.
