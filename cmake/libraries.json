@@ -23,6 +23,27 @@
     }
   },
 
+  "amd": {
+    "libflame": {
+      "git": "https://github.com/amd/libflame.git",
+      "4.2.0": {
+        "tag": "b51ceb238bb3a597c014f371822fc6963b1d5893"
+      }
+    },
+    "blis": {
+      "git": "https://github.com/amd/blis.git",
+      "4.2.0": {
+        "tag": "7c564c74e103249b52636e6cfc5a93ba8c2b0406"
+      }
+    },
+    "scalapack": {
+      "git": "https://github.com/amd/aocl-scalapack.git",
+      "4.2.0": {
+        "tag": "46ce83a5e0be9133c11e1bb057105abb97dbfc22"
+      }
+    }
+  },
+
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
     "2.2.1": {
