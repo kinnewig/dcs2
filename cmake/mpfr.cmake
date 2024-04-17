@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-find_package(MPFR)
+find_package(MPFR "4.0.2")
 if(MPFR_FOUND)
 
 else()

@@ -29,6 +29,26 @@ if(GMP_FOUND)
 
   get_filename_component(GMP_DIR "${GMP_LIBRARY}" DIRECTORY)
   get_filename_component(GMP_DIR "${GMP_DIR}" DIRECTORY)
+
+  # Version check
+  # First, read the version from the header file
+  file(STRINGS ${GMP_INCLUDE_DIR}/gmp-x86_64.h _gmp_version_line
+       REGEX "^#define __GNU_MP_VERSION.*|^#define __GNU_MP_VERSION_MINOR.*|^#define __GNU_MP_VERSION_PATCHLEVEL.*")
+  
+  # Parse the version information
+  string(REGEX REPLACE "^.*__GNU_MP_VERSION *([0-9]+).*$" "\\1" GMP_VERSION_MAJOR "${_gmp_version_line}")
+  string(REGEX REPLACE "^.*__GNU_MP_VERSION_MINOR *([0-9]+).*$" "\\1" GMP_VERSION_MINOR "${_gmp_version_line}")
+  string(REGEX REPLACE "^.*__GNU_MP_VERSION_PATCHLEVEL *([0-9]+).*$" "\\1" GMP_VERSION_PATCHLEVEL "${_gmp_version_line}")
+  
+  # Combine the version information
+  set(FOUND_GMP_VERSION "${GMP_VERSION_MAJOR}.${GMP_VERSION_MINOR}.${GMP_VERSION_PATCHLEVEL}")
+
+  # Check the version
+  if(${FOUND_GMP_VERSION} VERSION_LESS ${GMP_FIND_VERSION})
+    set(GMP_FOUND FALSE)
+    message("    Found GMP version ${FOUND_GMP_VERSION}, mark GMP as not FOUND")
+  endif()
+
 endif()
 
 mark_as_advanced(GMP_INCLUDE_DIR GMP_LIBRARY)

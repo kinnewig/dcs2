@@ -29,6 +29,25 @@ if(MPFR_FOUND)
 
   get_filename_component(MPFR_DIR "${MPFR_LIBRARY}" DIRECTORY)
   get_filename_component(MPFR_DIR "${MPFR_DIR}" DIRECTORY)
+
+  # Version check
+  # First, read the version from the header file
+  file(STRINGS ${MPFR_INCLUDE_DIR}/mpfr.h _mpfr_version_line
+       REGEX "^#define MPFR_VERSION_(MAJOR|MINOR|PATCHLEVEL) ")
+  
+  # Parse the version information
+  string(REGEX REPLACE "^.*MPFR_VERSION_MAJOR ([0-9]+).*$" "\\1" MPFR_VERSION_MAJOR "${_mpfr_version_line}")
+  string(REGEX REPLACE "^.*MPFR_VERSION_MINOR ([0-9]+).*$" "\\1" MPFR_VERSION_MINOR "${_mpfr_version_line}")
+  string(REGEX REPLACE "^.*MPFR_VERSION_PATCHLEVEL ([0-9]+).*$" "\\1" MPFR_VERSION_PATCHLEVEL "${_mpfr_version_line}")
+  
+  # Combine the version information
+  set(FOUND_MPFR_VERSION "${MPFR_VERSION_MAJOR}.${MPFR_VERSION_MINOR}.${MPFR_VERSION_PATCHLEVEL}")
+
+  # Check the version
+  if(${FOUND_MPFR_VERSION} VERSION_LESS ${MPFR_FIND_VERSION})
+    set(MPFR_FOUND FALSE)
+    message("    Found MPFR version ${FOUND_MPFR_VERSION}, mark MPFR as not FOUND")
+  endif()
 endif()
 
 mark_as_advanced(MPFR_INCLUDE_DIR MPFR_LIBRARY)

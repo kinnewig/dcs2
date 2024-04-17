@@ -1,9 +1,7 @@
 include(ExternalProject)
 
-find_package(GMP)
-if(GMP_FOUND)
-  
-else()
+find_package(GMP "6.1.2")
+if(NOT GMP_FOUND)
   message(STATUS "Building GMP")
   
   set(gmp_cmake_args
