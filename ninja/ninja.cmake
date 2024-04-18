@@ -15,7 +15,7 @@ endif()
 
 # If a custom tag for ninja is defined, use it.
 if (DEFINED NINJA_CUSTOM_TAG)
-  set(blis_tag ${NINJA_CUSTOM_TAG})
+  set(ninja_tag ${NINJA_CUSTOM_TAG})
 endif()
 
 
