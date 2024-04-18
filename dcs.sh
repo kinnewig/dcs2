@@ -88,18 +88,14 @@ check_and_install_ninja() {
         cmake --build ${BUILD_DIR}/ninja -- -j ${THREADS}
         cmake --install ${BUILD_DIR}/ninja
 
-        # Link cmake binary to the bin folder
-        ln -s "${PREFIX}/ninja/${NINJA_VERSION}/bin/ninja" "${BIN_DIR}/ninja"
-
         # Check that ${BIN_DIR} is already in the path.
         if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
-            echo "${BIN_DIR} is already in the path."
+            cecho ${INFO} "${BIN_DIR} is already in the path."
         else
             # Add Ninja to the PATH
             export PATH=${BIN_DIR}:${PATH}
         fi
 
-        echo $PATH
         if ! command -v ninja &>/dev/null; then
             cecho ${ERROR} "ERROR: Failed to install Ninja automatically."
             exit 1
@@ -324,8 +320,8 @@ parse_arguments() {
     # NINJA
     if [ -z "${USE_NINJA}" ]; then
         USE_NINJA=ON
-        echo "Default to use ninja."
-        echo "Otherwise, disable Ninja via -N OFF or --ninja=OFF."
+        cecho ${INFO} "Default to use ninja."
+        cecho ${INFO} "Otherwise, disable Ninja via -N OFF or --ninja=OFF."
     fi
 
     # MOLD

@@ -33,3 +33,10 @@ ExternalProject_Add(ninja
   CMAKE_ARGS ${ninja_cmake_args}
   CONFIGURE_HANDLED_BY_BUILD true
 )
+
+ExternalProject_Add_Step(
+  ninja ninja_symlink
+  COMMAND ln -s ${CMAKE_INSTALL_PREFIX}/ninja/${NINJA_VERSION}/bin/ninja ${BIN_DIR}/ninja
+  WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/ninja/${NINJA_VERSION}/bin
+  DEPENDEES install
+)
