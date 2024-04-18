@@ -29,6 +29,12 @@ include(ExternalProject)
     ${scalapack_cmake_args}
   )
 
+  if (AMD)
+    list(APPEND scalapack_cmake_args -D CMAKE_C_FLAGS="-openmp")
+    list(APPEND scalapack_cmake_args -D CMAKE_Fortran_FLAGS="-openmp")
+    list(APPEND scalapack_cmake_args -D MPI_Fortran_WORKS:BOOL=ON)
+  endif()
+
   # TODO: Remove, always use the lapack provided by the blas (libflame, reference LAPACK, OpenBLAS, MKL, etc...)
   #if(BUILD_LAPACK)
   #  list(APPEND scalapack_cmake_args "-D find_lapack=off")

@@ -14,11 +14,17 @@ else()
     -D BUILD_SHARED_LIBS:BOOL=ON
     -D BUILD_TESTING:BOOL=OFF
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
+    -D CMAKE_C_COMPILER:PATH=${CMAKE_MPI_C_COMPILER}
+    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_MPI_Fortran_COMPILER}
     -D CMAKE_BUILD_TYPE:STRING=Release
     ${mumps_cmake_args}
   )
+
+  if (AMD)
+    list(APPEND mumps_cmake_args -D CMAKE_CFLAGS="-openmp")
+    list(APPEND mumps_cmake_args -D CMAKE_Fortran_FLAGS="-fopenmp")
+    list(APPEND mumps_cmake_args -D MPI_Fortran_WORKS:BOOL=TRUE)
+  endif()
 
   # get the download url for mumps:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)

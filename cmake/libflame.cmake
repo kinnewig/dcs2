@@ -11,6 +11,7 @@ else()
   # Set the corresponding flags, depending if we build AMD Libflame or default libflame
   if (AMD)
     list(APPEND libflame_autotool_args "--enable-amd-flags")
+    list(APPEND libflame_autotool_args "CFLAGS=-fPIC -openmp")
   else()
     list(APPEND libflame_autotool_args "--enable-lapack2flame")
     list(APPEND libflame_autotool_args "--enable-external-lapack-interfaces")
@@ -18,7 +19,6 @@ else()
     list(APPEND libflame_autotool_args "--enable-f2c-dotc")
     list(APPEND libflame_autotool_args "--enable-max-arg-list-hack")
     list(APPEND libflame_autotool_args "--disable-builtin-blas")
-    list(APPEND libflame_autotool_args "CFLAGS=-fPIC")
     list(APPEND libflame_autotool_args "CXXFLAGS=-fPIC")
     list(APPEND libflame_autotool_args "FFLAGS=-fPIC")
     list(APPEND libflame_autotool_args "FCFLAGS=-fPIC")
@@ -79,6 +79,8 @@ else()
     libflame libflame_symlink
     COMMAND ln -s libflame.a liblapack.a
     COMMAND ln -s libflame${CMAKE_SHARED_LIBRARY_SUFFIX} liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}
+    COMMAND ln -s libflame.a flame.a
+    COMMAND ln -s libflame${CMAKE_SHARED_LIBRARY_SUFFIX} flame${CMAKE_SHARED_LIBRARY_SUFFIX}
     WORKING_DIRECTORY ${LIBFLAME_DIR}/lib
     DEPENDEES install
   )
