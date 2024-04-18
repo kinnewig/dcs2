@@ -24,6 +24,12 @@
   },
 
   "amd": {
+    "aocl-utils": {
+      "git": "https://github.com/amd/aocl-utils.git",
+      "4.2.0": {
+        "tag": "661527c6cc42bdde7086d752d56a44d9d2de01e3"
+      }
+    },
     "libflame": {
       "git": "https://github.com/amd/libflame.git",
       "4.2.0": {
