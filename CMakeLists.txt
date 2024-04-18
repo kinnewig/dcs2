@@ -49,12 +49,19 @@ set(CMAKE_Fortran_COMPILER "mpifort")
 set(CMAKE_C_COMPILER "mpicc")
 set(CMAKE_CXX_COMPILER "mpicxx")
 
+set(CMAKE_MPI_Fortran_COMPILER "mpifort")
+set(CMAKE_MPI_C_COMPILER "mpicc")
+set(CMAKE_MPI_CXX_COMPILER "mpicxx")
 
 
 # AMD - AOCL
 set(AMD_VERSION "4.2.0" CACHE STRING "Specify the version of AOCL packages to be used")
 if (AMD)
   include(cmake/aocl-utils.cmake)
+
+  set(CMAKE_Fortran_COMPILER "flang")
+  set(CMAKE_C_COMPILER "clang")
+  set(CMAKE_CXX_COMPILER "clang++")
 endif()
 
 
