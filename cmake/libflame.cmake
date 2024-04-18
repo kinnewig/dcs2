@@ -7,24 +7,41 @@ else()
   message(STATUS "Building LIBFLAME")
 
   list(APPEND libflame_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}")
-  list(APPEND libflame_autotool_args "--enable-lapack2flame")
-  list(APPEND libflame_autotool_args "--enable-external-lapack-interfaces")
-  list(APPEND libflame_autotool_args "--enable-dynamic-build")
-  list(APPEND libflame_autotool_args "--enable-f2c-dotc")
-  list(APPEND libflame_autotool_args "--enable-max-arg-list-hack")
-  list(APPEND libflame_autotool_args "--disable-builtin-blas")
-  list(APPEND libflame_autotool_args "CFLAGS=-fPIC")
-  list(APPEND libflame_autotool_args "CXXFLAGS=-fPIC")
-  list(APPEND libflame_autotool_args "FFLAGS=-fPIC")
-  list(APPEND libflame_autotool_args "FCFLAGS=-fPIC")
+
+  # Set the corresponding flags, depending if we build AMD Libflame or default libflame
+  if (AMD)
+    list(APPEND libflame_autotool_args "--enable-amd-flags")
+  else()
+    list(APPEND libflame_autotool_args "--enable-lapack2flame")
+    list(APPEND libflame_autotool_args "--enable-external-lapack-interfaces")
+    list(APPEND libflame_autotool_args "--enable-dynamic-build")
+    list(APPEND libflame_autotool_args "--enable-f2c-dotc")
+    list(APPEND libflame_autotool_args "--enable-max-arg-list-hack")
+    list(APPEND libflame_autotool_args "--disable-builtin-blas")
+    list(APPEND libflame_autotool_args "CFLAGS=-fPIC")
+    list(APPEND libflame_autotool_args "CXXFLAGS=-fPIC")
+    list(APPEND libflame_autotool_args "FFLAGS=-fPIC")
+    list(APPEND libflame_autotool_args "FCFLAGS=-fPIC")
+  endif()
   
   # get the download url for libflame:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
-  string(JSON libflame_url GET ${json} libflame git)
-  string(JSON libflame_tag GET ${json} libflame ${LIBFLAME_VERSION} tag)
+
+  # If we are on a amd build use AMD's libflame:
+  if (AMD)
+    string(JSON libflame_url GET ${json} amd libflame git)
+    string(JSON libflame_tag GET ${json} amd libflame ${AMD_VERSION} tag)
+    set(libflame_tag "4.0")
+  else()
+    string(JSON libflame_url GET ${json} libflame git)
+    string(JSON libflame_tag GET ${json} libflame ${LIBFLAME_VERSION} tag)
+  endif()
+
   if (NOT libflame_tag)
     message(FATAL_ERROR "Git tag for LIBFLAME version ${LIBFLAME_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
   endif()
+
+
   
   # If a custom URL for libflame is defined, use it.
   if (DEFINED LIBFLAME_CUSTOM_URL)

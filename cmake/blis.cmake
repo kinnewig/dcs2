@@ -16,11 +16,21 @@ else()
   list(APPEND blis_autotool_args "--enable-cblas")
   list(APPEND blis_autotool_args "CFLAGS='-DAOCL_F2C -fPIC'")
   list(APPEND blis_autotool_args "CXXFLAGS='-DAOCL_F2C -fPIC'")
+
+  if (AMD)
+    list(APPEND blis_autotool_args "--enable-aocl-dynamic")
+  endif()
   
   # get the download url for blis:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
-  string(JSON blis_url GET ${json} blis git)
-  string(JSON blis_tag GET ${json} blis ${BLIS_VERSION} tag)
+  if (AMD)
+    string(JSON blis_url GET ${json} amd blis git)
+    string(JSON blis_tag GET ${json} amd blis ${AMD_VERSION} tag)
+  else()
+    string(JSON blis_url GET ${json} blis git)
+    string(JSON blis_tag GET ${json} blis ${BLIS_VERSION} tag)
+  endif()
+
   if (NOT blis_tag)
     message(FATAL_ERROR "Git tag for BLIS version ${BLIS_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
   endif()
