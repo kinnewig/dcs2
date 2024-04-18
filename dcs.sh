@@ -88,23 +88,54 @@ check_and_install_ninja() {
         cmake --build ${BUILD_DIR}/ninja -- -j ${THREADS}
         cmake --install ${BUILD_DIR}/ninja
 
-        # Link cmake binary to the bin folder
-        ln -s "${PREFIX}/ninja/${NINJA_VERSION}/bin/ninja" "${BIN_DIR}/ninja"
-
         # Check that ${BIN_DIR} is already in the path.
         if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
-            echo "${BIN_DIR} is already in the path."
+            cecho ${INFO} "${BIN_DIR} is already in the path."
         else
             # Add Ninja to the PATH
             export PATH=${BIN_DIR}:${PATH}
         fi
 
-        echo $PATH
         if ! command -v ninja &>/dev/null; then
             cecho ${ERROR} "ERROR: Failed to install Ninja automatically."
             exit 1
         else
             cecho ${GOOD} "Ninja has been installed successfully."
+        fi
+    fi
+}
+
+
+
+# ++============================================================++
+# ||                           mold                             ||
+# ++============================================================++
+# Check if mold is installed and install if not
+check_and_install_mold() {
+    echo "Check if mold is installed"
+    if command -v mold &>/dev/null; then
+        cecho ${GOOD} "Found mold $(mold --version)"
+    else
+        cecho ${WARN} "Ninja not found. Attempting to install..."
+        # Call the CMake script to install Ninja
+        MOLD_VERSION=2.30.0
+        cmake -S mold -B ${BUILD_DIR}/mold -D CMAKE_INSTALL_PREFIX=${PREFIX} -D MOLD_VERSION=${MOLD_VERSION} -D BIN_DIR=${BIN_DIR}
+        cmake --build ${BUILD_DIR}/mold -- -j ${THREADS}
+        cmake --install ${BUILD_DIR}/mold
+
+        # Check that ${BIN_DIR} is already in the path.
+        if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
+            cecho ${INFO} "${BIN_DIR} is already in the path."
+        else
+            # Add mold to the PATH
+            export PATH=${BIN_DIR}:${PATH}
+        fi
+
+        if ! command -v mold &>/dev/null; then
+            cecho ${ERROR} "ERROR: Failed to install mold automatically."
+            exit 1
+        else
+            cecho ${GOOD} "mold has been installed successfully."
         fi
     fi
 }
@@ -147,6 +178,7 @@ parse_arguments() {
               echo "  -j <threads>, --parallel=<threads>   Set number of threads to use (default ${THREADS})"
               echo "  -A <ON|OFF>,  --add_to_path=<ON|OFF> Enable or disable to add deal.II permanently to the path"
               echo "  -N <ON|OFF>,  --ninja=<ON|OFF>       Enable or disable the use of Ninja"
+              echo "  -M <ON|OFF>,  --mold=<ON|OFF>        Enable or disable the use of mold"
               echo "  -U                                   Do not interupt"
               echo "  -v,           --version              Print the version number"
               exit 1
@@ -201,6 +233,13 @@ parse_arguments() {
                 shift
                 ;;
 
+           # Mold
+            -M|--mold)
+                USE_MOLD="$2"
+                shift
+                shift
+                ;;
+
             -U)
                 USER_INTERACTION=OFF
                 shift
@@ -227,8 +266,8 @@ parse_arguments() {
     # If user provided path is not set, use default path
     if [ -z "${PREFIX}" ]; then
         PREFIX="${DEFAULT_PATH}"
-        echo "No path was provided default to: ${PREFIX}"
-        echo "Otherwise, provide a path using the -p or --path option."
+        cecho {INFO} "No path was provided default to: ${PREFIX}"
+        cecho {INFO} "Otherwise, provide a path using the -p or --path option."
     else 
         # Check the input argument of the install path and (if used) replace the tilde
         # character '~' by the users home directory ${HOME}. 
@@ -236,14 +275,14 @@ parse_arguments() {
     fi
 
     # Check if the provided path is writable
-    mkdir -p "${PREFIX}" || { echo "Failed to create: ${PREFIX}"; exit 1; }
+    mkdir -p "${PREFIX}" || { cecho ${ERROR} "Failed to create: ${PREFIX}"; exit 1; }
 
     # BINARY DIRECTORY
     # If user provided binary directory is not set, use default binary directory
     if [ -z "${BIN_DIR}" ]; then
         BIN_DIR="${PREFIX}/bin"
-        echo "No binary directory was provided default to: ${BIN_DIR}"
-        echo "Otherwise, provide a binary directory using the -d or --bin-dir option."
+        cecho ${INFO} "No binary directory was provided default to: ${BIN_DIR}"
+        cecho ${INFO} "Otherwise, provide a binary directory using the -d or --bin-dir option."
     else 
         # Check the input argument of the install path and (if used) replace the tilde
         # character '~' by the users home directory ${HOME}. 
@@ -257,8 +296,8 @@ parse_arguments() {
     # If user provided build_dir is not set, use default build_dir
     if [ -z "${BUILD_DIR}" ]; then
         BUILD_DIR="${PREFIX}/tmp"
-        echo "No build directory was provided default to: ${BUILD_DIR}"
-        echo "Otherwise, provide a build directory using the -b or --build option."
+        cecho ${INFO} "No build directory was provided default to: ${BUILD_DIR}"
+        cecho ${INFO} "Otherwise, provide a build directory using the -b or --build option."
     else 
         # Check the input argument of the install path and (if used) replace the tilde
         # character '~' by the users home directory ${HOME}. 
@@ -274,16 +313,24 @@ parse_arguments() {
     # ADD TO PATH
     if [ -z "${ADD_TO_PATH}" ]; then
         ADD_TO_PATH=OFF
-        echo "Default is not to add DEAL_II_DIR permanently to the path."
-        echo "Otherwise, enable add to path via -A=OFF or --add_to_path=ON."
+        cecho ${INFO} "Default is not to add DEAL_II_DIR permanently to the path."
+        cecho ${INFO} "Otherwise, enable add to path via -A=OFF or --add_to_path=ON."
     fi
 
     # NINJA
     if [ -z "${USE_NINJA}" ]; then
         USE_NINJA=ON
-        echo "Default to use ninja."
-        echo "Otherwise, disable Ninja via -N OFF or --ninja=OFF."
+        cecho ${INFO} "Default to use ninja."
+        cecho ${INFO} "Otherwise, disable Ninja via -N OFF or --ninja=OFF."
     fi
+
+    # MOLD
+    if [ -z "${USE_MOLD}" ]; then
+        USE_MOLD=ON
+        cecho ${INFO} "Default to use mold."
+        cecho ${INFO} "Otherwise, disable mold via -M OFF or --mold=OFF."
+    fi
+
 }
 
 
@@ -314,6 +361,13 @@ if [ "${USE_NINJA}" = "ON" ]; then
         exit 1
     fi
 fi
+
+if [ "${USE_MOLD}" = "ON" ]; then
+    if ! check_and_install_mold "$@"; then
+        exit 1
+    fi
+fi
+
 
 cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS} ${CMAKE_FLAGS}
 cmake --build ${BUILD_DIR} #-- -j ${THREADS}

@@ -1,0 +1,8 @@
+{
+  "mold": {
+    "git": "https://github.com/rui314/mold.git",
+    "2.30.0": {
+      "tag": "c7f6a91da512ef8a2634a1bef5d4ba82104659fe"
+    }
+  }
+}

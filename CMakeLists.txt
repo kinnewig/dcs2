@@ -41,7 +41,7 @@ option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-
 set(TRILINOS_VERSION "15.1.0" CACHE STRING "Specify the version of Trilinos to be used")
 
 set(DEALII_VERSION "master" CACHE STRING "Specify the version of deal.II to be used")
-option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    OFF)
+option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
 option(DEALII_WITH_COMPLEX    "Build deal.II with support for 64bit long numbers"                 OFF)
 
 #Compiler
@@ -65,6 +65,15 @@ find_program(NINJA ninja)
 if(NINJA)
   set(DEFAULT_GENERATOR "Ninja")
 endif()
+
+# Linker: mold
+# Check if mold is installed
+find_program(MOLD mold)
+if(MOLD)
+  set(CMAKE_LINKER ${MOLD_FOUND})
+endif()
+
+
 
 if(TPL_ENABLE_GMP)
   include(cmake/gmp.cmake)

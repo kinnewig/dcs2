@@ -15,7 +15,7 @@ endif()
 
 # If a custom tag for ninja is defined, use it.
 if (DEFINED NINJA_CUSTOM_TAG)
-  set(blis_tag ${NINJA_CUSTOM_TAG})
+  set(ninja_tag ${NINJA_CUSTOM_TAG})
 endif()
 
 
@@ -32,4 +32,11 @@ ExternalProject_Add(ninja
   GIT_SHALLOW true
   CMAKE_ARGS ${ninja_cmake_args}
   CONFIGURE_HANDLED_BY_BUILD true
+)
+
+ExternalProject_Add_Step(
+  ninja ninja_symlink
+  COMMAND ln -s ${CMAKE_INSTALL_PREFIX}/ninja/${NINJA_VERSION}/bin/ninja ${BIN_DIR}/ninja
+  WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/ninja/${NINJA_VERSION}/bin
+  DEPENDEES install
 )
