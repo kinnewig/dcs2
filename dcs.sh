@@ -112,6 +112,41 @@ check_and_install_ninja() {
 
 
 # ++============================================================++
+# ||                           mold                             ||
+# ++============================================================++
+# Check if mold is installed and install if not
+check_and_install_mold() {
+    echo "Check if mold is installed"
+    if command -v mold &>/dev/null; then
+        cecho ${GOOD} "Found mold $(mold --version)"
+    else
+        cecho ${WARN} "Ninja not found. Attempting to install..."
+        # Call the CMake script to install Ninja
+        MOLD_VERSION=2.30.0
+        cmake -S mold -B ${BUILD_DIR}/mold -D CMAKE_INSTALL_PREFIX=${PREFIX} -D MOLD_VERSION=${MOLD_VERSION} -D BIN_DIR=${BIN_DIR}
+        cmake --build ${BUILD_DIR}/mold -- -j ${THREADS}
+        cmake --install ${BUILD_DIR}/mold
+
+        # Check that ${BIN_DIR} is already in the path.
+        if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
+            cecho ${INFO} "${BIN_DIR} is already in the path."
+        else
+            # Add mold to the PATH
+            export PATH=${BIN_DIR}:${PATH}
+        fi
+
+        if ! command -v mold &>/dev/null; then
+            cecho ${ERROR} "ERROR: Failed to install mold automatically."
+            exit 1
+        else
+            cecho ${GOOD} "mold has been installed successfully."
+        fi
+    fi
+}
+
+
+
+# ++============================================================++
 # ||                    Add to path                             ||
 # ++============================================================++
 add_to_path() {
@@ -147,6 +182,7 @@ parse_arguments() {
               echo "  -j <threads>, --parallel=<threads>   Set number of threads to use (default ${THREADS})"
               echo "  -A <ON|OFF>,  --add_to_path=<ON|OFF> Enable or disable to add deal.II permanently to the path"
               echo "  -N <ON|OFF>,  --ninja=<ON|OFF>       Enable or disable the use of Ninja"
+              echo "  -M <ON|OFF>,  --mold=<ON|OFF>        Enable or disable the use of mold"
               echo "  -U                                   Do not interupt"
               echo "  -v,           --version              Print the version number"
               exit 1
@@ -197,6 +233,13 @@ parse_arguments() {
             # Ninja
             -N|--ninja)
                 USE_NINJA="$2"
+                shift
+                shift
+                ;;
+
+           # Mold
+            -M|--mold)
+                USE_MOLD="$2"
                 shift
                 shift
                 ;;
@@ -284,6 +327,14 @@ parse_arguments() {
         echo "Default to use ninja."
         echo "Otherwise, disable Ninja via -N OFF or --ninja=OFF."
     fi
+
+    # MOLD
+    if [ -z "${USE_MOLD}" ]; then
+        USE_MOLD=ON
+        cecho ${INFO} "Default to use mold."
+        cecho ${INFO} "Otherwise, disable mold via -M OFF or --mold=OFF."
+    fi
+
 }
 
 
@@ -314,6 +365,13 @@ if [ "${USE_NINJA}" = "ON" ]; then
         exit 1
     fi
 fi
+
+if [ "${USE_MOLD}" = "ON" ]; then
+    if ! check_and_install_mold "$@"; then
+        exit 1
+    fi
+fi
+
 
 cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS} ${CMAKE_FLAGS}
 cmake --build ${BUILD_DIR} #-- -j ${THREADS}

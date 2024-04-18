@@ -56,6 +56,15 @@ if(NINJA)
   set(DEFAULT_GENERATOR "Ninja")
 endif()
 
+# Linker: mold
+# Check if mold is installed
+find_program(MOLD mold)
+if(MOLD)
+  set(CMAKE_LINKER ${MOLD_FOUND})
+endif()
+
+
+
 if(TPL_ENABLE_GMP)
   include(cmake/gmp.cmake)
 endif()
