@@ -266,8 +266,8 @@ parse_arguments() {
     # If user provided path is not set, use default path
     if [ -z "${PREFIX}" ]; then
         PREFIX="${DEFAULT_PATH}"
-        echo "No path was provided default to: ${PREFIX}"
-        echo "Otherwise, provide a path using the -p or --path option."
+        cecho {INFO} "No path was provided default to: ${PREFIX}"
+        cecho {INFO} "Otherwise, provide a path using the -p or --path option."
     else 
         # Check the input argument of the install path and (if used) replace the tilde
         # character '~' by the users home directory ${HOME}. 
@@ -275,14 +275,14 @@ parse_arguments() {
     fi
 
     # Check if the provided path is writable
-    mkdir -p "${PREFIX}" || { echo "Failed to create: ${PREFIX}"; exit 1; }
+    mkdir -p "${PREFIX}" || { cecho ${ERROR} "Failed to create: ${PREFIX}"; exit 1; }
 
     # BINARY DIRECTORY
     # If user provided binary directory is not set, use default binary directory
     if [ -z "${BIN_DIR}" ]; then
         BIN_DIR="${PREFIX}/bin"
-        echo "No binary directory was provided default to: ${BIN_DIR}"
-        echo "Otherwise, provide a binary directory using the -d or --bin-dir option."
+        cecho ${INFO} "No binary directory was provided default to: ${BIN_DIR}"
+        cecho ${INFO} "Otherwise, provide a binary directory using the -d or --bin-dir option."
     else 
         # Check the input argument of the install path and (if used) replace the tilde
         # character '~' by the users home directory ${HOME}. 
@@ -296,8 +296,8 @@ parse_arguments() {
     # If user provided build_dir is not set, use default build_dir
     if [ -z "${BUILD_DIR}" ]; then
         BUILD_DIR="${PREFIX}/tmp"
-        echo "No build directory was provided default to: ${BUILD_DIR}"
-        echo "Otherwise, provide a build directory using the -b or --build option."
+        cecho ${INFO} "No build directory was provided default to: ${BUILD_DIR}"
+        cecho ${INFO} "Otherwise, provide a build directory using the -b or --build option."
     else 
         # Check the input argument of the install path and (if used) replace the tilde
         # character '~' by the users home directory ${HOME}. 
@@ -313,8 +313,8 @@ parse_arguments() {
     # ADD TO PATH
     if [ -z "${ADD_TO_PATH}" ]; then
         ADD_TO_PATH=OFF
-        echo "Default is not to add DEAL_II_DIR permanently to the path."
-        echo "Otherwise, enable add to path via -A=OFF or --add_to_path=ON."
+        cecho ${INFO} "Default is not to add DEAL_II_DIR permanently to the path."
+        cecho ${INFO} "Otherwise, enable add to path via -A=OFF or --add_to_path=ON."
     fi
 
     # NINJA
