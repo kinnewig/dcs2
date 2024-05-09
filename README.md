@@ -46,6 +46,11 @@ To build deal.II from a local source folder use: `DEALII_SOURCE_DIR=</path/to/lo
 #### Algebra Packages
 - `TRILINOS` (default version: "15.1.0")
 
+#### Miscellaneous
+- `GMSH` (default version: "4.12.2", default "OFF")
+   Only testes on Fedora, requires the following dependencies `dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
+
+
 
 ## Usage
 

@@ -112,6 +112,13 @@
     }
   },
 
+  "gmsh" : {
+    "git": "https://gitlab.onelab.info/gmsh/gmsh.git"
+    "4.12.0": {
+      "tag": "bc6b651adf17a57698ee60d88b305afb4bb216b8"
+    }
+  },
+
   "dealii": {
     "git": "https://github.com/dealii/dealii",
     "master": {
