@@ -11,7 +11,6 @@ else()
   # Set the corresponding flags, depending if we build AMD Libflame or default libflame
   if (AMD)
     list(APPEND libflame_autotool_args "--enable-amd-flags")
-    list(APPEND libflame_autotool_args "CFLAGS=-fPIC -openmp")
   else()
     list(APPEND libflame_autotool_args "--enable-lapack2flame")
     list(APPEND libflame_autotool_args "--enable-external-lapack-interfaces")
@@ -122,6 +121,8 @@ list(APPEND scalapack_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
 
 # Add libflame to ScaLAPACK
 list(APPEND mumps_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
+list(APPEND mumps_cmake_args "-D LAPACK_s_FOUND:BOOL=TRUE")
+list(APPEND mumps_cmake_args "-D LAPACK_d_FOUND:BOOL=TRUE")
 
 # Add libflame to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES:PATH=${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
