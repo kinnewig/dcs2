@@ -24,13 +24,13 @@ if(NOT GMP_FOUND)
   # If a custom URL for GMP is defined, use it.
   if (DEFINED GMP_CUSTOM_URL)
     set(GMP_url ${GMP_CUSTOM_URL})
-    message("Using custom download URL for MUMPS: ${GMP_CUSTOM_URL}")
+    message("Using custom download URL for GMP: ${GMP_CUSTOM_URL}")
   endif()
   
   # If a custom tag for GMP is defined, use it.
   if (DEFINED GMP_CUSTOM_TAG)
-    set(mumps_tag ${GMP_CUSTOM_TAG})
-    message("Using custom git tag for MUMPS: ${GMP_CUSTOM_TAG}")
+    set(GMP_tag ${GMP_CUSTOM_TAG})
+    message("Using custom git tag for GMP: ${GMP_CUSTOM_TAG}")
   endif()
   
   ExternalProject_Add(gmp

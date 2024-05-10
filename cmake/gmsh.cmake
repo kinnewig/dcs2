@@ -61,7 +61,7 @@ if(NOT GMSH_FOUND)
     DEPENDERS configure
   )
   
-  ExternalProject_Get_Property(gmp INSTALL_DIR)
+  ExternalProject_Get_Property(gmsh INSTALL_DIR)
   
   # Populate the path
   set(GMSH_DIR ${INSTALL_DIR})

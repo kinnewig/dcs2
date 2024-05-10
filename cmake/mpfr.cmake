@@ -26,13 +26,13 @@ else()
   # If a custom URL for MPFR is defined, use it.
   if (DEFINED MPFR_CUSTOM_URL)
     set(MPFR_url ${MPFR_CUSTOM_URL})
-    message("Using custom download URL for MUMPS: ${MPFR_CUSTOM_URL}")
+    message("Using custom download URL for MPFR: ${MPFR_CUSTOM_URL}")
   endif()
   
   # If a custom tag for MPFR is defined, use it.
   if (DEFINED MPFR_CUSTOM_TAG)
-    set(mumps_tag ${MPFR_CUSTOM_TAG})
-    message("Using custom git tag for MUMPS: ${MPFR_CUSTOM_TAG}")
+    set(mpfr_tag ${MPFR_CUSTOM_TAG})
+    message("Using custom git tag for MPFR: ${MPFR_CUSTOM_TAG}")
   endif()
   
   ExternalProject_Add(mpfr

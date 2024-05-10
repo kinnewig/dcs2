@@ -4,8 +4,8 @@
 # This will define the following variables:
 # GRMSH_FOUND - System has GMSH 
 # GRMSH_INCLUDE_DIRS - The GMSH include directories
-# GRMSH_LIBRARIES - The libraries needed to use MUMPS
-# GRMSH_DIR - The directory of the found MUMPS installation
+# GRMSH_LIBRARIES - The libraries needed to use GMSH
+# GRMSH_DIR - The directory of the found GMSH installation
 
 find_package(PkgConfig)
 pkg_check_modules(PC_GMSH QUIET GMSH)
@@ -16,7 +16,7 @@ find_path(GMSH_INCLUDE_DIR NAMES gmsh.h
           HINTS ${GMSH_DIR}/include ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}/include
           PATHS ${PC_GMSH_INCLUDEDIR} ${PC_GMSH_INCLUDE_DIRS})
 
-find_library(MUMPS_LIBRARY NAMES libgmsh
+find_library(GMSH_LIBRARY NAMES libgmsh${CMAKE_SHARED_LIBRARY_SUFFIX}
              HINTS ${GMSH_DIR}/lib64 ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}/lib64
              PATHS ${PC_GMSH_LIBDIR} ${PC_GMSH_LIBRARY_DIRS})
 

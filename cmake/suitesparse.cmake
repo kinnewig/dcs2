@@ -26,13 +26,13 @@ else()
   # If a custom URL for SuiteSparse is defined, use it.
   if (DEFINED SUITESPARSE_CUSTOM_URL)
     set(SUITESPARSE_url ${SUITESPARSE_CUSTOM_URL})
-    message("Using custom download URL for MUMPS: ${SUITESPARSE_CUSTOM_URL}")
+    message("Using custom download URL for SuiteSparse: ${SUITESPARSE_CUSTOM_URL}")
   endif()
   
   # If a custom tag for SuiteSparse is defined, use it.
   if (DEFINED SUITESPARSE_CUSTOM_TAG)
-    set(mumps_tag ${SUITESPARSE_CUSTOM_TAG})
-    message("Using custom git tag for MUMPS: ${SUITESPARSE_CUSTOM_TAG}")
+    set(SUITESPARSE_tag ${SUITESPARSE_CUSTOM_TAG})
+    message("Using custom git tag for SuiteSparse: ${SUITESPARSE_CUSTOM_TAG}")
   endif()
   
   ExternalProject_Add(suitesparse
