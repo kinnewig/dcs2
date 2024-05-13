@@ -55,7 +55,7 @@ if(NOT GMSH_FOUND)
 
   # Work arround, this seems to be necessary...
   ExternalProject_Add_Step(gmsh workarround
-    COMMAND sed -i '15i#define _XOPEN_SOURCE' string.c
+    COMMAND sed -i "15i#define _XOPEN_SOURCE" string.c
     WORKING_DIRECTORY ${source_dir}/contrib/metis/GKlib/
     DEPENDEES download
     DEPENDERS configure
