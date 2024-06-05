@@ -34,17 +34,29 @@ else()
     message("Using custom git tag for AOCL-UTILS: ${AOCL-UTILS_CUSTOM_TAG}")
   endif()
   
-  ExternalProject_Add(aocl-utils
-    GIT_REPOSITORY ${aocl-utils_url}
-    GIT_TAG ${aocl-utils_tag}
-    GIT_SHALLOW true
-    CMAKE_ARGS ${aocl-utils_cmake_args}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/aocl-utils/${AOCL-UTILS_VERSION}
-    BUILD_BYPRODUCTS ${AOCL-UTILS_LIBRARIES}
-    CONFIGURE_HANDLED_BY_BUILD true
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${aocl-utils_dependencies}
-  )
+  if (DEFINED AOCL-UTILS_SOURCE_DIR)
+    ExternalProject_Add(aocl-utils
+      URL ${AOCL-UTILS_SOURCE_DIR}
+      CMAKE_ARGS ${aocl-utils_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/aocl-utils/${AOCL-UTILS_VERSION}
+      BUILD_BYPRODUCTS ${AOCL-UTILS_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${aocl-utils_dependencies}
+    )
+  else()
+    ExternalProject_Add(aocl-utils
+      GIT_REPOSITORY ${aocl-utils_url}
+      GIT_TAG ${aocl-utils_tag}
+      GIT_SHALLOW true
+      CMAKE_ARGS ${aocl-utils_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/aocl-utils/${AOCL-UTILS_VERSION}
+      BUILD_BYPRODUCTS ${AOCL-UTILS_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${aocl-utils_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(aocl-utils INSTALL_DIR)
   

@@ -47,19 +47,33 @@ else()
     message("Using custom git tag for BLIS: ${BLIS_CUSTOM_URL}")
   endif()
   
-  ExternalProject_Add(blis
-    GIT_REPOSITORY ${blis_url}
-    GIT_TAG ${blis_tag}
-    GIT_SHALLOW true
-    BUILD_COMMAND make -j ${THREADS}
-    INSTALL_COMMAND make install
-    CONFIGURE_COMMAND ./configure ${blis_autotool_args} ${BLIS_ARCHITECTURE}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}
-    BUILD_IN_SOURCE ON
-    BUILD_BYPRODUCTS ${BLIS_LIBRARIES}
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${blis_dependencies}
-  )
+  if (DEFINED BLIS_SOURCE_DIR)
+    ExternalProject_Add(blis
+      URL ${BLIS_SOURCE_DIR}
+      BUILD_COMMAND make -j ${THREADS}
+      INSTALL_COMMAND make install
+      CONFIGURE_COMMAND ./configure ${blis_autotool_args} ${BLIS_ARCHITECTURE}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}
+      BUILD_IN_SOURCE ON
+      BUILD_BYPRODUCTS ${BLIS_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${blis_dependencies}
+    )
+  else()
+    ExternalProject_Add(blis
+      GIT_REPOSITORY ${blis_url}
+      GIT_TAG ${blis_tag}
+      GIT_SHALLOW true
+      BUILD_COMMAND make -j ${THREADS}
+      INSTALL_COMMAND make install
+      CONFIGURE_COMMAND ./configure ${blis_autotool_args} ${BLIS_ARCHITECTURE}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}
+      BUILD_IN_SOURCE ON
+      BUILD_BYPRODUCTS ${BLIS_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${blis_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(blis INSTALL_DIR)
 

@@ -96,15 +96,26 @@ else()
     message("Using custom git tag for Trilinos: ${TRILINOS_CUSTOM_TAG}")
   endif()
   
-  ExternalProject_Add(
-      trilinos
-      GIT_REPOSITORY ${trilinos_url}
-      GIT_TAG ${trilinos_tag}
-      CMAKE_ARGS ${trilinos_cmake_args}
-      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
-      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-      DEPENDS ${trilinos_dependencies}
-  )
+  if (DEFINED TRILINOS_SOURCE_DIR)
+    ExternalProject_Add(
+        trilinos
+        URL ${TRILINOS_SOURCE_DIR}
+        CMAKE_ARGS ${trilinos_cmake_args}
+        INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
+        CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+        DEPENDS ${trilinos_dependencies}
+    )
+  else()
+    ExternalProject_Add(
+        trilinos
+        GIT_REPOSITORY ${trilinos_url}
+        GIT_TAG ${trilinos_tag}
+        CMAKE_ARGS ${trilinos_cmake_args}
+        INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
+        CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+        DEPENDS ${trilinos_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(trilinos INSTALL_DIR)
   

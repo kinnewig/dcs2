@@ -69,15 +69,24 @@ else()
     message("Using custom git tag for P4EST: ${P4EST_CUSTOM_TAG}")
   endif()
   
-  ExternalProject_Add(
-    p4est
-    GIT_REPOSITORY ${p4est_url}
-    GIT_TAG ${p4est_tag}
-    CMAKE_ARGS ${p4est_cmake_args}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION} 
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${p4est_dependencies}
-  )
+  if (DEFINED P4EST_SOURCE_DIR)
+    ExternalProject_Add(p4est
+      URL ${P4EST_SOURCE_DIR}
+      CMAKE_ARGS ${p4est_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION} 
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${p4est_dependencies}
+    )
+  else()
+    ExternalProject_Add(p4est
+      GIT_REPOSITORY ${p4est_url}
+      GIT_TAG ${p4est_tag}
+      CMAKE_ARGS ${p4est_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION} 
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${p4est_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(p4est INSTALL_DIR)
   

@@ -54,19 +54,33 @@ else()
     message("Using custom git tag for LIBFLAME: ${LIBFLAME_CUSTOM_URL}")
   endif()
   
-  ExternalProject_Add(libflame
-    GIT_REPOSITORY ${libflame_url}
-    GIT_TAG ${libflame_tag}
-    GIT_SHALLOW true
-    BUILD_COMMAND make -j ${THREADS}
-    INSTALL_COMMAND make install
-    CONFIGURE_COMMAND ./configure ${libflame_autotool_args}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}
-    BUILD_IN_SOURCE ON
-    BUILD_BYPRODUCTS ${LIBFLAME_LIBRARIES}
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${libflame_dependencies}
-  )
+  if (DEFINED LIBFLAME_SOURCE_DIR)
+    ExternalProject_Add(libflame
+      URL ${LIBFLAME_SOURCE_DIR}
+      BUILD_COMMAND make -j ${THREADS}
+      INSTALL_COMMAND make install
+      CONFIGURE_COMMAND ./configure ${libflame_autotool_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}
+      BUILD_IN_SOURCE ON
+      BUILD_BYPRODUCTS ${LIBFLAME_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${libflame_dependencies}
+    )
+  else()
+    ExternalProject_Add(libflame
+      GIT_REPOSITORY ${libflame_url}
+      GIT_TAG ${libflame_tag}
+      GIT_SHALLOW true
+      BUILD_COMMAND make -j ${THREADS}
+      INSTALL_COMMAND make install
+      CONFIGURE_COMMAND ./configure ${libflame_autotool_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/libflame/${LIBFLAME_VERSION}
+      BUILD_IN_SOURCE ON
+      BUILD_BYPRODUCTS ${LIBFLAME_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${libflame_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(libflame INSTALL_DIR)
 

@@ -12,8 +12,9 @@ DCS simplifies the process of building and installing the **deal.II** library al
 - `DEALII_WITH_64BIT`: Build deal.II with 64bit indice support (default: OFF)
 - `DEALII_WITH_COMPLEX`: Build deal.II with complex number support (default: OFF)
 
-#### Develping deal.II: 
-To build deal.II from a local source folder use: `DEALII_SOURCE_DIR=</path/to/local/development-dealii>` 
+#### Developing
+For deal.II and any TPL a custom path can be provided via `-D <PACKAGE>_SOURCE_DIR`. The custom path can either be a local folder containing the package, an archive or an URL.
+This feature is meant for development (e.g. you can provide your local deal.II folder, which is handy if you are working on deal.II itself), or it can be used to install deal.II and it dependecies on computers/servers without direct internet access.
 
 ### Third-Party Libraries
 

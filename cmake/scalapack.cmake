@@ -70,17 +70,29 @@ include(ExternalProject)
     )
   endif()
   
-  ExternalProject_Add(scalapack
-    GIT_REPOSITORY ${scalapack_url}
-    GIT_TAG ${scalapack_tag}
-    GIT_SHALLOW true
-    CMAKE_ARGS ${scalapack_cmake_args}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}
-    BUILD_BYPRODUCTS ${SCALAPACK_LIBRARIES}
-    CONFIGURE_HANDLED_BY_BUILD true
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${scalapack_dependencies}
-  )
+  if (DEFINED SCALAPACK_SOURCE_DIR)
+    ExternalProject_Add(scalapack
+      URL ${SCALAPACK_SOURCE_DIR}
+      CMAKE_ARGS ${scalapack_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}
+      BUILD_BYPRODUCTS ${SCALAPACK_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${scalapack_dependencies}
+    )
+  else()
+    ExternalProject_Add(scalapack
+      GIT_REPOSITORY ${scalapack_url}
+      GIT_TAG ${scalapack_tag}
+      GIT_SHALLOW true
+      CMAKE_ARGS ${scalapack_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}
+      BUILD_BYPRODUCTS ${SCALAPACK_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${scalapack_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(scalapack INSTALL_DIR)
   
