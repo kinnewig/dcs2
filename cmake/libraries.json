@@ -53,7 +53,7 @@
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
     "2.2.1": {
-      "tag": "7d2a199b91187f92c553179e22f76f42bc813728"
+      "tag": "acf286b783d53f73a42ec219ead74357e0b34501"
     },
     "2.2.0": {
       "tag": "7dbf35c74ceb77e06fdacf7056f78b5f56fe67fb"
