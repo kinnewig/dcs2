@@ -74,8 +74,8 @@ else()
   # Linking
   add_library(MPFR::MPFR INTERFACE IMPORTED GLOBAL)
   set_target_properties(MPFR::MPFR PROPERTIES
-    IMPORTED_LOCATION ${MPFR_DIR}/lib64/libumfpack.so
-    INTERFACE_INCLUDE_DIRECTORIES ${MPFR_DIR}/include/mpfr
+    IMPORTED_LOCATION ${MPFR_DIR}/lib/libmpfr.so
+    INTERFACE_INCLUDE_DIRECTORIES ${MPFR_DIR}/include
   )
 
   set(MPFR_LIBRARY "${MPFR_DIR}/lib")
