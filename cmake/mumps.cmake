@@ -3,6 +3,7 @@ include(ExternalProject)
 find_package(MUMPS)
 if(MUMPS_FOUND)
 
+
 else()
   message(STATUS "Building MUMPS")
   
@@ -21,7 +22,7 @@ else()
   )
 
   if (AMD)
-    list(APPEND mumps_cmake_args -D CMAKE_CFLAGS="-openmp")
+    list(APPEND mumps_cmake_args -D CMAKE_CFLAGS="-openmp ")
     list(APPEND mumps_cmake_args -D CMAKE_Fortran_FLAGS="-fopenmp")
     list(APPEND mumps_cmake_args -D MPI_Fortran_WORKS:BOOL=TRUE)
   endif()
@@ -45,18 +46,31 @@ else()
     set(mumps_tag ${MUMPS_CUSTOM_TAG})
     message("Using custom git tag for MUMPS: ${MUMPS_CUSTOM_TAG}")
   endif()
-  
-  ExternalProject_Add(mumps
-    GIT_REPOSITORY ${mumps_url}
-    GIT_TAG ${mumps_tag}
-    GIT_SHALLOW true
-    CMAKE_ARGS ${mumps_cmake_args}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
-    BUILD_BYPRODUCTS ${MUMPS_LIBRARIES}
-    CONFIGURE_HANDLED_BY_BUILD true
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${mumps_dependencies}
-  )
+
+  if (DEFINED MUMPS_SOURCE_DIR)
+    ExternalProject_Add(mumps
+      URL ${MUMPS_SOURCE_DIR}
+      GIT_SHALLOW true
+      CMAKE_ARGS ${mumps_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
+      BUILD_BYPRODUCTS ${MUMPS_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${mumps_dependencies}
+    ) 
+  else()
+    ExternalProject_Add(mumps
+      GIT_REPOSITORY ${mumps_url}
+      GIT_TAG ${mumps_tag}
+      GIT_SHALLOW true
+      CMAKE_ARGS ${mumps_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
+      BUILD_BYPRODUCTS ${MUMPS_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${mumps_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(mumps INSTALL_DIR)
   

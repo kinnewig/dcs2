@@ -35,7 +35,7 @@ if(NOT GMP_FOUND)
   
   if (DEFINED GMP_SOURCE_DIR)
     ExternalProject_Add(gmp
-      URL ${GMP}
+      URL ${GMP_SOURCE_DIR}
       BUILD_COMMAND make
       INSTALL_COMMAND make install
       CMAKE_ARGS ${gmp_cmake_args}
