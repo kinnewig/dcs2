@@ -92,7 +92,14 @@ endif()
 
 # add MUMPS to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_MUMPS=ON")
-list(APPEND trilinos_cmake_args "-D MUMPS_LIBRARY_DIRS:PATH=${MUMPS_DIR}/lib")
+if(EXISTS "${MUMPS_DIR}/lib")
+  list(APPEND trilinos_cmake_args "-D MUMPS_LIBRARY_DIRS:PATH=${MUMPS_DIR}/lib")
+elseif(EXISTS "${MUMPS_DIR}/lib64")
+  list(APPEND trilinos_cmake_args "-D MUMPS_LIBRARY_DIRS:PATH=${MUMPS_DIR}/lib")
+else()
+  message(FATAL_ERROR "Could not find the path to the MUMPS library, tested: ${MUMPS_DIR}/lib64 and ${MUMPS_DIR}/lib ")
+endif()
+
 list(APPEND trilinos_cmake_args "-D MUMPS_INCLUDE_DIRS:PATH=${MUMPS_DIR}/include")
 list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_MUMPS:BOOL=ON")
 

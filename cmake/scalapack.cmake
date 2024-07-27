@@ -168,7 +168,15 @@ endif()
 list(APPEND trilinos_dependencies "scalapack")
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_SCALAPACK:BOOL=ON")
 list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_NAMES='scalapack'")
-list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_DIRS:PATH=${SCALAPACK_DIR}/lib64")
+if(EXISTS "${SCALAPACK_DIR}/lib")
+  list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_DIRS:PATH=${SCALAPACK_DIR}/lib")
+elseif(EXISTS "${SCALAPACK_DIR}/lib64")
+  list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_DIRS:PATH=${SCALAPACK_DIR}/lib64")
+else()
+  message(FATAL_ERROR "Could not find the path to the ScaLAPACK library, tested: ${SCALAPACK_DIR}/lib64 and ${SCALAPACK_DIR}/lib ")
+endif()
+
+
 list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_SCALAPACK:BOOL=ON")
 
 if(BUILD_LAPACK)

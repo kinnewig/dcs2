@@ -83,5 +83,12 @@ list(APPEND dealii_cmake_args "-D UMFPACK_DIR=${UMFPACK_DIR}")
 
 # add SuiteSparse to Trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_UMFPACK=ON")
-list(APPEND trilinos_cmake_args "-D UMFPACK_LIBRARY_DIRS:PATH=${SUITESPARSE_DIR}/lib64")
+if(EXISTS "${SUITESPARSE_DIR}/lib")
+  list(APPEND trilinos_cmake_args "-D UMFPACK_LIBRARY_DIRS:PATH=${SUITESPARSE_DIR}/lib")
+elseif(EXISTS "${SUITESPARSE_DIR}/lib64")
+  list(APPEND trilinos_cmake_args "-D UMFPACK_LIBRARY_DIRS:PATH=${SUITESPARSE_DIR}/lib64")
+else()
+  message(FATAL_ERROR "Could not find the path to the SuiteSparse library, tested: ${SUITESPARSE_DIR}/lib64 and ${SUITESPARSE_DIR}/lib ")
+endif()
+
 list(APPEND trilinos_cmake_args "-D UMFPACK_INCLUDE_DIRS:PATH=${SUITESPARSE_DIR}/include/suitesparse")

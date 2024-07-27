@@ -128,7 +128,14 @@ list(APPEND dealii_cmake_args "-D LAPACK_DIR=${LIBFLAME_DIR}")
 # Add libflame to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_LAPACK:BOOL=ON")
 list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_NAMES=libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
-list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LIBFLAME_DIR}/lib")
+if(EXISTS "${LIBFLAME_DIR}/lib")
+  list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LIBFLAME_DIR}/lib")
+elseif(EXISTS "${LIBFLAME_DIR}/lib64")
+  list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LIBFLAME_DIR}/lib")
+else()
+  message(FATAL_ERROR "Could not find the path to the LIBFLAME library, tested: ${LIBFLAME_DIR}/lib64 and ${LIBFLAME_DIR}/lib ")
+endif()
+
 
 # Add libflame to ScaLAPACK
 list(APPEND scalapack_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
