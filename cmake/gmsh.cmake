@@ -6,9 +6,9 @@ if(NOT GMSH_FOUND)
   
   set(gmsh_cmake_args
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-    -D CMAKE_CXX_COMPILER:PATH=${CMAKE_CXX_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
+    -D CMAKE_C_COMPILER:PATH=${CMAKE_MPI_C_COMPILER}
+    -D CMAKE_CXX_COMPILER:PATH=${CMAKE_MPI_CXX_COMPILER}
+    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_MPI_Fortran_COMPILER}
     -D CMAKE_BUILD_TYPE:STRING=Release
     -D ENABLE_GRAPHICS:BOOL=ON 
     -D ENABLE_MPI:BOOL=ON 
@@ -39,17 +39,29 @@ if(NOT GMSH_FOUND)
     message("Using custom git tag for GMSH: ${GMSH_CUSTOM_TAG}")
   endif()
   
-  ExternalProject_Add(gmsh
-    GIT_REPOSITORY ${gmsh_url}
-    GIT_TAG ${gmsh_tag}
-    GIT_SHALLOW true
-    CMAKE_ARGS ${gmsh_cmake_args}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}
-    BUILD_BYPRODUCTS ${GMSH_LIBRARIES}
-    CONFIGURE_HANDLED_BY_BUILD true
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${gmsh_dependencies}
-  )
+  if (DEFINED GMSH_SOURCE_DIR)
+    ExternalProject_Add(gmsh
+      URL ${GMSH_SOURCE_DIR}
+      CMAKE_ARGS ${gmsh_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}
+      BUILD_BYPRODUCTS ${GMSH_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${gmsh_dependencies}
+    )
+  else()
+    ExternalProject_Add(gmsh
+      GIT_REPOSITORY ${gmsh_url}
+      GIT_TAG ${gmsh_tag}
+      GIT_SHALLOW true
+      CMAKE_ARGS ${gmsh_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}
+      BUILD_BYPRODUCTS ${GMSH_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${gmsh_dependencies}
+    )
+  endif()
 
   ExternalProject_Get_Property(gmsh source_dir)
 

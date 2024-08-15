@@ -25,14 +25,24 @@ else()
     message(FATAL_ERROR "Git tag for P4EST version ${P4EST_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
   endif()
   
-  ExternalProject_Add(
-    libsc
-    GIT_REPOSITORY ${libsc_url}
-    GIT_TAG ${libsc_tag}
-    CMAKE_ARGS ${libsc_cmake_args}
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${libsc_dependencies}
-  )
+  if (DEFINED LIBSC_SOURCE_DIR)
+    ExternalProject_Add(
+      libsc
+      URL ${LIBSC_SOURCE_DIR}
+      CMAKE_ARGS ${libsc_cmake_args}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${libsc_dependencies}
+    )
+  else()
+    ExternalProject_Add(
+      libsc
+      GIT_REPOSITORY ${libsc_url}
+      GIT_TAG ${libsc_tag}
+      CMAKE_ARGS ${libsc_cmake_args}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${libsc_dependencies}
+    )
+  endif()
 
   list(APPEND p4est_dependencies "libsc")
   
@@ -69,15 +79,24 @@ else()
     message("Using custom git tag for P4EST: ${P4EST_CUSTOM_TAG}")
   endif()
   
-  ExternalProject_Add(
-    p4est
-    GIT_REPOSITORY ${p4est_url}
-    GIT_TAG ${p4est_tag}
-    CMAKE_ARGS ${p4est_cmake_args}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION} 
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${p4est_dependencies}
-  )
+  if (DEFINED P4EST_SOURCE_DIR)
+    ExternalProject_Add(p4est
+      URL ${P4EST_SOURCE_DIR}
+      CMAKE_ARGS ${p4est_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION} 
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${p4est_dependencies}
+    )
+  else()
+    ExternalProject_Add(p4est
+      GIT_REPOSITORY ${p4est_url}
+      GIT_TAG ${p4est_tag}
+      CMAKE_ARGS ${p4est_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION} 
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${p4est_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(p4est INSTALL_DIR)
   
@@ -96,4 +115,5 @@ else()
 endif()
 
 # Add P4est to deal.II
+list(APPEND dealii_cmake_args "-D DEAL_II_WITH_P4EST=ON") 
 list(APPEND dealii_cmake_args "-D P4EST_DIR=${P4EST_DIR}") 

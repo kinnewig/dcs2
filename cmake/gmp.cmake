@@ -33,20 +33,35 @@ if(NOT GMP_FOUND)
     message("Using custom git tag for GMP: ${GMP_CUSTOM_TAG}")
   endif()
   
-  ExternalProject_Add(gmp
-    GIT_REPOSITORY ${gmp_url}
-    GIT_TAG ${gmp_tag}
-    GIT_SHALLOW true
-    BUILD_COMMAND make
-    INSTALL_COMMAND make install
-    CMAKE_ARGS ${gmp_cmake_args}
-    CONFIGURE_COMMAND ./configure --prefix=${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION} 
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}
-    BUILD_IN_SOURCE ON
-    BUILD_BYPRODUCTS ${GMP_LIBRARIES}
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${gmp_dependencies}
-  )
+  if (DEFINED GMP_SOURCE_DIR)
+    ExternalProject_Add(gmp
+      URL ${GMP_SOURCE_DIR}
+      BUILD_COMMAND make
+      INSTALL_COMMAND make install
+      CMAKE_ARGS ${gmp_cmake_args}
+      CONFIGURE_COMMAND ./configure --prefix=${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION} 
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}
+      BUILD_IN_SOURCE ON
+      BUILD_BYPRODUCTS ${GMP_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${gmp_dependencies}
+    )
+  else()
+    ExternalProject_Add(gmp
+      GIT_REPOSITORY ${gmp_url}
+      GIT_TAG ${gmp_tag}
+      GIT_SHALLOW true
+      BUILD_COMMAND make
+      INSTALL_COMMAND make install
+      CMAKE_ARGS ${gmp_cmake_args}
+      CONFIGURE_COMMAND ./configure --prefix=${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION} 
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}
+      BUILD_IN_SOURCE ON
+      BUILD_BYPRODUCTS ${GMP_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${gmp_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(gmp INSTALL_DIR)
   

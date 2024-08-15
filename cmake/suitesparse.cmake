@@ -35,17 +35,29 @@ else()
     message("Using custom git tag for SuiteSparse: ${SUITESPARSE_CUSTOM_TAG}")
   endif()
   
-  ExternalProject_Add(suitesparse
-    GIT_REPOSITORY ${suitesparse_url}
-    GIT_TAG ${suitesparse_tag}
-    GIT_SHALLOW true
-    CMAKE_ARGS ${suitesparse_cmake_args}
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/suitesparse/${SUITESPARSE_VERSION}
-    BUILD_BYPRODUCTS ${SUITESPARSE_LIBRARIES}
-    CONFIGURE_HANDLED_BY_BUILD true
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${suitesparse_dependencies}
-  )
+  if (DEFINED SUITESPARSE_SOURCE_DIR)
+    ExternalProject_Add(suitesparse
+      URL ${SUITESPARSE_SOURCE_DIR}
+      CMAKE_ARGS ${suitesparse_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/suitesparse/${SUITESPARSE_VERSION}
+      BUILD_BYPRODUCTS ${SUITESPARSE_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${suitesparse_dependencies}
+    )
+  else()
+    ExternalProject_Add(suitesparse
+      GIT_REPOSITORY ${suitesparse_url}
+      GIT_TAG ${suitesparse_tag}
+      GIT_SHALLOW true
+      CMAKE_ARGS ${suitesparse_cmake_args}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/suitesparse/${SUITESPARSE_VERSION}
+      BUILD_BYPRODUCTS ${SUITESPARSE_LIBRARIES}
+      CONFIGURE_HANDLED_BY_BUILD true
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${suitesparse_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(suitesparse INSTALL_DIR)
   

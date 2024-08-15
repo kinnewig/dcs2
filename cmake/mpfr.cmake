@@ -35,20 +35,35 @@ else()
     message("Using custom git tag for MPFR: ${MPFR_CUSTOM_TAG}")
   endif()
   
-  ExternalProject_Add(mpfr
-    GIT_REPOSITORY ${mpfr_url}
-    GIT_TAG ${mpfr_tag}
-    GIT_SHALLOW true
-    BUILD_COMMAND make
-    INSTALL_COMMAND make install
-    CMAKE_ARGS ${mpfr_cmake_args}
-    CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION} 
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}
-    BUILD_IN_SOURCE ON
-    BUILD_BYPRODUCTS ${MPFR_LIBRARIES}
-    CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-    DEPENDS ${mpfr_dependencies}
-  )
+  if (DEFINED MPFR_SOURCE_DIR)
+    ExternalProject_Add(mpfr
+      URL ${MPFR_SOURCE_DIR}
+      BUILD_COMMAND make
+      INSTALL_COMMAND make install
+      CMAKE_ARGS ${mpfr_cmake_args}
+      CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION} 
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}
+      BUILD_IN_SOURCE ON
+      BUILD_BYPRODUCTS ${MPFR_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${mpfr_dependencies}
+    )
+  else()
+    ExternalProject_Add(mpfr
+      GIT_REPOSITORY ${mpfr_url}
+      GIT_TAG ${mpfr_tag}
+      GIT_SHALLOW true
+      BUILD_COMMAND make
+      INSTALL_COMMAND make install
+      CMAKE_ARGS ${mpfr_cmake_args}
+      CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION} 
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}
+      BUILD_IN_SOURCE ON
+      BUILD_BYPRODUCTS ${MPFR_LIBRARIES}
+      CMAKE_GENERATOR ${DEFAULT_GENERATOR}
+      DEPENDS ${mpfr_dependencies}
+    )
+  endif()
   
   ExternalProject_Get_Property(mpfr INSTALL_DIR)
   
@@ -59,8 +74,8 @@ else()
   # Linking
   add_library(MPFR::MPFR INTERFACE IMPORTED GLOBAL)
   set_target_properties(MPFR::MPFR PROPERTIES
-    IMPORTED_LOCATION ${MPFR_DIR}/lib64/libumfpack.so
-    INTERFACE_INCLUDE_DIRECTORIES ${MPFR_DIR}/include/mpfr
+    IMPORTED_LOCATION ${MPFR_DIR}/lib/libmpfr.so
+    INTERFACE_INCLUDE_DIRECTORIES ${MPFR_DIR}/include
   )
 
   set(MPFR_LIBRARY "${MPFR_DIR}/lib")
