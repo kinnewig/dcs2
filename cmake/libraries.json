@@ -74,14 +74,14 @@
     "git": "https://github.com/alisw/GMP.git",
     "6.2.1": {
       "tag": "2bbd52703e5af82509773264bfbd20ff8464804f"
-    },
+    }
   },
 
   "mpfr": {
     "git": "https://gitlab.inria.fr/mpfr/mpfr.git",
     "4.2.1": {
       "tag": "53b7b847c406376b10cdd0ddcd46482dbd715363"
-    },
+    }
   },
 
   "suitesparse": {
@@ -104,11 +104,20 @@
 
   "trilinos": {
     "git": "https://github.com/trilinos/trilinos.git",
+    "16.0.0": {
+      "tag": "c6f6bea715046c00b327f5ddaacdc372dccd3f64"
+    },
     "15.1.0": {
       "tag": "6af5f44df4eb9be0799961afcdbcbf2c2ea3f5ca"
     },
     "15.0.0": {
       "tag": "3703c194db5ba3d9f2353aa0f1bb4731c7e53d45"
+    },
+    "14.4.0": {
+      "tag": "975307431d60d0859ebaa27c9169cbb1d4287513"
+    },
+    "13.4.0": {
+      "tag": "0976cf2a8f9ee2991f4fb479f1056ca569eb22b9"
     }
   },
 
@@ -124,8 +133,14 @@
     "master": {
       "tag": "master"
     },
+    "9.6.0": {
+      "tag": "93113976b8ed7b11be3f0ab2035467af102fe0fa"
+    },
     "9.5.2": {
       "tag": "6f07117be556bf929220c50820b4dead54dc31d0"
+    },
+    "9.3.3": {
+      "tag": "1e662e9dc99497b70bd5e381e418d577392e133f"
     }
   }
 }
