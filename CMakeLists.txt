@@ -25,13 +25,13 @@ set(SCALAPACK_VERSION "2.2.1" CACHE STRING "Specify the version of ScaLAPACK to 
 option(TPL_ENABLE_MUMPS       "Enable or disable the use of MUMPS as a third-party library"       ON)
 set(MUMPS_VERSION "5.6.2" CACHE STRING "Specify the version of MUMPS to be used")
 
-option(TPL_ENABLE_GMP         "Enable or disable the use of GMP as a third-party library"         ON)
+option(TPL_ENABLE_GMP         "Enable or disable the use of GMP as a third-party library"         OFF)
 set(GMP_VERSION "6.2.1" CACHE STRING "Specify the version of GMP to be used")
 
-option(TPL_ENABLE_MPFR        "Enable or disable the use of MMPFR as a third-party library"       ON)
+option(TPL_ENABLE_MPFR        "Enable or disable the use of MMPFR as a third-party library"       OFF)
 set(MPFR_VERSION "4.2.1" CACHE STRING "Specify the version of MPFR to be used")
 
-option(TPL_ENABLE_SUITESPARSE "Enable or disable the use of SuiteSparse as a third-party library" ON)
+option(TPL_ENABLE_SUITESPARSE "Enable or disable the use of SuiteSparse as a third-party library" OFF)
 set(SUITESPARSE_VERSION "7.7.0" CACHE STRING "Specify the version of SuiteSparse to be used")
 
 option(TPL_ENABLE_P4EST       "Enable or disable the use of P4EST as a third-party library"       ON)
