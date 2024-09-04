@@ -28,7 +28,7 @@ set(mold_cmake_args
 
 ExternalProject_Add(mold
   GIT_REPOSITORY ${mold_url}
-  GIT_TAG ${mold_version}
+  GIT_TAG ${mold_tag}
   GIT_SHALLOW true
   CMAKE_ARGS ${mold_cmake_args}
   CONFIGURE_HANDLED_BY_BUILD true
