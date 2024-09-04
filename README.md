@@ -51,7 +51,10 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `GMSH` (default version: "4.12.2", default "OFF")
    Only testes on Fedora, requires the following dependencies `dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
 
+### Installation Tools 
 
+#### Linker: Mold 
+- `-M|--mold` with the options `ON|OFF|DOWNLOAD`
 
 ## Usage
 
