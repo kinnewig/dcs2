@@ -43,7 +43,7 @@ set(TRILINOS_VERSION "15.1.0" CACHE STRING "Specify the version of Trilinos to b
 option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party library"         OFF)
 set(GMSH_VERSION "4.12.2" CACHE STRING "Specify the version of GMSH to be used")
 
-set(DEALII_VERSION "master" CACHE STRING "Specify the version of deal.II to be used")
+set(DEALII_VERSION "9.6.0" CACHE STRING "Specify the version of deal.II to be used")
 option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
 option(DEALII_WITH_COMPLEX    "Build deal.II with support for 64bit long numbers"                 OFF)
 
