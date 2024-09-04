@@ -140,6 +140,41 @@ check_and_install_mold() {
     fi
 }
 
+# Download and extract mold
+download_and_extract_mold() {
+  echo "Check if mold is installed"
+    if command -v mold &>/dev/null; then
+        cecho ${GOOD} "Found mold $(mold --version)"
+    else
+      # Read the mold version
+      MOLD_VERSION=2.30.0
+      ARCHITECTURE=x86_64-linux
+
+      # Download Mold
+      curl -L https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz -o "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
+
+      # Extract Mold
+      mkdir -p ${PREFIX}/mold/
+      tar -xf "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz" -C "${PREFIX}/mold/"
+
+      # Link the Mold binary to the bin folder
+      ln -s "${PREFIX}/mold/mold-${MOLD_VERSION}-${ARCHITECTURE}/bin/mold" "${BIN_DIR}/mold"
+
+      cd $(dirname $0)
+
+      # Add Mold to the PATH
+      export PATH=${BIN_DIR}:${PATH}
+
+      # Check mold
+      if ! command -v mold &>/dev/null; then
+          cecho ${ERROR} "ERROR: Failed to install mold automatically."
+          exit 1
+      else
+          cecho ${GOOD} "mold has been downloaded successfully."
+      fi
+    fi
+}
+
 
 
 # ++============================================================++
@@ -341,31 +376,35 @@ parse_arguments() {
 # Verify that dcs.sh is called from the directory where the script is located.
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 if [ "$(pwd)" != "${SCRIPT_DIR}" ]; then
-    cecho ${ERROR} "ERROR: DCS has to be called from the directory where it is located."
-    exit 1
+  cecho ${ERROR} "ERROR: DCS has to be called from the directory where it is located."
+  exit 1
 fi
 
 # Parse arguments
 if ! parse_arguments "$@"; then
-    exit 0
+  exit 0
 fi
 
 # Check wether CMake is available.
 # If it not available install it.
 if ! check_and_install_cmake "$@"; then
-    exit 1
+  exit 1
 fi
 
 if [ "${USE_NINJA}" = "ON" ]; then
-    if ! check_and_install_ninja "$@"; then
-        exit 1
-    fi
+  if ! check_and_install_ninja "$@"; then
+    exit 1
+  fi
 fi
 
 if [ "${USE_MOLD}" = "ON" ]; then
-    if ! check_and_install_mold "$@"; then
-        exit 1
-    fi
+  if ! check_and_install_mold "$@"; then
+    exit 1
+  fi
+elif [ "${USE_MOLD}" = "DOWNLOAD" ]; then
+  if ! download_and_extract_mold "$@"; then
+    exit 1
+  fi
 fi
 
 
@@ -373,5 +412,5 @@ cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREAD
 cmake --build ${BUILD_DIR} #-- -j ${THREADS}
 
 if [ "${ADD_TO_PATH}" = "YES" ]; then
-    add_to_path
+  add_to_path
 fi
