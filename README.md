@@ -1,6 +1,6 @@
-# DCS - Deal.II CMake Superbuild
+# DCS2 - Deal.II CMake Superbuild 2
 
-DCS simplifies the process of building and installing the **deal.II** library along with various third-party dependencies.
+DCS2 simplifies the process of building and installing the **deal.II** library along with various third-party dependencies.
 
 
 ## Options
@@ -49,16 +49,22 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 
 #### Miscellaneous
 - `GMSH` (default version: "4.12.2", default "OFF")
-   Only testes on Fedora, requires the following dependencies `dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
+   Only testes on Fedora 40/Rocky 9, requires the following dependencies `dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
 
 ### Installation Tools 
+
+### CMake 
+- CMake is a hard dependency for DCS2; therefore, if no CMake version is detected, CMake is automatically downloaded and installed.
 
 #### Linker: Mold 
 - `-M|--mold` with the options `ON|OFF|DOWNLOAD`
 
+#### Ninja
+- `-N|--ninja` with the options `ON|OFF`
+
 ## Usage
 
-To use DCS, follow these steps:
+To use DCS2, follow these steps:
 
 1. Clone this repository:
    ```bash
@@ -68,5 +74,9 @@ To use DCS, follow these steps:
 2. Create a new build directory:
    ```bash
    cd dcs2
-   ./dcs -p <path/to/install> -j <Number of threads>
+   ./dcs2 -p <path/to/install> -j <Number of threads>
    ```
+
+## Acknowledgements 
+
+DCS2 is originally based on [dealii-cmake-superbuild](https://github.com/jpthiele/dealii-cmake-superbuild) and [candi](https://github.com/dealii/candi).
