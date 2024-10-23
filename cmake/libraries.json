@@ -142,6 +142,16 @@
     }
   },
 
+  "tcl" : {
+    "git": "https://github.com/tcltk/tcl.git",
+    "8.6.15": "1a98213e55128c8a2136379fedfaef0c8e15320b"
+  },
+
+  "tk" : {
+    "git": "https://github.com/tcltk/tk.git",
+    "8.6.15": "56d86e87df03113f0a4190a503955417801c68da"
+  },
+
   "dealii": {
     "git": "https://github.com/dealii/dealii",
     "master": {

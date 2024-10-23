@@ -52,6 +52,8 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `GMSH` (default version: "4.12.2", default "OFF")
    Only testes on Fedora 40/Rocky 9, requires the following dependencies `dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
 - `VTK` (default version: "9.3.1", default "OFF")
+- `TCL` (default version: "8.6.15", default "OFF")
+- `TK` (default version: "8.6.15", default "OFF")
 
 ### Installation Tools 
 

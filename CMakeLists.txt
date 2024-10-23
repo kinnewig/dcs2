@@ -40,14 +40,20 @@ set(P4EST_VERSION "2.8.5" CACHE STRING "Specify the version of P4EST to be used"
 option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-party library"    ON)
 set(TRILINOS_VERSION "15.1.0" CACHE STRING "Specify the version of Trilinos to be used")
 
+option(TPL_ENABLE_TBB       "Enable or disable the use of oneTBB as a third-party library"        ON)
+set(TBB_VERSION "2021.13.0" CACHE STRING "Specify the version of oneTBB to be used")
+
 option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party library"         OFF)
 set(GMSH_VERSION "4.12.2" CACHE STRING "Specify the version of GMSH to be used")
 
-option(TPL_ENABLE_TBB       "Enable or disable the use of oneTBB as a third-party library"        OFF)
-set(TBB_VERSION "2021.13.0" CACHE STRING "Specify the version of oneTBB to be used")
-
 option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"          OFF)
 set(GMSH_VERSION "9.3.1" CACHE STRING "Specify the version of VTK to be used")
+
+option(TPL_ENABLE_TCL        "Enable or disable the use of TCL as a third-party library"          OFF)
+set(TCL_VERSION "8.6.15" CACHE STRING "Specify the version of TCL to be used")
+
+option(TPL_ENABLE_TK        "Enable or disable the use of TK as a third-party library"            OFF)
+set(TK_VERSION "8.6.15" CACHE STRING "Specify the version of TK to be used")
 
 set(DEALII_VERSION "9.6.0" CACHE STRING "Specify the version of deal.II to be used")
 option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
@@ -90,15 +96,6 @@ if(MOLD)
 endif()
 
 
-
-if(TPL_ENABLE_GMP)
-  include(cmake/gmp.cmake)
-endif()
-
-if(TPL_ENABLE_MPFR)
-  include(cmake/mpfr.cmake)
-endif()
-
 if(TPL_ENABLE_BLIS)
   include(cmake/blis.cmake)
 endif()
@@ -116,6 +113,14 @@ if(TPL_ENABLE_MUMPS)
 endif()
 
 if(TPL_ENABLE_SUITESPARSE)
+  if(NOT TPL_ENABLE_GMP)
+    message(STATUS "Building SuiteSparse set TPL_ENABLE_GMP to TRUE")
+    set(TPL_ENABLE_GMP  "ON")
+  endif()
+  if(NOT TPL_ENABLE_MPFR)
+    message(STATUS "Building SuiteSparse set TPL_ENABLE_MPFR to TRUE")
+    set(TPL_ENABLE_MPFR "ON")
+  endif()
   include(cmake/suitesparse.cmake)
 endif()
 
@@ -123,12 +128,54 @@ if(TPL_ENABLE_TRILINOS)
   include(cmake/trilinos.cmake)
 endif()
 
+if(TPL_ENABLE_P4EST)
+  include(cmake/p4est.cmake)
+endif()
+
 if(TPL_ENABLE_GMSH)
   include(cmake/gmsh.cmake)
 endif()
 
-if(TPL_ENABLE_P4EST)
-  include(cmake/p4est.cmake)
+if(TPL_ENABLE_OCCT)
+  if(NOT TPL_ENABLE_TBB)
+    message(STATUS "Building OpenCascade set TPL_ENABLE_TBB to TRUE")
+    set(TPL_ENABLE_TBB "ON")
+  endif()
+  if(NOT TPL_ENABLE_TCL)
+    message(STATUS "Building OpenCascade set TPL_ENABLE_TCL to TRUE")
+    set(TPL_ENABLE_TCL "ON")
+  endif()
+  if(NOT TPL_ENABLE_TK)
+    message(STATUS "Building OpenCascade set TPL_ENABLE_TK to TRUE")
+    set(TPL_ENABLE_TK  "ON")
+  endif()
+  include(cmake/occt.cmake)
 endif()
+
+if(TPL_ENABLE_TBB)
+  include(cmake/tbb.cmake)
+endif()
+
+if(TPL_ENABLE_VTK)
+  include(cmake/vtk.cmake)
+endif()
+
+# Dependencies:
+if(TPL_ENABLE_GMP)
+  include(cmake/gmp.cmake)
+endif()
+
+if(TPL_ENABLE_MPFR)
+  include(cmake/mpfr.cmake)
+endif()
+
+if(TPL_ENABLE_TCL)
+  include(cmake/tcl.cmake)
+endif()
+
+if(TPL_ENABLE_TK)
+  include(cmake/tk.cmake)
+endif()
+
 
 include(cmake/dealii.cmake)
