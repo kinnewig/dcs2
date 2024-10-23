@@ -43,7 +43,10 @@ set(TRILINOS_VERSION "15.1.0" CACHE STRING "Specify the version of Trilinos to b
 option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party library"         OFF)
 set(GMSH_VERSION "4.12.2" CACHE STRING "Specify the version of GMSH to be used")
 
-option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"         OFF)
+option(TPL_ENABLE_TBB       "Enable or disable the use of oneTBB as a third-party library"        OFF)
+set(TBB_VERSION "2021.13.0" CACHE STRING "Specify the version of oneTBB to be used")
+
+option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"          OFF)
 set(GMSH_VERSION "9.3.1" CACHE STRING "Specify the version of VTK to be used")
 
 set(DEALII_VERSION "9.6.0" CACHE STRING "Specify the version of deal.II to be used")

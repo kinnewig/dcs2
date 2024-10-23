@@ -48,6 +48,7 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `TRILINOS` (default version: "15.1.0")
 
 #### Miscellaneous
+- `TBB` Intel One Thread Building Blocks (default version: "2021.13.0")
 - `GMSH` (default version: "4.12.2", default "OFF")
    Only testes on Fedora 40/Rocky 9, requires the following dependencies `dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
 - `VTK` (default version: "9.3.1", default "OFF")

@@ -121,6 +121,13 @@
     }
   },
 
+  "tbb" : {
+    "git": "https://github.com/oneapi-src/oneTBB.git",
+    "2021.13.0": {
+      "tag": "1c4c93fc5398c4a1acb3492c02db4699f3048dea"
+    }
+  },
+
   "gmsh" : {
     "git": "https://gitlab.onelab.info/gmsh/gmsh.git",
     "4.12.2": {
