@@ -128,6 +128,13 @@
     }
   },
 
+  "vtk" : {
+    "git": "https://github.com/Kitware/VTK.git",
+    "9.3.1": {
+      "tag": "4f02ae83179c6a1542ac3c335c73dea976578c63"
+    }
+  },
+
   "dealii": {
     "git": "https://github.com/dealii/dealii",
     "master": {
