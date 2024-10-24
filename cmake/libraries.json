@@ -152,6 +152,11 @@
     "8.6.15": "56d86e87df03113f0a4190a503955417801c68da"
   },
 
+  "occt" : {
+    "git": "https://github.com/Open-Cascade-SAS/OCCT.git",
+    "7.8.1": "bd2a789f15235755ce4d1a3b07379a2e062fdc2e"
+  },
+
   "dealii": {
     "git": "https://github.com/dealii/dealii",
     "master": {

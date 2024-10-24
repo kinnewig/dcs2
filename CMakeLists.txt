@@ -49,6 +49,9 @@ set(GMSH_VERSION "4.12.2" CACHE STRING "Specify the version of GMSH to be used")
 option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"          OFF)
 set(GMSH_VERSION "9.3.1" CACHE STRING "Specify the version of VTK to be used")
 
+option(TPL_ENABLE_OCCT       "Enable or disable the use of OpenCascade as a third-party library"  OFF)
+set(OCCT_VERSION "7.8.1" CACHE STRING "Specify the version of OpenCascade to be used")
+
 option(TPL_ENABLE_TCL        "Enable or disable the use of TCL as a third-party library"          OFF)
 set(TCL_VERSION "8.6.15" CACHE STRING "Specify the version of TCL to be used")
 

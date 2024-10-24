@@ -89,4 +89,4 @@ endif()
 list(APPEND occt_cmake_args "-D 3RDPARTY_VTK_LIBRARY_DIR=${VTK_DIR}/lib64")
 
 # add VTK to deal.II
-list(APPEND dealii_cmake_args "-D VTK_DIR=${VTK_LIBRARY}")
+list(APPEND dealii_cmake_args "-D VTK_DIR=${VTK_DIR}")
