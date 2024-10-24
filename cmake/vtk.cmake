@@ -86,8 +86,7 @@ if(NOT VTK_FOUND)
 endif()
 
 # add VTK to OpenCascade
-list(APPEND opencascade_cmake_args "-D VTK_INCLUDE_DIR=${VTK_INCLUDE_DIRS}")
-list(APPEND opencascade_cmake_args "-D VTK_LIBRARIES=${VTK_LIBRARY}")
+list(APPEND opencascade_cmake_args "-D 3RDPARTY_VTK_LIBRARY_DIR=${VTK_DIR}/lib64")
 
 # add VTK to deal.II
-list(APPEND dealii_cmake_args "-D VTK_DIR=${VTK_LIBRARY}")
+list(APPEND dealii_cmake_args "-D VTK_DIR=${VTK_DIR}")

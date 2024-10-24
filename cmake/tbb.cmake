@@ -67,13 +67,6 @@ else()
   set(TBB_DIR ${INSTALL_DIR})
   list(APPEND CMAKE_PREFIX_PATH "${TBB_DIR}")
   
-  # Linking
-  add_library(TBB::TBB INTERFACE IMPORTED GLOBAL)
-  set_target_properties(TBB::TBB PROPERTIES
-    IMPORTED_LOCATION ${TBB_DIR}/lib64/libstbb.so
-    INTERFACE_INCLUDE_DIRECTORIES ${TBB_DIR}/include
-  )
-
   # Dependencies:
   # add TBB as dependencie to OpenCascade
   list(APPEND opencascade_dependencies "tbb")
@@ -83,7 +76,7 @@ else()
 endif()
 
 # add TBB to OpenCascade
-list(APPEND opencascade_cmake_args "-D TBB_DIR=${TBB_DIR}")
+list(APPEND opencascade_cmake_args "-D 3RDPARTY_TBB_LIBRARY_DIR=${TBB_DIR}/lib64")
 
 # add TBB to deal.II
 list(APPEND dealii_cmake_args "-D TBB_DIR=${TBB_DIR}")
