@@ -78,8 +78,8 @@ else()
 endif()
 
 # add SuiteSparse to deal.II
-list(APPEND dealii_cmake_args "-D DEAL_II_WITH_UMFPACK:BOO=ON")
-list(APPEND dealii_cmake_args "-D UMFPACK_DIR=${UMFPACK_DIR}")
+list(APPEND dealii_cmake_args "-D DEAL_II_WITH_UMFPACK:BOO=OFF")
+list(APPEND dealii_cmake_args "-D UMFPACK_DIR=${SUITESPARSE_DIR}")
 
 # add SuiteSparse to Trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_UMFPACK=ON")
