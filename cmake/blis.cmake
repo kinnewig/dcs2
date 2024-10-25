@@ -2,7 +2,6 @@ include(ExternalProject)
 
 find_package(BLIS)
 if(BLIS_FOUND)
-  message(STATUS "BLIS found: ${BLIS_DIR}")
   
 else()
   message(STATUS "Building BLIS")

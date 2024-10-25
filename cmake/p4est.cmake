@@ -2,7 +2,6 @@ include(ExternalProject)
 
 find_package(P4EST)
 if(P4EST_FOUND)
-  message(STATUS "P4EST found: ${P4EST_DIR}")
 
 else()
 
