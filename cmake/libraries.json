@@ -144,17 +144,23 @@
 
   "tcl" : {
     "git": "https://github.com/tcltk/tcl.git",
-    "8.6.15": "1a98213e55128c8a2136379fedfaef0c8e15320b"
+    "8.6.15": {
+      "tag": "1a98213e55128c8a2136379fedfaef0c8e15320b"
+    }
   },
 
   "tk" : {
     "git": "https://github.com/tcltk/tk.git",
-    "8.6.15": "56d86e87df03113f0a4190a503955417801c68da"
+    "8.6.15": {
+      "tag": "56d86e87df03113f0a4190a503955417801c68da"
+    }
   },
 
   "occt" : {
     "git": "https://github.com/Open-Cascade-SAS/OCCT.git",
-    "7.8.1": "bd2a789f15235755ce4d1a3b07379a2e062fdc2e"
+    "7.8.1": {
+      "tag": "bd2a789f15235755ce4d1a3b07379a2e062fdc2e"
+    }
   },
 
   "dealii": {
