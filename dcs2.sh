@@ -249,7 +249,7 @@ parse_arguments() {
 
             # Threads
             -j)
-                THREADS="${1}"
+                THREADS="${2}"
                 shift
                 shift
                 ;;
@@ -407,6 +407,7 @@ elif [ "${USE_MOLD}" = "DOWNLOAD" ]; then
   fi
 fi
 
+echo ${THREADS}
 
 cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS} ${CMAKE_FLAGS}
 cmake --build ${BUILD_DIR} #-- -j ${THREADS}
