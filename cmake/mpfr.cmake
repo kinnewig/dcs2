@@ -74,7 +74,7 @@ else()
   # Linking
   add_library(MPFR::MPFR INTERFACE IMPORTED GLOBAL)
   set_target_properties(MPFR::MPFR PROPERTIES
-    IMPORTED_LOCATION ${MPFR_DIR}/lib/libmpfr.so
+    IMPORTED_LOCATION ${MPFR_DIR}/lib/libmpfr${CMAKE_SHARED_LIBRARY_SUFFIX}
     INTERFACE_INCLUDE_DIRECTORIES ${MPFR_DIR}/include
   )
 
@@ -87,5 +87,7 @@ else()
 endif()
 
 # add MPFR to SuiteSparse
-list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR=${MPFR_INCLUDE_DIR}")
-list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARIES=${MPFR_LIBRARY}")
+list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR:PATH=${MPFR_INCLUDE_DIR}")
+#list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARIES:PATH=${MPFR_LIBRARY}")
+list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARY:PATH=${MPFR_LIBRARY}/libmpfr${CMAKE_SHARED_LIBRARY_SUFFIX}")
+list(APPEND suitesparse_cmake_args "-D MPFR_STATIC:PATH=${MPFR_LIBRARY}/libmpfr.a")
