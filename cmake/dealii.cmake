@@ -39,14 +39,18 @@ if (DEFINED DEALII_CUSTOM_TAG)
   message("Using custom git tag for deal.II: ${DEALII_CUSTOM_TAG}")
 endif()
 
-message("TRILINOS_DIR (in deal.II): ${dealii_cmake_args}")
+if (DEFINED DEALII_CUSTOM_NAME)
+  set(dealii_name ${DEALII_CUSTOM_NAME})
+else()
+  set(dealii_name ${DEALII_VERSION})
+endif()
 
 if (DEFINED DEALII_SOURCE_DIR)
   ExternalProject_Add(
       dealii
       SOURCE_DIR ${DEALII_SOURCE_DIR}
       CMAKE_ARGS ${dealii_cmake_args}
-      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/dealii/${DEALII_VERSION}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/dealii/${dealii_name}
       BUILD_COMMAND cmake --build . --parallel ${THREADS}
       BUILD_BYPRODUCTS ${DEALII_LIBRARIES}
       CMAKE_GENERATOR ${DEFAULT_GENERATOR}
@@ -58,7 +62,7 @@ else()
       GIT_REPOSITORY ${dealii_url}
       GIT_TAG ${dealii_tag}
       CMAKE_ARGS ${dealii_cmake_args}
-      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/dealii/${DEALII_VERSION}
+      INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/dealii/${dealii_name}
       BUILD_COMMAND cmake --build . --parallel ${THREADS}
       BUILD_BYPRODUCTS ${DEALII_LIBRARIES}
       CMAKE_GENERATOR ${DEFAULT_GENERATOR}
