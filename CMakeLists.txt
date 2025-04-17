@@ -73,7 +73,7 @@ set(CMAKE_MPI_CXX_COMPILER "mpicxx")
 
 
 # AMD - AOCL
-set(AMD_VERSION "4.2.0" CACHE STRING "Specify the version of AOCL packages to be used")
+set(AMD_VERSION "5.0.0" CACHE STRING "Specify the version of AOCL packages to be used")
 if (AMD)
   include(cmake/aocl-utils.cmake)
 
