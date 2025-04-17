@@ -116,6 +116,9 @@
 
   "trilinos": {
     "git": "https://github.com/trilinos/trilinos.git",
+    "16.1.0": {
+      "tag": "c6f6bea715046c00b327f5ddaacdc372dccd3f64"
+    },
     "16.0.0": {
       "tag": "c6f6bea715046c00b327f5ddaacdc372dccd3f64"
     },
