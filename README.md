@@ -2,8 +2,72 @@
 
 DCS2 simplifies the process of building and installing the **deal.II** library along with various third-party dependencies.
 
+## Requirements
+DCS2 requires a modern MPI compiler, and a few additional programs that are not build by DCS2 itself.
 
-## Options
+### Fedora/Rocky/Redhat
+Install the dependencies
+```bash
+ sudo dnf install @development-tools openmpi openmpi-devel boost-devel
+```
+To enable openmpi by default add the following lines to the ~/.bashrc
+```bash
+source /etc/profile.d/modules.sh
+module load mpi/openmpi-x86_64
+```
+
+## DCS2 Options
+
+Usage: 
+```bash
+./dcs2.sh [options] [--blas-stack=<blas option>] [--cmake-flags="<CMake Options>"]
+```
+
+| Short Option     | Long Option                     | Description                                                  |
+|------------------|---------------------------------|---------------------------------------------------------------
+| `-h`             | `--help`                        | Print the help message                                       |
+| `-p <path>`      | `--prefix=<path>`               | Set a different prefix path                                  |
+| `-b <path>`      | `--build=<path>`                | Set a different build path                                   |
+| `-d <path>`      | `--bin-dir=<path>`              | Set a different binary path                                  |
+| `-j <threads>`   | `--parallel=<threads>`          | Set number of threads to use                                 |
+| `-A <ON|OFF>`    | `--add_to_path=<ON|OFF>`        | Enable or disable adding deal.II permanently to the path     |
+| `-N <ON|OFF>`    | `--ninja=<ON|OFF>`              | Enable or disable the use of Ninja                           |
+| `-M <ON|OFF>`    | `--mold=<ON|OFF>`               | Enable or disable the use of mold                            |
+| `-U`             |                                 | Do not interrupt                                             |
+| `-v`             | `--version`                     | Print the version number                                     |
+|                  | `--blas-stack=<blas option>`    | Select which BLAS to use (default|AMD)                       |
+|                  | `--cmake-flags=<CMake Options>` | Specify additional CMake Options, see below                  |
+
+
+### Blas Options
+One specilty of DCS2 is, that it can build deal.II and the TPL packages with different Blas backends.
+
+#### AMD AOCL 
+AMD AOCL provides hardware acceleration for AMD Zen CPUs, to select this Blas stack use
+
+```bash
+--blas-stack=AMD
+```
+
+To use the AOCL stack the AOCC compilier is required. Due to licensing, the AOCC compiler cannot be downloaded automatically.
+Download [aocc-compiler-5.0.0.tar](https://www.amd.com/de/developer/aocc/eula/aocc-5-0-eula.html?filename=aocc-compiler-5.0.0.tar) and place it in the DCS2 root directory. DCS2 will attempt to install it automatically from there.
+
+Alternatively, visit: https://www.amd.com/de/developer/aocc.html download the latest version, and install it manually.
+
+### Installation Tools 
+DCS2 provides a list of installation tools.
+
+#### CMake 
+- CMake is a hard dependency for DCS2; therefore, if no CMake version is detected, CMake is automatically downloaded and installed.
+
+#### Linker: Mold 
+- `-M|--mold` with the options `ON|OFF|DOWNLOAD`
+
+#### Ninja
+- `-N|--ninja` with the options `ON|OFF`
+
+
+## CMake Options
 
 ### deal.II Itself
 - `DEALII_VERSION`: Specify the deal.II version (default: "master")
@@ -48,7 +112,8 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 #### Grid generation
 - `GMSH` (default version: "4.12.2", default "OFF")
 #### Dependencies:
-   Only testes on Fedora 40/Rocky 9, requires the following dependencies `dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
+   Only testes on Fedora 40/41/42 and Rocky 9, requires the following dependencies `dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
+
 - `OCCT` OpenCascade (default version: "7.8.1", default "OFF")
 #### Dependencies:
 - `TCL` (default version: "8.6.15", default "OFF")
@@ -61,18 +126,8 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `TBB` Intel One Thread Building Blocks (default version: "2021.13.0")
 - `VTK` (default version: "9.3.1", default "OFF")
 
-### Installation Tools 
 
-### CMake 
-- CMake is a hard dependency for DCS2; therefore, if no CMake version is detected, CMake is automatically downloaded and installed.
-
-#### Linker: Mold 
-- `-M|--mold` with the options `ON|OFF|DOWNLOAD`
-
-#### Ninja
-- `-N|--ninja` with the options `ON|OFF`
-
-## Usage
+## Quick start
 
 To use DCS2, follow these steps:
 
@@ -86,6 +141,10 @@ To use DCS2, follow these steps:
    cd dcs2
    ./dcs2 -p <path/to/install> -j <Number of threads>
    ```
+
+## Troubleshooting
+### The build of deal.II fails
+deal.II requires 8GB of RAM per thread during the build process. If your build fails lower the number of threads to use (e.g. -j 2 when your system has 16GB of RAM).
 
 ## Acknowledgements 
 

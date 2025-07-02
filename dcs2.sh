@@ -178,17 +178,132 @@ download_and_extract_mold() {
 
 
 # ++============================================================++
+# ||                      AMD AOCC                              ||
+# ++============================================================++
+check_and_install_aocc() {
+  local aocc_found=false
+  local aocc_in_path=false
+
+  AOCC_VERSION=5.0.0
+  ARCHITECTURE=x86_64-linux
+
+  # Check if clang is associated with AOCC
+  if clang --version 2>/dev/null | grep -q "AMD"; then
+    cecho ${GOOD} "Found AMD AOCC Compiler"
+    clang --version
+    aocc_found=true
+    aocc_in_path=true
+  fi
+
+  # Check if AOCC is installed at the default path
+  if [[ "$aocc_found" == false ]]; then
+    if ls /opt/AMD/aocc-compiler-* &>/dev/null; then
+      echo "AMD AOCC found in /opt/AMD/, trying to activate it..."
+      source /opt/AMD/aocc-compiler-*/setenv_AOCC.sh
+
+      if clang --version 2>/dev/null | grep -q "AMD"; then
+        cecho ${GOOD} "Found AMD AOCC Compiler"
+        clang --version
+        AOCC_VERSION=$(clang --version | grep -oP 'AOCC_\K[\d.]+')
+        AOCC_PATH="/opt/AMD/aocc-compiler-${AOCC_VERSION}"
+        aocc_found=true
+      fi
+    fi
+  fi
+
+  # Attempt to install AOCC from local archive
+  if [[ "$aocc_found" == false ]]; then
+    if [[ -f "aocc-compiler-${AOCC_VERSION}.tar" ]]; then
+      cecho ${INFO} "Found AMD AOCC archive, attempting automatic installation..."
+
+      mkdir -p "${PREFIX}/aocc/"
+      tar -xf "aocc-compiler-${AOCC_VERSION}.tar" -C "${PREFIX}/aocc/"
+
+      cd "${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}" || exit 1
+      ./install.sh
+      source "${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}/setenv_AOCC.sh"
+      cd - > /dev/null
+
+      if clang --version 2>/dev/null | grep -q "AMD"; then
+        cecho ${GOOD} "Successfully installed the AMD AOCC compiler"
+        clang --version
+        AOCC_PATH="${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}"
+        aocc_found=true
+      else
+        cecho {ERROR} "Automated installation of the AMD AOCC compiler failed. Please install AOCC manually."
+        exit 1
+      fi
+    fi
+  fi
+
+  # Handle PATH update suggestion
+  if [[ "$aocc_in_path" == false && "$aocc_found" == true ]]; then
+    echo
+    if [[ "${ADD_TO_PATH}" == "OFF" ]]; then
+      cecho ${INFO} "==================================================="}
+      cecho ${INFO} "IMPORTANT:"
+      echo
+      cecho ${INFO} "In order to use AOCC in future sessions, run:"
+      cecho ${INFO} "source ${AOCC_PATH}/setenv_AOCC.sh"
+      cecho ${INFO} "Or to automatically load AOCC, add the following to your ~/.bashrc:"
+      cecho ${INFO} "if [ -f ${AOCC_PATH}/setenv_AOCC.sh ]; then"
+      cecho ${INFO} "  source ${AOCC_PATH}/setenv_AOCC.sh"
+      cecho ${INFO} "fi"
+      echo
+      if [[ "${ADD_TO_PATH}" == "OFF" && "${USER_INTERACTION}" == "ON" ]]; then
+        read -p "Press Enter to continue..."
+      fi
+      cecho ${INFO} "==================================================="}
+      echo
+    else
+      SET_AOCC_PATH=ON
+    fi
+  fi
+
+  # Final fallback if all attempts fail
+  if [[ "$aocc_found" == false ]]; then
+    cecho ${ERROR} "AMD AOCC not found!"
+    echo
+    cecho ${INFO} "Due to licensing, AMD AOCC cannot be downloaded automatically."
+    cecho ${INFO} "Please visit: https://www.amd.com/de/developer/aocc.html and download the latest version."
+    cecho ${INFO} "Alternatively, place aocc-compiler-${AOCC_VERSION}.tar.gz in the dcs2 root directory."
+    cecho ${INFO} "The tool will attempt to install it automatically from there."
+  fi
+}
+
+
+
+# ++============================================================++
 # ||                    Add to path                             ||
 # ++============================================================++
 add_to_path() {
-    # Check if ~/.bashrc already contains BIN_DIR in the PATH
-    if grep -q "#BEGIN: ADDED BY DCS" ~/.bashrc; then
-        # If it does, remove the old lines
-        sed -i '/#BEGIN: ADDED BY DCS/,/#END: ADDED BY DCS/d' ~/.bashrc
+    # Remove previous DCS2 block if it exists
+    if grep -q "#BEGIN: ADDED BY DCS2" ~/.bashrc; then
+        sed -i '/#BEGIN: ADDED BY DCS2/,/#END: ADDED BY DCS2/d' ~/.bashrc
     fi
 
-    # Add BIN_DIR to the PATH in ~/.bashrc
-    echo -e "\n#BEGIN: ADDED BY DCS\nexport PATH=${BIN_DIR}:\$PATH\n#END: ADDED BY DCS" >> ~/.bashrc
+    # Append the updated PATH block
+    {
+        echo
+        echo "#BEGIN: ADDED BY DCS2"
+        echo "# Everything in this block will be overwritten the next time you run dcs2"
+        echo
+        echo "# --- dcs2 bin dir (includes CMAKE, Ninja, Mold) ---"
+        echo "if [ -d \"${BIN_DIR}\" ]; then"
+        echo "  export PATH=\"${BIN_DIR}:\$PATH\""
+        echo "fi"
+        echo
+
+        if [[ "${SET_AOCC_PATH}" == "ON" ]]; then
+            echo "# --- AOCC Compiler ---"
+            echo "if [ -f \"${AOCC_PATH}/setenv_AOCC.sh\" ]; then"
+            echo "  source \"${AOCC_PATH}/setenv_AOCC.sh\""
+            echo "fi"
+            echo
+        fi
+
+        echo "#END: ADDED BY DCS2"
+    } >> ~/.bashrc
 }
 
 
@@ -205,17 +320,19 @@ parse_arguments() {
             # Help
             -h|--help)
               echo "deal.II CMake SuberBuild, Version $(cat VERSION)"
-              echo "Usage: $0 [options]"
-              echo "  -h, --help                   Print this message"
-              echo "  -p <path>,    --prefix=<path>        Set a different prefix path (default ${DEFAULT_PATH})"
-              echo "  -b <path>,    --build=<path>         Set a different build path (default ${DEFAULT_PATH}/tmp)$"
-              echo "  -d <path>,    --bin-dir=<path>       Set a different binary path (default ${DEFAULT_PATH}/bin)$"
-              echo "  -j <threads>, --parallel=<threads>   Set number of threads to use (default ${THREADS})"
-              echo "  -A <ON|OFF>,  --add_to_path=<ON|OFF> Enable or disable to add deal.II permanently to the path"
-              echo "  -N <ON|OFF>,  --ninja=<ON|OFF>       Enable or disable the use of Ninja"
-              echo "  -M <ON|OFF>,  --mold=<ON|OFF>        Enable or disable the use of mold"
-              echo "  -U                                   Do not interupt"
-              echo "  -v,           --version              Print the version number"
+              echo "Usage: $0 [options] [--blas-stack=<BLAS option>] [--cmake-flags=\"<CMake Options>\"]"
+              echo "  -h,           --help                         Print this message"
+              echo "  -p <path>,    --prefix=<path>                Set a different prefix path (default ${DEFAULT_PATH})"
+              echo "  -b <path>,    --build=<path>                 Set a different build path (default ${DEFAULT_PATH}/tmp)$"
+              echo "  -d <path>,    --bin-dir=<path>               Set a different binary path (default ${DEFAULT_PATH}/bin)$"
+              echo "  -j <threads>, --parallel=<threads>           Set number of threads to use (default ${THREADS})"
+              echo "  -A <ON|OFF>   --add_to_path=<ON|OFF>         Enable or disable adding deal.II permanently to the path"  
+              echo "  -N <ON|OFF>,  --ninja=<ON|OFF>               Enable or disable the use of Ninja"
+              echo "  -M <ON|OFF>,  --mold=<ON|OFF>                Enable or disable the use of mold"
+              echo "  -U                                           Do not interupt"
+              echo "  -v,           --version                      Print the version number"
+              echo "                --blas-stack=<blas option>     Select which BLAS to use (default|AMD)"
+              echo "                --cmake-flags=<CMake Options>  Specify additional CMake Options, see the README for details" 
               exit 1
             ;;
 
@@ -257,6 +374,13 @@ parse_arguments() {
             # Add to PATH
             -A|--add_to_path)
                 ADD_TO_PATH="$2"
+                shift
+                shift
+                ;;
+
+            # BLAS stack
+            --blas-stack)
+                BLAS_STACK="$2"
                 shift
                 shift
                 ;;
@@ -352,6 +476,13 @@ parse_arguments() {
         cecho ${INFO} "Otherwise, enable add to path via -A=OFF or --add_to_path=ON."
     fi
 
+    # AMD
+    if [ -z "${BLAS_STACK}" ]; then
+        BLAS_STACK=default
+        cecho ${INFO} "Using the default BLAS stack."
+        cecho ${INFO} "To select a different BLAS stack use: --blas-stack=<default|AMD>"
+    fi
+
     # NINJA
     if [ -z "${USE_NINJA}" ]; then
         USE_NINJA=ON
@@ -366,6 +497,22 @@ parse_arguments() {
         cecho ${INFO} "Otherwise, disable mold via -M OFF or --mold=OFF."
     fi
 
+    if [ -z "${SET_AOCC_PATH}" ]; then
+        SET_AOCC_PATH=OFF
+    fi
+
+    if [ -z "${USER_INTERACTION}" ]; then
+        USER_INTERACTION=ON 
+    fi
+
+    echo
+    echo "==================================================="
+    echo "IMPORTANT: Please check the configuration above."
+    if [[ "${USER_INTERACTION}" == "ON" ]]; then
+      read -p "Press Enter to continue... otherwise press STR+C"
+    fi
+    echo "==================================================="
+    echo
 }
 
 
@@ -376,7 +523,7 @@ parse_arguments() {
 # Verify that dcs.sh is called from the directory where the script is located.
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 if [ "$(pwd)" != "${SCRIPT_DIR}" ]; then
-  cecho ${ERROR} "ERROR: DCS has to be called from the directory where it is located."
+  cecho ${ERROR} "ERROR: dcs2 has to be called from the directory where it is located."
   exit 1
 fi
 
@@ -389,6 +536,14 @@ fi
 # If it not available install it.
 if ! check_and_install_cmake "$@"; then
   exit 1
+fi
+
+if [ "${BLAS_STACK}" = "AMD" ]; then
+  if ! check_and_install_aocc "&@"; then
+    exit 1 
+  fi
+  # Add AMD=ON to the CMake flags aswell:
+  CMAKE_FLAGS="${CMAKE_FLAGS} -D AMD=ON"
 fi
 
 if [ "${USE_NINJA}" = "ON" ]; then
@@ -407,11 +562,9 @@ elif [ "${USE_MOLD}" = "DOWNLOAD" ]; then
   fi
 fi
 
-echo ${THREADS}
-
 cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS} ${CMAKE_FLAGS}
 cmake --build ${BUILD_DIR} #-- -j ${THREADS}
 
-if [ "${ADD_TO_PATH}" = "YES" ]; then
+if [ "${ADD_TO_PATH}" = "ON" ]; then
   add_to_path
 fi
