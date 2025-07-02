@@ -123,7 +123,8 @@ endif()
 
 # Add libflame to deal.II
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_LAPACK:BOOL=ON")
-list(APPEND dealii_cmake_args "-D LAPACK_DIR=${LIBFLAME_DIR}")
+#list(APPEND dealii_cmake_args "-D LAPACK_DIR=${LIBFLAME_DIR}")
+#list(APPEND dealii_cmake_args "-D LAPACK_LIBRARIES=${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add libflame to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_LAPACK:BOOL=ON")

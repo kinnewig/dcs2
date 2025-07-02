@@ -14,11 +14,14 @@ set(GMP_DIR "" CACHE PATH "The directory of the GMP installation")
 
 find_path(GMP_INCLUDE_DIR NAMES gmp.h
           HINTS ${GMP_DIR}/include ${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}/include/gmp
-          PATHS ${PC_GMP_INCLUDEDIR} ${PC_GMP_INCLUDE_DIRS})
+          PATHS ${PC_GMP_INCLUDEDIR} ${PC_GMP_INCLUDE_DIRS}
+          PATHS /usr/include /usr/local/include
+          PATH_SUFFIXES gmp)
 
 find_library(GMP_LIBRARY NAMES gmp
              HINTS ${GMP_DIR}/lib ${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}/lib
-             PATHS ${PC_GMP_LIBDIR} ${PC_GMP_LIBRARY_DIRS})
+             PATHS ${PC_GMP_LIBDIR} ${PC_GMP_LIBRARY_DIRS}
+             PATHS /usr/lib /usr/local/lib)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GMP DEFAULT_MSG GMP_LIBRARY GMP_INCLUDE_DIR)
