@@ -100,6 +100,9 @@
     "git": "https://github.com/DrTimothyAldenDavis/SuiteSparse.git",
     "7.7.0": {
       "tag": "13806726cbf470914d012d132a85aea1aff9ee77"
+    },
+    "7.10.3": {
+      "tag": "1786fef52d4bea8fadb9f775f0fd5af459a14293"
     }
   },
 

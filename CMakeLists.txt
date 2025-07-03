@@ -32,7 +32,7 @@ option(TPL_ENABLE_MPFR        "Enable or disable the use of MMPFR as a third-par
 set(MPFR_VERSION "4.2.1" CACHE STRING "Specify the version of MPFR to be used")
 
 option(TPL_ENABLE_SUITESPARSE "Enable or disable the use of SuiteSparse as a third-party library" ON)
-set(SUITESPARSE_VERSION "7.7.0" CACHE STRING "Specify the version of SuiteSparse to be used")
+set(SUITESPARSE_VERSION "7.10.3" CACHE STRING "Specify the version of SuiteSparse to be used")
 
 option(TPL_ENABLE_P4EST       "Enable or disable the use of P4EST as a third-party library"       ON)
 set(P4EST_VERSION "2.8.5" CACHE STRING "Specify the version of P4EST to be used")
