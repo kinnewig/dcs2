@@ -68,7 +68,7 @@
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
     "2.2.1": {
-      "tag": "acf286b783d53f73a42ec219ead74357e0b34501"
+      "tag": "a8cc939fec988191d0267a9b39436d6f6cb66b08"
     },
     "2.2.0": {
       "tag": "7dbf35c74ceb77e06fdacf7056f78b5f56fe67fb"
@@ -123,7 +123,7 @@
   "trilinos": {
     "git": "https://github.com/trilinos/trilinos.git",
     "16.1.0": {
-      "tag": "c6f6bea715046c00b327f5ddaacdc372dccd3f64"
+      "tag": "687258b4bfad0c6d7a80992f9d67a67c0d52b2cc"
     },
     "16.0.0": {
       "tag": "c6f6bea715046c00b327f5ddaacdc372dccd3f64"
