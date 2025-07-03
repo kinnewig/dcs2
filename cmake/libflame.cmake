@@ -15,12 +15,16 @@ else()
     list(APPEND libflame_autotool_args "--enable-lapack2flame")
     list(APPEND libflame_autotool_args "--enable-external-lapack-interfaces")
     list(APPEND libflame_autotool_args "--enable-dynamic-build")
-    list(APPEND libflame_autotool_args "--enable-f2c-dotc")
-    list(APPEND libflame_autotool_args "--enable-max-arg-list-hack")
+    list(APPEND libflame_autotool_args "--with-cc=gcc")
     list(APPEND libflame_autotool_args "--disable-builtin-blas")
-    list(APPEND libflame_autotool_args "CXXFLAGS=-fPIC")
+    list(APPEND libflame_autotool_args "--enable-max-arg-list-hack")
+    list(APPEND libflame_autotool_args "CFLAGS=-fPIC")
+    list(APPEND libflame_autotool_args "CPPFLAGS=-fPIC")
     list(APPEND libflame_autotool_args "FFLAGS=-fPIC")
     list(APPEND libflame_autotool_args "FCFLAGS=-fPIC")
+
+    # TODO: this is a workarround for bug: https://github.com/flame/libflame/issues/102
+    list(APPEND libflame_autotool_args "--enable-legacy-lapack")
   endif()
   
   # get the download url for libflame:
