@@ -3,6 +3,10 @@ include(ExternalProject)
 find_package(MPFR "4.0.2")
 if(MPFR_FOUND)
 
+  # add MPFR to SuiteSparse
+  list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR:PATH=${MPFR_INCLUDE_DIR}")
+  list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARY:PATH=${MPFR_LIBRARY}")
+
 else()
   message(STATUS "Building MPFR")
   
@@ -84,10 +88,11 @@ else()
   # Dependencies:
   # add MPFR as dependencie to SuiteSparse
   list(APPEND suitesparse_dependencies "mpfr")
+
+  # add MPFR to SuiteSparse
+  list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR:PATH=${MPFR_INCLUDE_DIR}")
+  list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARY:PATH=${MPFR_LIBRARY}/libmpfr${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  list(APPEND suitesparse_cmake_args "-D MPFR_STATIC:PATH=${MPFR_LIBRARY}/libmpfr.a")
 endif()
 
-# add MPFR to SuiteSparse
-list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR:PATH=${MPFR_INCLUDE_DIR}")
-#list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARIES:PATH=${MPFR_LIBRARY}")
-list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARY:PATH=${MPFR_LIBRARY}/libmpfr${CMAKE_SHARED_LIBRARY_SUFFIX}")
-list(APPEND suitesparse_cmake_args "-D MPFR_STATIC:PATH=${MPFR_LIBRARY}/libmpfr.a")
+
