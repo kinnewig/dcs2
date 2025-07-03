@@ -8,7 +8,7 @@ DCS2 requires a modern MPI compiler, and a few additional programs that are not 
 ### Fedora/Rocky/Redhat
 Install the dependencies
 ```bash
- sudo dnf install @development-tools openmpi openmpi-devel boost-devel
+ sudo dnf install @development-tools openmpi-devel boost-devel gcc-c++ git 
 ```
 To enable openmpi by default add the following lines to the ~/.bashrc
 ```bash
@@ -42,9 +42,20 @@ Usage:
 ### Blas Options
 One specilty of DCS2 is, that it can build deal.II and the TPL packages with different Blas backends.
 
+#### System
+If you want to install DEALII using the system-provided BLAS stack, please use the following flag
+```bash
+--blas-stack=system
+```
+
+The most straightforward method for installing DEALII is to rely on the BLAS, LAPACK, and ScaLAPACK libraries, which are typically provided by the system repositories. 
+
+You need to install the developer packages of the following packages `openblas` `lapack` `scalapack`.
+In the case of Fedora/Rocky/Redhat this boils down to `sudo dnf install openblas-devel lapack-devel scalapack-openmpi-devel`
+
+
 #### AMD AOCL 
 AMD AOCL provides hardware acceleration for AMD Zen CPUs, to select this Blas stack use
-
 ```bash
 --blas-stack=AMD
 ```
