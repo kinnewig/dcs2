@@ -6,7 +6,10 @@ THREADS=$(($(nproc)-2))
 
 DEFAULT_PATH="${HOME}/dcs"
 
-
+# List of available BLAS stacks:
+BLAS_OPTIONS=(AMD default system)
+BOOL_OPTIONS=(ON OFF)
+BOOL_WITH_DOWNLOAD_OPTIONS=(ON OFF download)
 
 # ++============================================================++
 # ||                         Premilaris                         ||
@@ -56,18 +59,20 @@ download_and_install_cmake() {
 }
 
 check_and_install_cmake() {
-    echo "Check if CMake is installed"
+    cecho ${INFO} "CMake:"
     if command -v cmake &>/dev/null; then
-        cecho ${GOOD} "Found CMake $(cmake --version)"
+        cecho ${GOOD} "  already installed"
     else
+        cecho ${WARN} "  attempt to install..."
         download_and_install_cmake
         if ! command -v cmake &>/dev/null; then
-            echo ${ERROR} "ERROR: Failed to install CMake automatically."
+            echo ${ERROR} "  ERROR: Failed to install CMake automatically."
             exit 1
         else
-            cecho ${GOOD} "CMake ${CMAKE_VERSION} has been installed to ${PREFIX}/cmake/${CMAKE_VERSION}"
+            cecho ${GOOD} "  CMake ${CMAKE_VERSION} has been installed to ${PREFIX}/cmake/${CMAKE_VERSION}"
         fi
     fi
+    echo
 }
 
 
@@ -77,11 +82,11 @@ check_and_install_cmake() {
 # ++============================================================++
 # Check if Ninja is installed and install if not
 check_and_install_ninja() {
-    echo "Check if Ninja is installed"
+    cecho ${INFO} "Ninja:"
     if command -v ninja &>/dev/null; then
-        cecho ${GOOD} "Found Ninja $(ninja --version)"
+        cecho ${GOOD} "  already installed"
     else
-        cecho ${WARN} "Ninja not found. Attempting to install..."
+        cecho ${WARN} "  attempting to install..."
         # Call the CMake script to install Ninja
         NINJA_VERSION=1.11.1
         cmake -S ninja -B ${BUILD_DIR}/ninja -D CMAKE_INSTALL_PREFIX=${PREFIX} -D NINJA_VERSION=${NINJA_VERSION} -D BIN_DIR=${BIN_DIR}
@@ -90,19 +95,20 @@ check_and_install_ninja() {
 
         # Check that ${BIN_DIR} is already in the path.
         if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
-            cecho ${INFO} "${BIN_DIR} is already in the path."
+            cecho ${INFO} "  ${BIN_DIR} is already in the path."
         else
             # Add Ninja to the PATH
             export PATH=${BIN_DIR}:${PATH}
         fi
 
         if ! command -v ninja &>/dev/null; then
-            cecho ${ERROR} "ERROR: Failed to install Ninja automatically."
+            cecho ${ERROR} "  ERROR: Failed to install Ninja automatically."
             exit 1
         else
-            cecho ${GOOD} "Ninja has been installed successfully."
+            cecho ${GOOD} "  Ninja has been installed successfully."
         fi
     fi
+    echo
 }
 
 
@@ -112,11 +118,11 @@ check_and_install_ninja() {
 # ++============================================================++
 # Check if mold is installed and install if not
 check_and_install_mold() {
-    echo "Check if mold is installed"
+    cecho ${INFO} "mold:"
     if command -v mold &>/dev/null; then
-        cecho ${GOOD} "Found mold $(mold --version)"
+        cecho ${GOOD} "  already installed"
     else
-        cecho ${WARN} "Ninja not found. Attempting to install..."
+        cecho ${WARN} "  attempting to install..."
         # Call the CMake script to install Ninja
         MOLD_VERSION=2.30.0
         cmake -S mold -B ${BUILD_DIR}/mold -D CMAKE_INSTALL_PREFIX=${PREFIX} -D MOLD_VERSION=${MOLD_VERSION} -D BIN_DIR=${BIN_DIR}
@@ -125,27 +131,29 @@ check_and_install_mold() {
 
         # Check that ${BIN_DIR} is already in the path.
         if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
-            cecho ${INFO} "${BIN_DIR} is already in the path."
+            cecho ${INFO} "  ${BIN_DIR} is already in the path."
         else
             # Add mold to the PATH
             export PATH=${BIN_DIR}:${PATH}
         fi
 
         if ! command -v mold &>/dev/null; then
-            cecho ${ERROR} "ERROR: Failed to install mold automatically."
+            cecho ${ERROR} "  ERROR: Failed to install mold automatically."
             exit 1
         else
-            cecho ${GOOD} "mold has been installed successfully."
+            cecho ${GOOD} "  mold has been installed successfully."
         fi
     fi
+    echo
 }
 
 # Download and extract mold
 download_and_extract_mold() {
-  echo "Check if mold is installed"
+  cecho ${INFO} "mold:"
     if command -v mold &>/dev/null; then
-        cecho ${GOOD} "Found mold $(mold --version)"
+        cecho ${GOOD} "  already installed"
     else
+      cecho ${WARN} "  attempt to install..."
       # Read the mold version
       MOLD_VERSION=2.30.0
       ARCHITECTURE=x86_64-linux
@@ -167,12 +175,13 @@ download_and_extract_mold() {
 
       # Check mold
       if ! command -v mold &>/dev/null; then
-          cecho ${ERROR} "ERROR: Failed to install mold automatically."
+          cecho ${ERROR} "  ERROR: Failed to install mold automatically."
           exit 1
       else
-          cecho ${GOOD} "mold has been downloaded successfully."
+          cecho ${GOOD} "  mold has been downloaded successfully."
       fi
     fi
+    echo
 }
 
 
@@ -188,9 +197,9 @@ check_and_install_aocc() {
   ARCHITECTURE=x86_64-linux
 
   # Check if clang is associated with AOCC
+  cecho ${INFO} "AMD AOCC"
   if clang --version 2>/dev/null | grep -q "AMD"; then
-    cecho ${GOOD} "Found AMD AOCC Compiler"
-    clang --version
+    cecho ${GOOD} "  already installed"
     aocc_found=true
     aocc_in_path=true
   fi
@@ -198,11 +207,11 @@ check_and_install_aocc() {
   # Check if AOCC is installed at the default path
   if [[ "$aocc_found" == false ]]; then
     if ls /opt/AMD/aocc-compiler-* &>/dev/null; then
-      echo "AMD AOCC found in /opt/AMD/, trying to activate it..."
+      echo "  AMD AOCC found in /opt/AMD/, trying to activate it..."
       source /opt/AMD/aocc-compiler-*/setenv_AOCC.sh
 
       if clang --version 2>/dev/null | grep -q "AMD"; then
-        cecho ${GOOD} "Found AMD AOCC Compiler"
+        cecho ${GOOD} "  Found AMD AOCC Compiler"
         clang --version
         AOCC_VERSION=$(clang --version | grep -oP 'AOCC_\K[\d.]+')
         AOCC_PATH="/opt/AMD/aocc-compiler-${AOCC_VERSION}"
@@ -214,7 +223,7 @@ check_and_install_aocc() {
   # Attempt to install AOCC from local archive
   if [[ "$aocc_found" == false ]]; then
     if [[ -f "aocc-compiler-${AOCC_VERSION}.tar" ]]; then
-      cecho ${INFO} "Found AMD AOCC archive, attempting automatic installation..."
+      cecho ${INFO} "  Found AMD AOCC archive, attempting automatic installation..."
 
       mkdir -p "${PREFIX}/aocc/"
       tar -xf "aocc-compiler-${AOCC_VERSION}.tar" -C "${PREFIX}/aocc/"
@@ -225,12 +234,12 @@ check_and_install_aocc() {
       cd - > /dev/null
 
       if clang --version 2>/dev/null | grep -q "AMD"; then
-        cecho ${GOOD} "Successfully installed the AMD AOCC compiler"
+        cecho ${GOOD} "  Successfully installed the AMD AOCC compiler"
         clang --version
         AOCC_PATH="${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}"
         aocc_found=true
       else
-        cecho {ERROR} "Automated installation of the AMD AOCC compiler failed. Please install AOCC manually."
+        cecho {ERROR} "  Automated installation of the AMD AOCC compiler failed. Please install AOCC manually."
         exit 1
       fi
     fi
@@ -262,12 +271,13 @@ check_and_install_aocc() {
 
   # Final fallback if all attempts fail
   if [[ "$aocc_found" == false ]]; then
-    cecho ${ERROR} "AMD AOCC not found!"
+    cecho ${ERROR} "  AMD AOCC not found!"
     echo
-    cecho ${INFO} "Due to licensing, AMD AOCC cannot be downloaded automatically."
-    cecho ${INFO} "Please visit: https://www.amd.com/de/developer/aocc.html and download the latest version."
-    cecho ${INFO} "Alternatively, place aocc-compiler-${AOCC_VERSION}.tar.gz in the dcs2 root directory."
-    cecho ${INFO} "The tool will attempt to install it automatically from there."
+    cecho ${INFO} "  Due to licensing, AMD AOCC cannot be downloaded automatically."
+    cecho ${INFO} "  Please visit: https://www.amd.com/de/developer/aocc.html and download the latest version."
+    cecho ${INFO} "  Alternatively, place aocc-compiler-${AOCC_VERSION}.tar.gz in the dcs2 root directory."
+    cecho ${INFO} "  The tool will attempt to install it automatically from there."
+    exit 1
   fi
 }
 
@@ -304,6 +314,288 @@ add_to_path() {
 
         echo "#END: ADDED BY DCS2"
     } >> ~/.bashrc
+}
+
+
+
+# ++============================================================++
+# ||                    Check compiler                          ||
+# ++============================================================++
+
+check_compiler() {
+  echo
+  echo "==================================================="
+  echo "Compiler:"
+  echo "==================================================="
+  echo 
+
+  # NON MPI Compiler
+  cecho ${INFO} "C Compiler: "
+  local found_c_compiler=false
+
+  # If we use the AMD stack, ensure we are using clang
+  if [ "${BLAS_STACK}" = "AMD" ]; then
+
+    # check if CC is defined
+    if [[ -n "$CC" ]]; then
+      if [[ "$CC" == "clang" ]]; then
+        cecho ${GOOD} "  Found CC compilier ${CC}"
+        found_c_compiler=true
+      else
+        cecho ${WARN} "  CC is set to ${CC} instead of clang."
+      fi
+    else
+      cecho ${WARN} "  CC Variable not set."
+    fi
+
+    # If clang was not found yet, check if it is present in the path
+    if [ "$found_c_compiler" = "false" ]; then
+      if builtin command -v clang > /dev/null; then
+        cecho ${INFO} "  Found default clang."
+        export CC=clang
+        found_c_compiler=true
+      else
+        cecho ${ERROR} "  Could not find AMD clang!"
+        cecho ${INFO} "  For the AMD BLAS stack the AMD clang compilier is required."
+        cecho ${INFO} "  For more details see the README."
+        cecho ${INFO} "  Either ensure that clang is included in your PATH"
+        cecho ${INFO} "  or set the variable: export CC=</path/to>/clang"
+        exit 1
+      fi
+    fi
+
+    # Check that this is the AMD Clang compiler
+    if ! clang --version | grep -qi "amd"; then
+      cecho ${ERROR} "  It seems the clang compilier that was provided is not the AMD "
+      cecho ${ERROR} "  clang compilier. But for the AMD BLAS stack the AMD clang compilier"
+      cecho ${ERROR} "  is required. For more details see the README."
+      exit 1
+    fi
+
+  # Otherwise, just check that we have a C compilier
+  else
+    if [[ -n "$CC" ]]; then
+      cecho ${GOOD} "  Found CC compilier ${CC}"
+    else
+      cecho ${WARN} "  CC Variable not set."
+      if builtin command -v gcc > /dev/null; then
+        cecho ${INFO} "  Found default gcc."
+        export CC=gcc
+      else
+        cecho ${ERROR} "  No C Compiler was found!"
+        cecho ${INFO} "  Either ensure that gcc is included in your PATH"
+        cecho ${INFO} "  or set the variable: export CC=</path/to/c-compilier>"
+        exit 1
+      fi
+    fi
+  fi
+
+  echo "  Found:   $(which ${CC})"
+  echo "  Version: $(${CC} --version)"
+  echo
+
+
+  cecho ${INFO} "CXX Compiler: "
+  local found_cxx_compiler=false
+
+  # If we use the AMD stack, ensure we are using clang++
+  if [ "${BLAS_STACK}" = "AMD" ]; then
+
+    # check if CXX is defined
+    if [[ -n "$CXX" ]]; then
+      if [[ "$CXX" == "clang++" || "$CXX" == "clangxx" ]]; then
+        cecho ${GOOD} "  Found CXX compilier ${CXX}"
+        found_cxx_compiler=true
+      else
+        cecho ${WARN} "  CXX is set to ${CXX} instead of clang++/clangxx."
+      fi
+    else
+      cecho ${WARN} "  CXX Variable not set."
+    fi
+
+    # If clang++ was not found yet, check if it is present in the path
+    if [ "$found_cxx_compiler" = "false" ]; then
+      if builtin command -v clang++ > /dev/null; then
+        cecho ${INFO} "  Found default clang++."
+        export CXX=clang++
+        found_cxx_compiler=true
+      else
+        cecho ${ERROR} "  Could not find AMD clang++!"
+        cecho ${INFO} "  For the AMD BLAS stack the AMD clang++ compilier is required."
+        cecho ${INFO} "  For more details see the README."
+        cecho ${INFO} "  Either ensure that clang is included in your PATH"
+        cecho ${INFO} "  or set the variable: export CXX=</path/to>/clang++"
+        exit 1
+      fi
+    fi
+
+    # Check that this is the AMD clang++ compiler
+    if ! clang++ --version | grep -qi "amd"; then
+      cecho ${ERROR} "  It seems the clang++ compilier that was provided is not the AMD "
+      cecho ${ERROR} "  clang compilier. But for the AMD BLAS stack the AMD clang compilier"
+      cecho ${ERROR} "  is required. For more details see the README."
+      exit 1
+    fi
+
+  # Otherwise, just check that we have a CXX compilier
+  else
+    if [[ -n "$CXX" ]]; then
+      cecho ${GOOD} "  Found CXX compilier ${CXX}"
+    else
+      cecho ${WARN}   "  CXX Variable not set."
+      if builtin command -v g++ > /dev/null; then
+        cecho ${INFO} "  Found default gcc."
+        export CXX=g++
+      else
+        cecho ${ERROR} "  No CXX Compiler was found!"
+        cecho ${INFO} "  Either ensure that g++ is included in your PATH"
+        cecho ${INFO} "  or set the variable: export CXX=</path/to/c++-compilier>"
+        exit 1
+      fi
+    fi
+  fi
+
+  echo "  Found:   $(which ${CXX})"
+  echo "  Version: $(${CXX} --version)"
+  echo 
+
+
+  cecho ${INFO} "Fortran Compiler: "
+  local found_f_compiler=false
+
+  # If we use the AMD stack, ensure we are using flang
+  if [ "${BLAS_STACK}" = "AMD" ]; then
+
+    # check if FC is defined
+    if [[ -n "$FC" ]]; then
+      if [[ "$FC" == "flang" ]]; then
+        cecho ${GOOD} "  Found FC compilier ${FC}"
+        found_f_compiler=true
+      else
+        cecho ${WARN} "  FC is set to ${FC} instead of flang."
+      fi
+    else
+      cecho ${WARN} "  FC Variable not set."
+    fi
+
+    # If clang++ was not found yet, check if it is present in the path
+    if [ "$found_f_compiler" = "false" ]; then
+      if builtin command -v flang > /dev/null; then
+        cecho ${INFO} "  Found default flang."
+        export FC=flang
+        found_f_compiler=true
+      else
+        cecho ${ERROR} "  Could not find AMD flang!"
+        cecho ${INFO} "  For the AMD BLAS stack the AMD flang compilier is required."
+        cecho ${INFO} "  For more details see the README."
+        cecho ${INFO} "  Either ensure that flang is included in your PATH"
+        cecho ${INFO} "  or set the variable: export FC=</path/to>/flang"
+        exit 1
+      fi
+    fi
+
+    # Check that this is the AMD clang++ compiler
+    if ! flang --version | grep -qi "amd"; then
+      cecho ${ERROR} "  It seems the flang compilier that was provided is not the AMD "
+      cecho ${ERROR} "  clang compilier. But for the AMD BLAS stack the AMD clang compilier"
+      cecho ${ERROR} "  is required. For more details see the README."
+      exit 1
+    fi
+
+  # Otherwise, just check that we have a CXX compilier
+  else
+    if [[ -n "$FC" ]]; then
+      cecho ${GOOD} "  Found FC compilier ${FC}"
+    else
+      cecho ${WARN} "  FC Variable not set."
+      if builtin command -v gfortran > /dev/null; then
+        cecho ${INFO} "  Found default gfortran."
+        export FC=gfortran
+      else
+        cecho ${ERROR} "  No FC Compiler was found!"
+        cecho ${INFO} "  Either ensure that gfortran is included in your PATH"
+        cecho ${INFO} "  or set the variable: export FC=</path/to/fortran-compilier>"
+        exit 1
+      fi
+    fi
+  fi
+
+  echo "  Found:   $(which ${FC})"
+  echo "  Version: $(${FC} --version)"
+  echo
+
+
+  cecho ${INFO} "MPI C Compiler: "
+  if [[ -n "$MPI_CC" ]]; then
+    cecho ${GOOD} "  Found MPI_CC compilier ${MPI_CC}"
+  else
+    cecho ${WARN} "  MPI_CC Variable not set."
+    if builtin command -v mpicc > /dev/null; then
+      cecho ${INFO} "  Found default mpicc."
+      export MPI_CC=mpicc
+    else
+      cecho ${ERROR} "  No MPI C Compiler was found!"
+      cecho ${INFO} "  Either ensure that mpicc is included in your PATH"
+      cecho ${INFO} "  or set the variable: export MPI_CC=</path/to/mpi-c-compilier>"
+      exit 1
+    fi
+  fi
+
+  echo "  Found:   $(which ${MPI_CC})"
+  echo "  Version: $(${MPI_CC} --version)"
+  echo
+
+
+  cecho ${INFO} "MPI CXX Compiler: "
+  if [[ -n "$MPI_CXX" ]]; then
+    cecho ${GOOD} "  Found MPI_CXX compilier ${MPI_CXX}"
+  else
+    cecho ${WARN} "  MPI_CXX Variable not set."
+    if builtin command -v mpicxx > /dev/null; then
+      cecho ${INFO} "  Found default mpicxx."
+      export MPI_CXX=mpicxx
+    else
+      cecho ${ERROR} "  No MPI CXX Compiler was found!"
+      cecho ${INFO} "  Either ensure that mpicc is included in your PATH"
+      cecho ${INFO} "  or set the variable: export MPI_CXX=</path/to/mpi-c++-compilier>"
+      exit 1
+    fi
+  fi
+
+  echo "  Found:   $(which ${MPI_CXX})"
+  echo "  Version: $(${MPI_CXX} --version)"
+  echo
+
+
+  cecho ${INFO} "MPI Fortran Compiler: "
+  if [[ -n "$MPI_FC" ]]; then
+    echo "Found MPI_FC compilier ${MPI_FC}"
+  else
+    cecho ${WARN} "  MPI_FC Variable not set."
+    if builtin command -v mpifort > /dev/null; then
+      cecho ${INFO} "  Found default mpifort."
+      export MPI_FC=mpifort
+    else
+      cecho ${ERROR} "  No MPI Fortran Compiler was found!"
+      cecho ${INFO} "  Either ensure that mpifort is included in your PATH"
+      cecho ${INFO} "  or set the variable: export MPI_FC=</path/to/mpi-fortran-compilier>"
+      exit 1
+    fi
+  fi
+
+  echo "  Found:   $(which ${MPI_CC})"
+  echo "  Version: $(${MPI_CC} --version)"
+  echo
+
+  # -- ASK THE USER TO CONTINUE --
+  echo "==================================================="
+  echo "IMPORTANT: Please check the configuration above."
+  if [[ "${USER_INTERACTION}" == "ON" ]]; then
+    read -p "Press Enter to continue... otherwise press STR+C"
+  fi
+  echo "==================================================="
+  echo
+
 }
 
 
@@ -421,91 +713,249 @@ parse_arguments() {
         esac
     done
 
-    # PREFIX PATH
+    # -- PREFIX PATH --
     # If user provided path is not set, use default path
+    cecho ${INFO} "Installation folder:"
     if [ -z "${PREFIX}" ]; then
         PREFIX="${DEFAULT_PATH}"
-        cecho {INFO} "No path was provided default to: ${PREFIX}"
-        cecho {INFO} "Otherwise, provide a path using the -p or --path option."
+        echo "  No path was provided. Use the default installation folder:"
+        echo "  ${PREFIX}"
+        echo "  If you want to install deal.II to an other path, provide the path you want to use"
+        echo "  via the -p <DIR> or --path <DIR> option."
     else 
         # Check the input argument of the install path and (if used) replace the tilde
         # character '~' by the users home directory ${HOME}. 
         PREFIX=${PREFIX/#~\//$HOME\/}
+        echo "  ${PREFIX}"
     fi
 
     # Check if the provided path is writable
-    mkdir -p "${PREFIX}" || { cecho ${ERROR} "Failed to create: ${PREFIX}"; exit 1; }
+    mkdir -p "${PREFIX}" || { cecho ${ERROR} "  Failed to create: ${PREFIX}"; exit 1; }
+    echo
 
-    # BINARY DIRECTORY
+
+    # -- BINARY DIRECTORY --
     # If user provided binary directory is not set, use default binary directory
+    cecho ${INFO} "Binary folder:"
     if [ -z "${BIN_DIR}" ]; then
         BIN_DIR="${PREFIX}/bin"
-        cecho ${INFO} "No binary directory was provided default to: ${BIN_DIR}"
-        cecho ${INFO} "Otherwise, provide a binary directory using the -d or --bin-dir option."
+        echo "  No binary directory was provided. Use the default binary folder:"
+        echo "  ${BIN_DIR}"
+        echo "  If you want to specify an other path, provide a binary directory" 
+        echo "  using the -d <DIR> or --bin-dir <DIR> option."
     else 
         # Check the input argument of the install path and (if used) replace the tilde
         # character '~' by the users home directory ${HOME}. 
         BIN_DIR=${BIN_DIR/#~\//$HOME\/}
+        echo "  ${BIN_DIR}"
     fi
 
     # Check if the provided binary directory is writable
-    mkdir -p "${BIN_DIR}" || { echo "Failed to create: ${BIN_DIR}"; exit 1; }
+    mkdir -p "${BIN_DIR}" || { cecho ${ERROR} "  Failed to create: ${BIN_DIR}"; exit 1; }
+    echo
 
-    # BUILD DIRECTORY
+
+    # -- BUILD DIRECTORY --
     # If user provided build_dir is not set, use default build_dir
+    cecho ${INFO} "Build folder:"
     if [ -z "${BUILD_DIR}" ]; then
         BUILD_DIR="${PREFIX}/tmp"
-        cecho ${INFO} "No build directory was provided default to: ${BUILD_DIR}"
-        cecho ${INFO} "Otherwise, provide a build directory using the -b or --build option."
+        echo "  No build directory was provided. Use the default build folder:"
+        echo "  ${BUILD_DIR}"
+        echo "  If you want to specify an other path, provide a build directory"
+        echo "  using the -b <DIR> or --build <DIR> option."
     else 
         # Check the input argument of the install path and (if used) replace the tilde
         # character '~' by the users home directory ${HOME}. 
         BUILD_DIR=${BUILD_DIR/#~\//$HOME\/}
+        echo "  ${BUILD_DIR}"
     fi
+    echo
 
     # Check if the provided build directory is writable
-    mkdir -p "${BUILD_DIR}"           || { echo "Failed to create: ${BUILD_DIR}"; exit 1; }
-    mkdir -p "${BUILD_DIR}/source"    || { echo "Failed to create: ${BUILD_DIR}/source"; exit 1; }
-    mkdir -p "${BUILD_DIR}/extracted" || { echo "Failed to create: ${BUILD_DIR}/extracted"; exit 1; }
-    mkdir -p "${BUILD_DIR}/build"     || { echo "Failed to create: ${BUILD_DIR}/build"; exit 1; }
+    mkdir -p "${BUILD_DIR}"           || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}"; exit 1; }
+    mkdir -p "${BUILD_DIR}/source"    || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/source"; exit 1; }
+    mkdir -p "${BUILD_DIR}/extracted" || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/extracted"; exit 1; }
+    mkdir -p "${BUILD_DIR}/build"     || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/build"; exit 1; }
 
-    # ADD TO PATH
+
+    # -- ADD TO PATH --
+    cecho ${INFO} "DCS2 offers to add the installed components to the default path"
+    cecho ${INFO} "by automaically modifing the ~/.bashrc"
+
     if [ -z "${ADD_TO_PATH}" ]; then
         ADD_TO_PATH=OFF
-        cecho ${INFO} "Default is not to add DEAL_II_DIR permanently to the path."
-        cecho ${INFO} "Otherwise, enable add to path via -A=OFF or --add_to_path=ON."
+        echo "  The default is not to modify the bashrc."
+        echo "  However, if you want to automatically add the installed components"
+        echo "  to the bashrc enable this feature via -A ON or --add_to_path ON."
     fi
 
-    # AMD
+    # Check if the variable is valid
+    if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${ADD_TO_PATH} " ]]; then
+      cecho ${WARN} "  Unkown --add_to_path option: ${ADD_TO_PATH} (available option: ON|OFF)"
+      cecho ${WARN} "  Default to --add_to_path OFF"
+      echo "  However, if you want to automatically add the installed components"
+      echo "  to the bashrc enable this feature via -A ON or --add_to_path ON."
+      ADD_TO_PATH=OFF
+    fi
+
+    # Print the corresponding information
+    if [ "${ADD_TO_PATH}" = "ON" ]; then
+      echo "  The installed components will be added to the path, by modifing"
+      echo "  the ~/.bashrc"
+    else
+      echo "  No modifications to the bashrc will be done!"
+    fi
+    echo
+
+
+    # -- BLAS stack --
     if [ -z "${BLAS_STACK}" ]; then
         BLAS_STACK=default
-        cecho ${INFO} "Using the default BLAS stack."
-        cecho ${INFO} "To select a different BLAS stack use: --blas-stack=<default|AMD>"
     fi
 
-    # NINJA
+    # check if the user selcted a valid blas option:
+    cecho ${INFO} "BLAS stack: "
+    if [[ " ${BLAS_OPTIONS[@]} " =~ " ${BLAS_STACK} " ]]; then
+      echo "  ${BLAS_STACK}"
+    else
+      cecho ${WARN} "  Unkown BLAS stack: ${BLAS_STACK}"
+      cecho ${WARN} "  Default to use the default BLAS stack."
+      BLAS_STACK=default
+    fi
+
+    # Print the information about the BLAS stack
+    echo "  To select a different BLAS stack use: --blas-stack=<OPTION>"
+    echo "  The currently available options are: AMD, default, system"
+    echo
+
+
+    # -- CMAKE --
+    cecho ${INFO} "CMake:"
+    if command -v cmake &>/dev/null; then
+      cecho ${GOOD} "  Found CMake"
+      echo "  Found:   $(which cmake)"
+      echo "  Version: $(cmake --version)"
+    else
+      cecho ${WARN} "  CMake not found. But this is (maybe) not a problem!"
+      cecho ${INFO} "  DCS2 will attempt to install CMake."
+      echo
+      echo "  CMake is a hard requirement for DCS2, if the automated installation"
+      echo "  of CMake fails, please try to install manually (e.g. via the package"
+      echo "  manager of your system)."
+      echo
+      echo "  If you want CMake to be available after the install of deal.II and all of its"
+      echo "  dependencies, add ${BIN_DIR} to your enviroment."
+      echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
+      echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
+    fi
+
+
+    # -- NINJA --
+    cecho ${INFO} "Build tool:"
+
     if [ -z "${USE_NINJA}" ]; then
-        USE_NINJA=ON
-        cecho ${INFO} "Default to use ninja."
-        cecho ${INFO} "Otherwise, disable Ninja via -N OFF or --ninja=OFF."
+      USE_NINJA=ON
+      echo "  Ninja is used by default (and replaces GNU make)."
+      echo "  If you don't want to use ninja, it can be disabled via -N OFF or --ninja OFF."
     fi
 
-    # MOLD
+    # Check if the variable is valid
+    if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${USE_NINJA} " ]]; then
+      cecho ${WARN} "  Unkown --ninja option: ${ADD_TO_PATH} (available option: ON|OFF)"
+      cecho ${WARN} "  Default to --ninja ON"
+      USE_NINJA=ON
+    fi
+
+    # Print the corresponding information about Ninja
+    if [ "${USE_NINJA}" = "ON" ]; then
+      if command -v ninja &>/dev/null; then
+        cecho ${GOOD} "  Found Ninja"
+        echo "  Found:   $(which ninja)"
+        echo "  Version: $(ninja --version)"
+      else
+        cecho ${WARN} "  Ninja not found. But this is not a problem!"
+        cecho ${INFO} "  DCS2 will attempt to install Ninja."
+        echo "  If you want Ninja to be available after the install of deal.II and all of its"
+        echo "  dependencies, add ${BIN_DIR} to your enviroment."
+        echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
+        echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
+      fi
+    else
+      echo "  Using GNU make as build tool."
+    fi
+    echo
+
+
+    # -- MOLD --
+    cecho ${INFO} "Linker:"
     if [ -z "${USE_MOLD}" ]; then
         USE_MOLD=ON
-        cecho ${INFO} "Default to use mold."
-        cecho ${INFO} "Otherwise, disable mold via -M OFF or --mold=OFF."
+        echo "  mold is used by default (and replaces ld)."
+        echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
     fi
 
+    # check if the user specified a valid mold option
+    if [[ ! " ${BOOL_WITH_DOWNLOAD_OPTIONS[@]} " =~ " ${USE_MOLD} " ]]; then
+      cecho ${WARN} "  Unkown mold option: ${USE_MOLD}"
+      cecho ${WARN} "  Default to use mold!"
+      echo "  mold is used by default (and replaces ld)."
+      echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
+      USE_MOLD=ON
+    fi
+
+    if [[ "${USE_MOLD}" = "ON" || "${USE_MOLD}" = "download" ]]; then
+      if command -v mold &>/dev/null; then
+        cecho ${GOOD} "  Found mold!"
+        echo "  Found:   $(which mold)"
+        echo "  Version: $(mold --version)"
+      else
+        cecho ${WARN} "  Mold not found. But this is not a problem!"
+        if [ "${USE_MOLD}" = "ON" ]; then
+          cecho ${INFO} "  DCS2 will attempt to install Mold."
+        fi
+        if [ "${USE_MOLD}" = "download" ]; then
+          cecho ${INFO} "  DCS2 will attempt to download Mold."
+        fi
+        echo "  If you want mold to be available after the install of deal.II and all of its"
+        echo "  dependencies, add ${BIN_DIR} to your enviroment."
+        echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
+        echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
+      fi
+    else
+      echo "  Use ld as linker."
+    fi
+    echo
+
+
+    # -- SET_AOCC_PATH --
     if [ -z "${SET_AOCC_PATH}" ]; then
         SET_AOCC_PATH=OFF
     fi
 
+
+    # -- USER INTERACTION --
+    cecho ${INFO} "Userinteraction mode:"
     if [ -z "${USER_INTERACTION}" ]; then
         USER_INTERACTION=ON 
     fi
 
+    # Check if the variable is valid
+    if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${USER_INTERACTION} " ]]; then
+      cecho ${WARN} "  Unkown -U option: ${ADD_TO_PATH} (available option: ON|OFF)"
+      cecho ${WARN} "  Default to -U ON"
+    fi
+
+    if [ "${USER_INTERACTION}" = "ON" ]; then
+      echo "  Manual, requires the user to verify the installation."
+      echo "  To supress the user interaction use: -U OFF"
+    else
+      echo "  Automatic."
+    fi
     echo
+
+
+    # -- ASK THE USER TO CONTINUE --
     echo "==================================================="
     echo "IMPORTANT: Please check the configuration above."
     if [[ "${USER_INTERACTION}" == "ON" ]]; then
@@ -520,6 +970,17 @@ parse_arguments() {
 # ++============================================================++
 # ||                    The actual program                      ||
 # ++============================================================++
+echo
+echo "==================================================="
+echo "                     _  __ ____ "
+echo "                    | \/  (_  _)"
+echo "                    |_/\____)/__"
+echo 
+echo "==================================================="
+echo 
+echo "Welcome to the deal.II CMake Superbuild Script 2"
+echo
+
 # Verify that dcs.sh is called from the directory where the script is located.
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 if [ "$(pwd)" != "${SCRIPT_DIR}" ]; then
@@ -531,6 +992,12 @@ fi
 if ! parse_arguments "$@"; then
   exit 0
 fi
+
+echo
+echo "==================================================="
+echo "Automated install of pre-CMake dependencies:"
+echo "==================================================="
+echo
 
 # Check wether CMake is available.
 # If it not available install it.
@@ -562,7 +1029,42 @@ elif [ "${USE_MOLD}" = "DOWNLOAD" ]; then
   fi
 fi
 
+# Check the compiler
+if ! check_compiler "$@"; then
+  exit 1
+fi
+
+echo
+
+#if [[ -d "${BUILD_DIR}" ]]; then
+#  echo
+#  cecho ${WARN} "The build folder ${BUILD_DIR} already exists."
+#  echo "This can mean, that you simply aborted the last run and want to continue"
+#  echo "where you stopped. In this case you can ignore this message. Similar, if you want" 
+#  echo "to install an updated version of deal.II you can ignore this message aswell."
+#  echo "However, if you last build failed it could be a good idea to delete the build"
+#  echo "folder."
+#  echo "Note: Deleting the build folder only effects the packages that are not build yet."
+#  echo "DCS2 will attempt to find already installed packages in ${PREFIX}."
+#  echo
+#  read -p "Press Enter to continue... otherwise press STR+C"
+#fi
+
+echo "==================================================="
+echo "Summary of packages, that will be build:"
+echo "==================================================="
+
 cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS} ${CMAKE_FLAGS}
+
+echo 
+echo "==================================================="
+echo "Please check the packages that will be installed"
+if [[ "${USER_INTERACTION}" == "ON" ]]; then
+  read -p "Press Enter to continue... otherwise press STR+C"
+fi
+echo "==================================================="
+echo 
+
 cmake --build ${BUILD_DIR} #-- -j ${THREADS}
 
 if [ "${ADD_TO_PATH}" = "ON" ]; then

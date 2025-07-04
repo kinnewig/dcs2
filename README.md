@@ -1,4 +1,14 @@
 # DCS2 - Deal.II CMake Superbuild 2
+```bash
+===================================================
+                     _  __ ____ 
+                    | \/  (_  _)
+                    |_/\____)/__
+
+===================================================
+        deal.II CMake Superbuild Script 2"
+```
+
 
 DCS2 simplifies the process of building and installing the **deal.II** library along with various third-party dependencies.
 
@@ -30,9 +40,9 @@ Usage:
 | `-b <path>`      | `--build=<path>`                | Set a different build path                                   |
 | `-d <path>`      | `--bin-dir=<path>`              | Set a different binary path                                  |
 | `-j <threads>`   | `--parallel=<threads>`          | Set number of threads to use                                 |
-| `-A <ON/|OFF>`   | `--add_to_path=<ON/|OFF>`       | Enable or disable adding deal.II permanently to the path     |
-| `-N <ON/|OFF>`   | `--ninja=<ON/|OFF>`             | Enable or disable the use of Ninja                           |
-| `-M <ON/|OFF>`   | `--mold=<ON/|OFF>`              | Enable or disable the use of mold                            |
+| `-A <ON\|OFF>`   | `--add_to_path=<ON\|OFF>`       | Enable or disable adding deal.II permanently to the path     |
+| `-N <ON\|OFF>`   | `--ninja=<ON\|OFF>`             | Enable or disable the use of Ninja                           |
+| `-M <ON\|OFF>`   | `--mold=<ON\|OFF>`              | Enable or disable the use of mold                            |
 | `-U`             |                                 | Do not interrupt                                             |
 | `-v`             | `--version`                     | Print the version number                                     |
 |                  | `--blas-stack=<blas option>`    | Select which BLAS to use (default|AMD)                       |

@@ -31,6 +31,4 @@ if(TRILINOS_FOUND)
   get_filename_component(TRILINOS_DIR ${TRILINOS_DIR} DIRECTORY)
 endif()
 
-message("${TRILINOS_DIR}")
-
 mark_as_advanced(TRILINOS_INCLUDE_DIR TRILINOS_LIBRARY)

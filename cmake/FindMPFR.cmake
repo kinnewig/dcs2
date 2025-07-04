@@ -13,7 +13,7 @@ pkg_check_modules(PC_MPFR QUIET MPFR)
 set(MPFR_DIR "" CACHE PATH "The directory of the MPFR installation")
 
 find_path(MPFR_INCLUDE_DIR NAMES mpfr.h
-          HINTS ${MPFR_DIR}/include ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}/include/mpfr
+          HINTS ${MPFR_DIR}/include ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}/include/
           PATHS ${PC_MPFR_INCLUDEDIR} ${PC_MPFR_INCLUDE_DIRS})
 
 find_library(MPFR_LIBRARY NAMES mpfr
