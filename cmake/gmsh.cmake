@@ -85,9 +85,16 @@ if(NOT GMSH_FOUND)
 
   # Dependencies:
   # add GMSH as dependencie for deal.II
-  list(APPEND suitesparse_dependencies "gmsh")
+  list(APPEND dealii_dependencies "gmsh")
+
+  # add GMSH as dependencie for PETSc
+  list(APPEND petsc_dependencies "gmsh")
 
 endif()
 
 # add GMSH to deal.II
 list(APPEND dealii_cmake_args "-D GMSH_DIR=${GMSH_DIR}")
+
+# add GMSH to PETSc
+list(APPEND petsc_autotool_args "--with-gmsh=true")
+list(APPEND petsc_autotool_args "--with-gmsh-dir=${GMSH_DIR}")

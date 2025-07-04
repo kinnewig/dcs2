@@ -30,9 +30,9 @@ Usage:
 | `-b <path>`      | `--build=<path>`                | Set a different build path                                   |
 | `-d <path>`      | `--bin-dir=<path>`              | Set a different binary path                                  |
 | `-j <threads>`   | `--parallel=<threads>`          | Set number of threads to use                                 |
-| `-A <ON|OFF>`    | `--add_to_path=<ON|OFF>`        | Enable or disable adding deal.II permanently to the path     |
-| `-N <ON|OFF>`    | `--ninja=<ON|OFF>`              | Enable or disable the use of Ninja                           |
-| `-M <ON|OFF>`    | `--mold=<ON|OFF>`               | Enable or disable the use of mold                            |
+| `-A <ON/|OFF>`   | `--add_to_path=<ON/|OFF>`       | Enable or disable adding deal.II permanently to the path     |
+| `-N <ON/|OFF>`   | `--ninja=<ON/|OFF>`             | Enable or disable the use of Ninja                           |
+| `-M <ON/|OFF>`   | `--mold=<ON/|OFF>`              | Enable or disable the use of mold                            |
 | `-U`             |                                 | Do not interrupt                                             |
 | `-v`             | `--version`                     | Print the version number                                     |
 |                  | `--blas-stack=<blas option>`    | Select which BLAS to use (default|AMD)                       |
@@ -131,7 +131,9 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `TK` (default version: "8.6.15", default "OFF")
 
 #### Algebra Packages
-- `TRILINOS` (default version: "15.1.0")
+- `PETSC` (default version: "3.23.3")
+
+- `TRILINOS` (default version: "16.1.0")
 
 #### Miscellaneous
 - `TBB` Intel One Thread Building Blocks (default version: "2021.13.0")

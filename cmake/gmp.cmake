@@ -80,6 +80,9 @@ if(NOT GMP_FOUND)
   set(GMP_INCLUDE_DIRS "${GMP_DIR}/include")
 
   # Dependencies:
+  # add GMP as dependencie to PETSc
+  list(APPEND petsc_dependencies "gmp")
+
   # add GMP as dependencie to SuiteSparse
   list(APPEND suitesparse_dependencies "gmp")
 
@@ -87,6 +90,10 @@ if(NOT GMP_FOUND)
   list(APPEND libflame_dependencies "gmp")
 
 endif()
+
+# add GMP to PETSc
+list(APPEND petsc_autotool_args "--with-gmp=true")
+list(APPEND petsc_autotool_args "--with-gmp-dir=${GMP_DIR}")
 
 # add GMP to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D GMP_INCLUDE_DIR=${GMP_INCLUDE_DIRS}")

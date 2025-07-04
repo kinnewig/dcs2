@@ -154,13 +154,22 @@ list(APPEND dealii_cmake_args "-D SCALAPACK_DIR=${SCALAPACK_DIR}")
 if(BUILD_LAPACK)
   # LAPACK
   list(APPEND dealii_cmake_args "-D DEAL_II_WITH_LAPACK:BOO=ON")
-  list(APPEND dealii_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib64/liblapack.so")
+  list(APPEND dealii_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib64/liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
   # BLAS
   #list(APPEND dealii_cmake_args "-D DEAL_II_WITH_BLAS:BOOL=ON")
   #list(APPEND dealii_cmake_args "-D BLAS_DIR=${BLAS_DIR}")
 else()
   list(APPEND dealii_cmake_args "-D DEAL_II_WITH_LAPACK:BOO=ON")
+endif()
+
+
+# Add scalapack as dependecie to PETSc
+list(APPEND petsc_dependencies "scalapack")
+list(APPEND petsc_autotool_args "--with-scalapack-lib=${SCALAPACK_DIR}/lib64/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+if(BUILD_LAPACK)
+  list(APPEND petsc_autotool_args "--with-lapack-lib=${LAPACK_DIR}/lib64/liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
 
 

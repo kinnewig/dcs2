@@ -37,6 +37,9 @@ set(SUITESPARSE_VERSION "7.10.3" CACHE STRING "Specify the version of SuiteSpars
 option(TPL_ENABLE_P4EST       "Enable or disable the use of P4EST as a third-party library"       ON)
 set(P4EST_VERSION "2.8.5" CACHE STRING "Specify the version of P4EST to be used")
 
+option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-party library"       ON)
+set(PETSC_VERSION "3.23.3" CACHE STRING "Specify the version of PETSc to be used")
+
 option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-party library"    ON)
 set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of Trilinos to be used")
 
@@ -148,6 +151,10 @@ endif()
 
 if(TPL_ENABLE_TRILINOS)
   include(cmake/trilinos.cmake)
+endif()
+
+if(TPL_ENABLE_PETSC)
+  include(cmake/petsc.cmake)
 endif()
 
 if(TPL_ENABLE_P4EST)

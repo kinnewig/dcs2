@@ -7,6 +7,10 @@ if(MPFR_FOUND)
   list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR:PATH=${MPFR_INCLUDE_DIR}")
   list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARY:PATH=${MPFR_LIBRARY}")
 
+  # add MPFR to PETSc
+  list(APPEND petsc_autotool_args "--with-mpfr=true")
+  list(APPEND petsc_autotool_args "--with-mpfr-dir=${MPFR_DIR}")
+
 else()
   message(STATUS "Building MPFR")
   
@@ -88,6 +92,13 @@ else()
   # Dependencies:
   # add MPFR as dependencie to SuiteSparse
   list(APPEND suitesparse_dependencies "mpfr")
+
+  # add MPFR as dependencie to PETSc
+  list(APPEND petsc_dependencies "mpfr")
+
+  # add MPFR to PETSc
+  list(APPEND petsc_autotool_args "--with-mpfr=true")
+  list(APPEND petsc_autotool_args "--with-mpfr-dir=${MPFR_DIR}")
 
   # add MPFR to SuiteSparse
   list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR:PATH=${MPFR_INCLUDE_DIR}")

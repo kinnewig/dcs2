@@ -70,9 +70,16 @@ else()
   list(APPEND CMAKE_PREFIX_PATH "${OCCT_DIR}")
   
   # Dependencies:
-  # add OCCT as dependencie to trilinos
+  # add OCCT as dependencie to dealii
   list(APPEND dealii_dependencies "occt")
+
+  # add OCCT as dependencie to dealii
+  list(APPEND petsc_dependencies "occt")
 endif()
 
 # Force deal.II to use OCCT
 list(APPEND dealii_cmake_args "-D OPENCASCADE_DIR=${OCCT_DIR}")
+
+# add OCCT to PETSc
+list(APPEND petsc_autotool_args "--with-opencascade=true")
+list(APPEND petsc_autotool_args "--with-opencascade-dir=${OCCT_DIR}")

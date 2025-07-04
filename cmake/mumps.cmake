@@ -86,9 +86,16 @@ else()
   )
 
   # Dependencies:
+  # add MUMPS as dependencie to PETSc
+  list(APPEND petsc_dependencies "mumps")
+
   # add MUMPS as dependencie to trilinos
   list(APPEND trilinos_dependencies "mumps")
 endif()
+
+# add MUMPS to PETSc
+list(APPEND petsc_autotool_args "--with-mumps=true")
+list(APPEND petsc_autotool_args "--with-mumps-dir=${MUMPS_DIR}")
 
 # add MUMPS to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_MUMPS=ON")

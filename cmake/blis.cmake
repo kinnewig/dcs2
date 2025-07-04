@@ -98,6 +98,9 @@ else()
   # Add blis as dependecie to deal.II
   list(APPEND dealii_dependencies "blis")
 
+  # Add blis as dependecie to PETSc
+  list(APPEND petsc_dependencies "blis")
+
   # Add blis as dependecie to trilinos
   list(APPEND trilinos_dependencies "blis")
 
@@ -111,6 +114,10 @@ endif()
 # Add blis to deal.II
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_BLAS:BOOL=ON")
 list(APPEND dealii_cmake_args "-D BLAS_DIR=${BLIS_DIR}")
+
+# Add blis to PETSc
+list(APPEND petsc_autotool_args "--with-blis=true")
+list(APPEND petsc_autotool_args "--with-blis-dir=${BLIS_DIR}")
 
 # Add blis to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")

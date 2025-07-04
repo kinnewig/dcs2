@@ -120,6 +120,13 @@
     }
   },
 
+  "petsc": {
+    "git": "https://gitlab.com/petsc/petsc.git",
+    "3.23.3": {
+      "tag": "512bef4061f9345d4b7b3b1002751fab57e1221c"
+    }
+  },
+
   "trilinos": {
     "git": "https://github.com/trilinos/trilinos.git",
     "16.1.0": {
