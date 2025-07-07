@@ -1,8 +1,0 @@
-{
-  "ninja": {
-    "git": "https://github.com/ninja-build/ninja.git",
-    "1.11.1": {
-      "tag": "a524bf3f6bacd1b4ad85d719eed2737d8562f27a"
-    }
-  }
-}
