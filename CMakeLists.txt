@@ -10,16 +10,14 @@ endif()
 # Add the Find<PACKAGE>.cmake files from dcs to CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-#set(BOOST_DIR "/opt/cit/13.2.0-V1/lib64/boost-1.84.0/")
-
 # Options
 option(TPL_ENABLE_BLIS        "Enable or disable the use of BLIS as a third-party library"        ON)
 set(BLIS_VERSION "2.0.0" CACHE STRING "Specify the version of BLIS to be used")
 
 option(TPL_ENABLE_LIBFLAME    "Enable or disable the use of LIBFLAME as a third-party library"    ON)
-set(LIBFLAME_VERSION "master" CACHE STRING "Specify the version of BLIS to be used")
+set(LIBFLAME_VERSION "master" CACHE STRING "Specify the version of LIBFLAME to be used")
 
-option(TPL_ENABLE_SCALAPACK   "Enable or disable the use of ScaLAPACK as a third-party library"   ON)
+option(TPL_ENABLE_SCALAPACK   "Enable or disable the use of SCALAPACK as a third-party library"   ON)
 set(SCALAPACK_VERSION "2.2.1" CACHE STRING "Specify the version of ScaLAPACK to be used")
 
 option(TPL_ENABLE_MUMPS       "Enable or disable the use of MUMPS as a third-party library"       ON)
@@ -36,6 +34,7 @@ set(SUITESPARSE_VERSION "7.10.3" CACHE STRING "Specify the version of SuiteSpars
 
 option(TPL_ENABLE_P4EST       "Enable or disable the use of P4EST as a third-party library"       ON)
 set(P4EST_VERSION "2.8.5" CACHE STRING "Specify the version of P4EST to be used")
+set(LIBSC_VERSION "2.8.5" CACHE STRING "Specify the version of LIBSC to be used")
 
 option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-party library"       ON)
 set(PETSC_VERSION "3.23.3" CACHE STRING "Specify the version of PETSc to be used")
@@ -76,7 +75,10 @@ set(CMAKE_MPI_CXX_COMPILER "mpicxx")
 
 
 # AMD - AOCL
-set(AMD_VERSION "5.0.0" CACHE STRING "Specify the version of AOCL packages to be used")
+set(AMD_BLIS_VERSION "5.0.0" CACHE STRING "Specify the version of AMD_BLIS to be used")
+set(AMD_LIBFLAME_VERSION "5.0.0" CACHE STRING "Specify the version of AMD_LIBFLAME to be used")
+set(AMD_AOCL-UTILS_VERSION "5.0.0" CACHE STRING "Specify the version of AMD_AOCL-UTILS to be used")
+
 if (AMD)
   include(cmake/aocl-utils.cmake)
 

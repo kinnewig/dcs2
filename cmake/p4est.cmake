@@ -18,10 +18,10 @@ else()
   
   # get the download url for p4est:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
-  string(JSON libsc_url GET ${json} p4est ${P4EST_VERSION} libsc git)
-  string(JSON libsc_tag GET ${json} p4est ${P4EST_VERSION} libsc tag)
+  string(JSON libsc_url GET ${json} libsc git)
+  string(JSON libsc_tag GET ${json} libsc ${LIBSC_VERSION} tag)
   if (NOT libsc_tag)
-    message(FATAL_ERROR "Git tag for P4EST version ${P4EST_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
+    message(FATAL_ERROR "Git tag for LIBSC version ${LIBSC_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
   endif()
   
   if (DEFINED LIBSC_SOURCE_DIR)
