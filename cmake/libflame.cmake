@@ -33,7 +33,7 @@ else()
   # If we are on a amd build use AMD's libflame:
   if (AMD)
     string(JSON libflame_url GET ${json} amd libflame git)
-    string(JSON libflame_tag GET ${json} amd libflame ${AMD_VERSION} tag)
+    string(JSON libflame_tag GET ${json} amd libflame ${AMD_LAPACK_VERSION} tag)
     set(libflame_tag "4.0")
   else()
     string(JSON libflame_url GET ${json} libflame git)

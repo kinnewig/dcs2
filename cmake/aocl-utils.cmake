@@ -17,9 +17,9 @@ else()
   # get the download url for aocl-utils:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
   string(JSON aocl-utils_url GET ${json} amd aocl-utils git)
-  string(JSON aocl-utils_tag GET ${json} amd aocl-utils ${AMD_VERSION} tag)
+  string(JSON aocl-utils_tag GET ${json} amd aocl-utils ${AMD_AOCL_UTILS_VERSION} tag)
   if (NOT aocl-utils_tag)
-    message(FATAL_ERROR "Git tag for AOCL-UTILS version ${AOCL-UTILS_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
+    message(FATAL_ERROR "Git tag for AOCL-UTILS version ${AMD_AOCL-UTILS_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
   endif()
   
   # If a custom URL for aocl-utils is defined, use it.

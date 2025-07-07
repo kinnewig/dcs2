@@ -1,11 +1,11 @@
 include(ExternalProject)
 
 # get the download url for ninja:
-file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
+file(READ ${CMAKE_CURRENT_LIST_DIR}/../cmake/libraries.json json)
 string(JSON mold_url GET ${json} mold git)
 string(JSON mold_tag GET ${json} mold ${MOLD_VERSION} tag)
 if (NOT mold_tag)
-  message(FATAL_ERROR "Git tag for MOLD version ${MOLD_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
+  message(FATAL_ERROR "Git tag for MOLD version ${MOLD_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/../cmake/libraries.json.")
 endif()
 
 # If a custom URL for mold is defined, use it.

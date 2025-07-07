@@ -1,11 +1,11 @@
 include(ExternalProject)
 
 # get the download url for ninja:
-file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
+file(READ ${CMAKE_CURRENT_LIST_DIR}/../cmake/libraries.json json)
 string(JSON ninja_url GET ${json} ninja git)
 string(JSON ninja_tag GET ${json} ninja ${NINJA_VERSION} tag)
 if (NOT ninja_tag)
-  message(FATAL_ERROR "Git tag for Ninja version ${NINJA_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
+  message(FATAL_ERROR "Git tag for Ninja version ${NINJA_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/../cmake/libraries.json.")
 endif()
 
 # If a custom URL for ninja is defined, use it.
