@@ -1,0 +1,120 @@
+-> mold:
+Updated mold entry in cmake/libraries.json, by adding the new tag 2.40.1 (with tag: v2.40.1).
+Updated MOLD_VERSION in CMakeLists.txt (with tag: 2.40.1).
+
+
+-> ninja:
+Updated ninja entry in cmake/libraries.json, by adding the new tag 1.13.0 (with tag: v1.13.0).
+Updated NINJA_VERSION in CMakeLists.txt (with tag: 1.13.0).
+
+
+-> blis:
+ blis is already up to date (current version: 2.0). Nothing to do.
+
+
+-> libflame:
+ libflame is already up to date (current version: 5.2.0). Nothing to do.
+
+
+-> amd/aocl-utils:
+Updated aocl-utils entry in cmake/libraries.json, by adding the new tag 5.1 (with tag: 5.1).
+Updated AMD_AOCL-UTILS_VERSION in CMakeLists.txt (with tag: 5.1).
+
+
+-> amd/libflame:
+Updated libflame entry in cmake/libraries.json, by adding the new tag 5.1 (with tag: 5.1).
+Updated AMD_LIBFLAME_VERSION in CMakeLists.txt (with tag: 5.1).
+
+
+-> amd/blis:
+Updated blis entry in cmake/libraries.json, by adding the new tag 5.1 (with tag: 5.1).
+Updated AMD_BLIS_VERSION in CMakeLists.txt (with tag: 5.1).
+
+
+-> amd/scalapack:
+Updated scalapack entry in cmake/libraries.json, by adding the new tag 5.1 (with tag: 5.1).
+Updated AMD_SCALAPACK_VERSION in CMakeLists.txt (with tag: 5.1).
+
+
+-> scalapack:
+Updated scalapack entry in cmake/libraries.json, by adding the new tag 2.2.2.1 (with tag: v2.2.2.1).
+Updated SCALAPACK_VERSION in CMakeLists.txt (with tag: 2.2.2.1).
+
+
+-> mumps:
+Updated mumps entry in cmake/libraries.json, by adding the new tag 5.8.0.2 (with tag: v5.8.0.2).
+Updated MUMPS_VERSION in CMakeLists.txt (with tag: 5.8.0.2).
+
+
+-> gmp:
+ gmp is already up to date (current version: 6.2.1). Nothing to do.
+
+
+-> mpfr:
+Updated mpfr entry in cmake/libraries.json, by adding the new tag 4.2.2 (with tag: 4.2.2).
+Updated MPFR_VERSION in CMakeLists.txt (with tag: 4.2.2).
+
+
+-> suitesparse:
+ suitesparse is already up to date (current version: 7.10.3). Nothing to do.
+
+
+-> p4est:
+Updated p4est entry in cmake/libraries.json, by adding the new tag 2.8.7 (with tag: v2.8.7).
+Updated P4EST_VERSION in CMakeLists.txt (with tag: 2.8.7).
+
+
+-> libsc:
+Updated libsc entry in cmake/libraries.json, by adding the new tag 2.8.7 (with tag: v2.8.7).
+Updated LIBSC_VERSION in CMakeLists.txt (with tag: 2.8.7).
+
+
+-> petsc:
+Updated petsc entry in cmake/libraries.json, by adding the new tag 3.23.4 (with tag: v3.23.4).
+Updated PETSC_VERSION in CMakeLists.txt (with tag: 3.23.4).
+
+
+-> trilinos:
+ trilinos is already up to date (current version: 16.1.0). Nothing to do.
+
+
+-> tbb:
+Updated tbb entry in cmake/libraries.json, by adding the new tag 2022.2.0 (with tag: v2022.2.0).
+Updated TBB_VERSION in CMakeLists.txt (with tag: 2022.2.0).
+
+
+-> gmsh:
+Updated gmsh entry in cmake/libraries.json, by adding the new tag 4.14.0 (with tag: gmsh_4_14_0).
+Updated GMSH_VERSION in CMakeLists.txt (with tag: 4.14.0).
+
+
+-> vtk:
+Updated vtk entry in cmake/libraries.json, by adding the new tag 9.5.0 (with tag: v9.5.0).
+Updated VTK_VERSION in CMakeLists.txt (with tag: 9.5.0).
+
+
+-> tcl:
+ tcl is already up to date (current version: 1.5.0). Nothing to do.
+
+
+-> tk:
+ tk is already up to date (current version: 1.5.0). Nothing to do.
+
+
+-> occt:
+Updated occt entry in cmake/libraries.json, by adding the new tag 7.9.1 (with tag: V7_9_1).
+Updated OCCT_VERSION in CMakeLists.txt (with tag: 7.9.1).
+
+
+-> dealii:
+Updated dealii entry in cmake/libraries.json, by adding the new tag 9.6.2 (with tag: v9.6.2).
+Updated DEALII_VERSION in CMakeLists.txt (with tag: 9.6.2).
+
+
+Summary:
+17 out of 24 packages were updated.
+Git diff summary:
+ CMakeLists.txt       | 28 +++++++++++++--------------
+ cmake/libraries.json | 53 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 66 insertions(+), 15 deletions(-)
+

@@ -3,12 +3,18 @@
     "git": "https://github.com/rui314/mold.git",
     "2.30.0": {
       "tag": "c7f6a91da512ef8a2634a1bef5d4ba82104659fe"
+    },
+    "2.40.1": {
+      "tag": "v2.40.1"
     }
   },
   "ninja": {
     "git": "https://github.com/ninja-build/ninja.git",
     "1.11.1": {
       "tag": "a524bf3f6bacd1b4ad85d719eed2737d8562f27a"
+    },
+    "1.13.0": {
+      "tag": "v1.13.0"
     }
   },
   "blis": {
@@ -37,6 +43,9 @@
       },
       "4.2.0": {
         "tag": "661527c6cc42bdde7086d752d56a44d9d2de01e3"
+      },
+      "5.1": {
+        "tag": "5.1"
       }
     },
     "libflame": {
@@ -46,6 +55,9 @@
       },
       "4.2.0": {
         "tag": "b51ceb238bb3a597c014f371822fc6963b1d5893"
+      },
+      "5.1": {
+        "tag": "5.1"
       }
     },
     "blis": {
@@ -55,6 +67,9 @@
       },
       "4.2.0": {
         "tag": "7c564c74e103249b52636e6cfc5a93ba8c2b0406"
+      },
+      "5.1": {
+        "tag": "5.1"
       }
     },
     "scalapack": {
@@ -64,6 +79,9 @@
       },
       "4.2.0": {
         "tag": "46ce83a5e0be9133c11e1bb057105abb97dbfc22"
+      },
+      "5.1": {
+        "tag": "5.1"
       }
     }
   },
@@ -74,6 +92,9 @@
     },
     "2.2.0": {
       "tag": "7dbf35c74ceb77e06fdacf7056f78b5f56fe67fb"
+    },
+    "2.2.2.1": {
+      "tag": "v2.2.2.1"
     }
   },
   "mumps": {
@@ -83,6 +104,9 @@
     },
     "5.6.1": {
       "tag": "477ab2ce4450cfe357acbfbc3cfd61d1e41dd391"
+    },
+    "5.8.0.2": {
+      "tag": "v5.8.0.2"
     }
   },
   "gmp": {
@@ -95,6 +119,9 @@
     "git": "https://gitlab.inria.fr/mpfr/mpfr.git",
     "4.2.1": {
       "tag": "53b7b847c406376b10cdd0ddcd46482dbd715363"
+    },
+    "4.2.2": {
+      "tag": "4.2.2"
     }
   },
   "suitesparse": {
@@ -110,18 +137,27 @@
     "git": "https://github.com/cburstedde/p4est.git",
     "2.8.5": {
       "tag": "5f0e2f34b377066e9ba453aadf26dbc5cded4963"
+    },
+    "2.8.7": {
+      "tag": "v2.8.7"
     }
   },
   "libsc": {
     "git": "https://github.com/cburstedde/libsc.git",
     "2.8.5": {
       "tag": "5f0e2f34b377066e9ba453aadf26dbc5cded4963"
+    },
+    "2.8.7": {
+      "tag": "v2.8.7"
     }
   },
   "petsc": {
     "git": "https://gitlab.com/petsc/petsc.git",
     "3.23.3": {
       "tag": "512bef4061f9345d4b7b3b1002751fab57e1221c"
+    },
+    "3.23.4": {
+      "tag": "v3.23.4"
     }
   },
   "trilinos": {
@@ -149,18 +185,27 @@
     "git": "https://github.com/oneapi-src/oneTBB.git",
     "2021.13.0": {
       "tag": "1c4c93fc5398c4a1acb3492c02db4699f3048dea"
+    },
+    "2022.2.0": {
+      "tag": "v2022.2.0"
     }
   },
   "gmsh": {
     "git": "https://gitlab.onelab.info/gmsh/gmsh.git",
     "4.12.2": {
       "tag": "bc6b651adf17a57698ee60d88b305afb4bb216b8"
+    },
+    "4.14.0": {
+      "tag": "gmsh_4_14_0"
     }
   },
   "vtk": {
     "git": "https://github.com/Kitware/VTK.git",
     "9.3.1": {
       "tag": "4f02ae83179c6a1542ac3c335c73dea976578c63"
+    },
+    "9.5.0": {
+      "tag": "v9.5.0"
     }
   },
   "tcl": {
@@ -179,6 +224,9 @@
     "git": "https://github.com/Open-Cascade-SAS/OCCT.git",
     "7.8.1": {
       "tag": "bd2a789f15235755ce4d1a3b07379a2e062fdc2e"
+    },
+    "7.9.1": {
+      "tag": "V7_9_1"
     }
   },
   "dealii": {
@@ -197,6 +245,9 @@
     },
     "9.3.3": {
       "tag": "1e662e9dc99497b70bd5e381e418d577392e133f"
+    },
+    "9.6.2": {
+      "tag": "v9.6.2"
     }
   }
 }

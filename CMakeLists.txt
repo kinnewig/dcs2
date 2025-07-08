@@ -18,41 +18,41 @@ option(TPL_ENABLE_LIBFLAME    "Enable or disable the use of LIBFLAME as a third-
 set(LIBFLAME_VERSION "master" CACHE STRING "Specify the version of LIBFLAME to be used")
 
 option(TPL_ENABLE_SCALAPACK   "Enable or disable the use of SCALAPACK as a third-party library"   ON)
-set(SCALAPACK_VERSION "2.2.1" CACHE STRING "Specify the version of ScaLAPACK to be used")
+set(SCALAPACK_VERSION "2.2.2.1" CACHE STRING "Specify the version of SCALAPACK to be used")
 
 option(TPL_ENABLE_MUMPS       "Enable or disable the use of MUMPS as a third-party library"       ON)
-set(MUMPS_VERSION "5.6.2" CACHE STRING "Specify the version of MUMPS to be used")
+set(MUMPS_VERSION "5.8.0.2" CACHE STRING "Specify the version of MUMPS to be used")
 
 option(TPL_ENABLE_GMP         "Enable or disable the use of GMP as a third-party library"         ON)
 set(GMP_VERSION "6.2.1" CACHE STRING "Specify the version of GMP to be used")
 
 option(TPL_ENABLE_MPFR        "Enable or disable the use of MMPFR as a third-party library"       ON)
-set(MPFR_VERSION "4.2.1" CACHE STRING "Specify the version of MPFR to be used")
+set(MPFR_VERSION "4.2.2" CACHE STRING "Specify the version of MPFR to be used")
 
 option(TPL_ENABLE_SUITESPARSE "Enable or disable the use of SuiteSparse as a third-party library" ON)
 set(SUITESPARSE_VERSION "7.10.3" CACHE STRING "Specify the version of SuiteSparse to be used")
 
 option(TPL_ENABLE_P4EST       "Enable or disable the use of P4EST as a third-party library"       ON)
-set(P4EST_VERSION "2.8.5" CACHE STRING "Specify the version of P4EST to be used")
-set(LIBSC_VERSION "2.8.5" CACHE STRING "Specify the version of LIBSC to be used")
+set(P4EST_VERSION "2.8.7" CACHE STRING "Specify the version of P4EST to be used")
+set(LIBSC_VERSION "2.8.7" CACHE STRING "Specify the version of LIBSC to be used")
 
 option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-party library"       ON)
-set(PETSC_VERSION "3.23.3" CACHE STRING "Specify the version of PETSc to be used")
+set(PETSC_VERSION "3.23.4" CACHE STRING "Specify the version of PETSC to be used")
 
 option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-party library"    ON)
 set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of Trilinos to be used")
 
 option(TPL_ENABLE_TBB       "Enable or disable the use of oneTBB as a third-party library"        ON)
-set(TBB_VERSION "2021.13.0" CACHE STRING "Specify the version of oneTBB to be used")
+set(TBB_VERSION "2022.2.0" CACHE STRING "Specify the version of TBB to be used")
 
 option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party library"         OFF)
-set(GMSH_VERSION "4.12.2" CACHE STRING "Specify the version of GMSH to be used")
+set(GMSH_VERSION "4.14.0" CACHE STRING "Specify the version of GMSH to be used")
 
 option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"          OFF)
-set(VTK_VERSION "9.3.1" CACHE STRING "Specify the version of VTK to be used")
+set(VTK_VERSION "9.5.0" CACHE STRING "Specify the version of VTK to be used")
 
 option(TPL_ENABLE_OCCT       "Enable or disable the use of OpenCascade as a third-party library"  OFF)
-set(OCCT_VERSION "7.8.1" CACHE STRING "Specify the version of OpenCascade to be used")
+set(OCCT_VERSION "7.9.1" CACHE STRING "Specify the version of OCCT to be used")
 
 option(TPL_ENABLE_TCL        "Enable or disable the use of TCL as a third-party library"          OFF)
 set(TCL_VERSION "8.6.15" CACHE STRING "Specify the version of TCL to be used")
@@ -60,7 +60,7 @@ set(TCL_VERSION "8.6.15" CACHE STRING "Specify the version of TCL to be used")
 option(TPL_ENABLE_TK        "Enable or disable the use of TK as a third-party library"            OFF)
 set(TK_VERSION "8.6.15" CACHE STRING "Specify the version of TK to be used")
 
-set(DEALII_VERSION "9.6.0" CACHE STRING "Specify the version of deal.II to be used")
+set(DEALII_VERSION "9.6.2" CACHE STRING "Specify the version of DEALII to be used")
 option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
 option(DEALII_WITH_COMPLEX    "Build deal.II with support for 64bit long numbers"                 OFF)
 
@@ -75,9 +75,9 @@ set(CMAKE_MPI_CXX_COMPILER "mpicxx")
 
 
 # AMD - AOCL
-set(AMD_BLIS_VERSION "5.0.0" CACHE STRING "Specify the version of AMD_BLIS to be used")
-set(AMD_LIBFLAME_VERSION "5.0.0" CACHE STRING "Specify the version of AMD_LIBFLAME to be used")
-set(AMD_AOCL-UTILS_VERSION "5.0.0" CACHE STRING "Specify the version of AMD_AOCL-UTILS to be used")
+set(AMD_BLIS_VERSION "5.1" CACHE STRING "Specify the version of BLIS to be used")
+set(AMD_LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of LIBFLAME to be used")
+set(AMD_AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AOCL-UTILS to be used")
 
 if (AMD)
   include(cmake/aocl-utils.cmake)
