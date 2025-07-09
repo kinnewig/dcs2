@@ -38,6 +38,7 @@ ExternalProject_Add_Step(
   mold mold_symlink
   COMMAND ln -s ${CMAKE_INSTALL_PREFIX}/mold/${MOLD_VERSION}/bin/mold ${BIN_DIR}/mold
   COMMAND ln -s ${CMAKE_INSTALL_PREFIX}/mold/${MOLD_VERSION}/bin/ld.mold ${BIN_DIR}/ld.mold
+  COMMAND ln -s ${CMAKE_INSTALL_PREFIX}/mold/${MOLD_VERSION}/lib/mold ${LIB_DIR}/mold
   WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/mold/${MOLD_VERSION}/bin
   DEPENDEES install
 )

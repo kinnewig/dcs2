@@ -298,14 +298,22 @@ add_to_path() {
         echo "#BEGIN: ADDED BY DCS2"
         echo "# Everything in this block will be overwritten the next time you run dcs2"
         echo
-        echo "# --- dcs2 bin dir (includes CMAKE, Ninja, Mold) ---"
+        echo "# --- dcs2: bin, lib, and lib64  ---"
         echo "if [ -d \"${BIN_DIR}\" ]; then"
         echo "  export PATH=\"${BIN_DIR}:\$PATH\""
         echo "fi"
         echo
+        echo "if [ -d \"${LIB_DIR}\" ]; then"
+        echo "  export LD_LIBRARY_PATH=\"${LIB_DIR}:\$LD_LIBRARY_PATH\""
+        echo "fi"
+        echo
+        echo "if [ -d \"${LIB64_DIR}\" ]; then"
+        echo "  export LD_LIBRARY_PATH=\"${LIB64_DIR}:\$LD_LIBRARY_PATH\""
+        echo "fi"
+        echo
 
         if [[ "${SET_AOCC_PATH}" == "ON" ]]; then
-            echo "# --- AOCC Compiler ---"
+            echo "# --- dcs2: AOCC Compiler ---"
             echo "if [ -f \"${AOCC_PATH}/setenv_AOCC.sh\" ]; then"
             echo "  source \"${AOCC_PATH}/setenv_AOCC.sh\""
             echo "fi"
@@ -617,6 +625,7 @@ parse_arguments() {
               echo "  -p <path>,    --prefix=<path>                Set a different prefix path (default ${DEFAULT_PATH})"
               echo "  -b <path>,    --build=<path>                 Set a different build path (default ${DEFAULT_PATH}/tmp)$"
               echo "  -d <path>,    --bin-dir=<path>               Set a different binary path (default ${DEFAULT_PATH}/bin)$"
+              echo "  -l <path>,    --lib-dir=<path>               Set a different library path (default ${DEFAULT_PATH}/lib)$"
               echo "  -j <threads>, --parallel=<threads>           Set number of threads to use (default ${THREADS})"
               echo "  -A <ON|OFF>   --add_to_path=<ON|OFF>         Enable or disable adding deal.II permanently to the path"  
               echo "  -N <ON|OFF>,  --ninja=<ON|OFF>               Enable or disable the use of Ninja"
@@ -645,6 +654,13 @@ parse_arguments() {
             # binary directory
             -d|--bin-dir)
                 BIN_DIR="$2"
+                shift
+                shift
+                ;;
+
+            # binary directory
+            -l|--lib-dir)
+                LIB_DIR="$2"
                 shift
                 shift
                 ;;
@@ -753,6 +769,49 @@ parse_arguments() {
     # Check if the provided binary directory is writable
     mkdir -p "${BIN_DIR}" || { cecho ${ERROR} "  Failed to create: ${BIN_DIR}"; exit 1; }
     echo
+
+    # Add the BIN_DIR to as flag to CMake
+    CMAKE_FLAGS="${CMAKE_FLAGS} -D BIN_DIR=${BIN_DIR}"
+
+
+    # -- LIBRARY DIRECTORY --
+    # If user provided binary directory is not set, use default binary directory
+    cecho ${INFO} "Library folder:"
+    if [ -z "${LIB_DIR}" ]; then
+        LIB_DIR="${PREFIX}/lib"
+        echo "  No library directory was provided. Use the default binary folder:"
+        echo "  ${LIB_DIR}"
+        echo "  If you want to specify an other path, provide a library directory" 
+        echo "  using the -l <DIR> or --lib-dir <DIR> option."
+    else 
+        # Check the input argument of the install path and (if used) replace the tilde
+        # character '~' by the users home directory ${HOME}. 
+        LIB_DIR=${LIB_DIR/#~\//$HOME\/}
+        echo "  ${LIB_DIR}"
+    fi
+
+    # Check if the provided library directory is writable
+    mkdir -p "${LIB_DIR}" || { cecho ${ERROR} "  Failed to create: ${LIB_DIR}"; exit 1; }
+    echo
+
+    # Add the LIB_DIR to as flag to CMake
+    CMAKE_FLAGS="${CMAKE_FLAGS} -D LIB_DIR=${LIB_DIR}"
+
+
+    # -- LIBRARY64 DIRECTORY --
+    # If user provided binary directory is not set, use default binary directory
+    cecho ${INFO} "Library 64 folder:"
+    if [ -z "${LIB64_DIR}" ]; then
+        LIB64_DIR="${LIB_DIR}/../lib64"
+        echo "  The Library 64 folder will be created next to the Library folder"
+    fi
+
+    # Check if the provided library directory is writable
+    mkdir -p "${LIB64_DIR}" || { cecho ${ERROR} "  Failed to create: ${LIB64_DIR}"; exit 1; }
+    echo
+
+    # Add the LIB_DIR to as flag to CMake
+    CMAKE_FLAGS="${CMAKE_FLAGS} -D LIB64_DIR=${LIB64_DIR}"
 
 
     # -- BUILD DIRECTORY --

@@ -6,7 +6,7 @@
                     |_/\____)/__
 
 ===================================================
-        deal.II CMake Superbuild Script 2"
+        deal.II CMake Superbuild Script 2
 ```
 
 
@@ -39,6 +39,7 @@ Usage:
 | `-p <path>`      | `--prefix=<path>`               | Set a different prefix path                                  |
 | `-b <path>`      | `--build=<path>`                | Set a different build path                                   |
 | `-d <path>`      | `--bin-dir=<path>`              | Set a different binary path                                  |
+| `-l <path>`      | `--lib-dir=<path>`              | Set a different library path                                 |
 | `-j <threads>`   | `--parallel=<threads>`          | Set number of threads to use                                 |
 | `-A <ON\|OFF>`   | `--add_to_path=<ON\|OFF>`       | Enable or disable adding deal.II permanently to the path     |
 | `-N <ON\|OFF>`   | `--ninja=<ON\|OFF>`             | Enable or disable the use of Ninja                           |

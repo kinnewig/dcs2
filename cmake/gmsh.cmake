@@ -73,6 +73,14 @@ if(NOT GMSH_FOUND)
     DEPENDEES download
     DEPENDERS configure
   )
+
+  ExternalProject_Add_Step(
+    gmsh gmsh_symlink
+    COMMAND ln -s ${GMSH_DIR}/bin/gmsh ${BIN_DIR}/gmsh
+    COMMAND ln -s ${GMSH_DIR}/lib64/libgmsh${CMAKE_SHARED_LIBRARY_SUFFIX} ${LIB64_DIR}/libgmsh${CMAKE_SHARED_LIBRARY_SUFFIX}
+    WORKING_DIRECTORY ${GMSH_DIR}
+    DEPENDEES install
+  )
   
   ExternalProject_Get_Property(gmsh INSTALL_DIR)
   
