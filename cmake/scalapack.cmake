@@ -1,13 +1,5 @@
 include(ExternalProject)
 
-# TODO: Remove, always use the lapack provided by the blas (libflame, reference LAPACK, OpenBLAS, MKL, etc...)
-#find_package(LAPACK)
-#if(LAPACK_FOUND)
-#  set(BUILD_LAPACK OFF)
-#else()
-#  set(BUILD_LAPACK ON)
-#endif()
-
 #find_package(SCALAPACK)
 #if(SCALAPACK_FOUND)
 #  return()
@@ -35,11 +27,6 @@ include(ExternalProject)
     list(APPEND scalapack_cmake_args -D MPI_Fortran_WORKS:BOOL=ON)
   endif()
 
-  # TODO: Remove, always use the lapack provided by the blas (libflame, reference LAPACK, OpenBLAS, MKL, etc...)
-  #if(BUILD_LAPACK)
-  #  list(APPEND scalapack_cmake_args "-D find_lapack=off")
-  #endif()
-  
   # get the download url for scalapack:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
   string(JSON scalapack_url GET ${json} scalapack git)
@@ -107,71 +94,14 @@ include(ExternalProject)
     INTERFACE_INCLUDE_DIRECTORIES ${SCALAPACK_DIR}/include
   )
   
-  
-  # If we also build LAPACK, we can find BLAS and LAPACK in the SCALAPACK_DIR
-  if(BUILD_LAPACK)
-    # LAPACK:
-    # Populate the path
-    set(LAPACK_DIR ${INSTALL_DIR})
-  
-    # Linking
-    #add_library(LAPACK::LAPACK INTERFACE IMPORTED GLOBAL)
-    #set_target_properties(LAPACK::LAPACK PROPERTIES
-    #  IMPORTED_LOCATION ${SCALAPACK_DIR}/lib64/liblapack.so
-    #  INTERFACE_INCLUDE_DIRECTORIES ${SCALAPACK_DIR}/include
-    #)
-  
-    # BLAS
-    # Populate the path
-    #set(BLAS_DIR ${INSTALL_DIR})
-  
-    # Linking
-    #add_library(BLAS::BLAS INTERFACE IMPORTED GLOBAL)
-    #set_target_properties(BLAS::BLAS PROPERTIES
-    #  IMPORTED_LOCATION ${SCALAPACK_DIR}/lib64/libblas.so
-    #  INTERFACE_INCLUDE_DIRECTORIES ${SCALAPACK_DIR}/include
-    #)
-  
-    # BLACS
-    # Populate the path
-    set(BLACS_DIR ${INSTALL_DIR})
-  
-    # Linking
-    add_library(BLACS::BLACS INTERFACE IMPORTED GLOBAL)
-    set_target_properties(BLACS::BLACS PROPERTIES
-      IMPORTED_LOCATION ${SCALAPACK_DIR}/lib64/libblacs.so
-      INTERFACE_INCLUDE_DIRECTORIES ${SCALAPACK_DIR}/include
-    )
-  
-  endif()
-#endif()
-
 # Add scalapack to deal.II
 list(APPEND dealii_dependencies "scalapack")
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_SCALAPACK:BOOL=ON")
 list(APPEND dealii_cmake_args "-D SCALAPACK_DIR=${SCALAPACK_DIR}")
 
-if(BUILD_LAPACK)
-  # LAPACK
-  list(APPEND dealii_cmake_args "-D DEAL_II_WITH_LAPACK:BOO=ON")
-  list(APPEND dealii_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib64/liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
-
-  # BLAS
-  #list(APPEND dealii_cmake_args "-D DEAL_II_WITH_BLAS:BOOL=ON")
-  #list(APPEND dealii_cmake_args "-D BLAS_DIR=${BLAS_DIR}")
-else()
-  list(APPEND dealii_cmake_args "-D DEAL_II_WITH_LAPACK:BOO=ON")
-endif()
-
-
 # Add scalapack as dependecie to PETSc
 list(APPEND petsc_dependencies "scalapack")
 list(APPEND petsc_autotool_args "--with-scalapack-lib=${SCALAPACK_DIR}/lib64/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
-
-if(BUILD_LAPACK)
-  list(APPEND petsc_autotool_args "--with-lapack-lib=${LAPACK_DIR}/lib64/liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
-endif()
-
 
 # Add scalapack to trilinos
 list(APPEND trilinos_dependencies "scalapack")
@@ -180,27 +110,6 @@ list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_NAMES='scalapack'")
 list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_DIRS:PATH=${SCALAPACK_DIR}/lib64")
 list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_SCALAPACK:BOOL=ON")
 
-if(BUILD_LAPACK)
-  # LAPACK
-  list(APPEND trilinos_cmake_args "-D TPL_ENABLE_LAPACK:BOOL=ON")
-  list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LAPACK_DIR}/lib64")
-
-  # BLAS
-  #list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
-  #list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLAS_DIR}/lib64")
-endif()
-
-
 # Add scalapack to mumps
 list(APPEND mumps_dependencies "scalapack")
 list(APPEND mumps_cmake_args -D SCALAPACK_ROOT=${SCALAPACK_DIR})
-
-if(BUILD_LAPACK)
-  list(APPEND mumps_cmake_args -D LAPACK_ROOT=${LAPACK_DIR})
-endif()
-
-# Add ScaLAPACK to SuiteSparse
-if(BUILD_LAPACK)
-  list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib64/liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
-endif()
-
