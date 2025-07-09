@@ -1,0 +1,13 @@
+name: Platform Test Fedora-42
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fedora-test:
+    name: Fedora-42
+    runs-on: [self-hosted, fedora-42]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: ./dcs2.sh -U OFF -j 12 --blas-stack default --cmake-flags "-D TPL_ENABLE_GMSH=ON"
