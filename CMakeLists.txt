@@ -43,7 +43,7 @@ option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-
 set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of Trilinos to be used")
 
 option(TPL_ENABLE_TBB       "Enable or disable the use of oneTBB as a third-party library"        ON)
-set(TBB_VERSION "2022.2.0" CACHE STRING "Specify the version of TBB to be used")
+set(TBB_VERSION "2021.13.0" CACHE STRING "Specify the version of TBB to be used")
 
 option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party library"         OFF)
 set(GMSH_VERSION "4.14.0" CACHE STRING "Specify the version of GMSH to be used")
