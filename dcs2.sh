@@ -35,7 +35,7 @@ cecho() {
 # Download and install CMake
 download_and_install_cmake() {
     # Read the CMake version from VERSIONS.cmake
-    CMAKE_VERSION=3.28.3
+    CMAKE_VERSION=4.0.3
 
     # Download CMake
     curl -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
