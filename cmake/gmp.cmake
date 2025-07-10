@@ -1,17 +1,16 @@
 include(ExternalProject)
 
 find_package(GMP "6.1.2")
-if(NOT GMP_FOUND)
+if(GMP_FOUND)
+
+  # Add GMP to SuiteSparse (how to link GMP depends on wether we build GMP ourself or if we use the system package)
+  list(APPEND suitesparse_cmake_args "-D GMP_INCLUDE_DIR=${GMP_INCLUDE_DIR}")
+  list(APPEND suitesparse_cmake_args "-D GMP_LIBRARIES=${GMP_DIR}/lib")
+
+else()
   message(STATUS "Building GMP")
   
-  set(gmp_cmake_args
-    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-    -D CMAKE_CXX_COMPILER:PATH=${CMAKE_CXX_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
-    -D CMAKE_BUILD_TYPE:STRING=Release
-    ${gmp_cmake_args}
-  )
+  list(APPEND gmp_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}")
   
   # get the download url for GMP:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
@@ -39,7 +38,7 @@ if(NOT GMP_FOUND)
       BUILD_COMMAND make
       INSTALL_COMMAND make install
       CMAKE_ARGS ${gmp_cmake_args}
-      CONFIGURE_COMMAND ./configure --prefix=${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION} 
+      CONFIGURE_COMMAND ./configure ${gmp_autotool_args}
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}
       BUILD_IN_SOURCE ON
       BUILD_BYPRODUCTS ${GMP_LIBRARIES}
@@ -54,7 +53,7 @@ if(NOT GMP_FOUND)
       BUILD_COMMAND make
       INSTALL_COMMAND make install
       CMAKE_ARGS ${gmp_cmake_args}
-      CONFIGURE_COMMAND ./configure --prefix=${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION} 
+      CONFIGURE_COMMAND ./configure ${gmp_autotool_args}
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}
       BUILD_IN_SOURCE ON
       BUILD_BYPRODUCTS ${GMP_LIBRARIES}
@@ -72,14 +71,17 @@ if(NOT GMP_FOUND)
   # Linking
   add_library(GMP::GMP INTERFACE IMPORTED GLOBAL)
   set_target_properties(GMP::GMP PROPERTIES
-    IMPORTED_LOCATION ${GMP_DIR}/lib64/libumfpack.so
-    INTERFACE_INCLUDE_DIRECTORIES ${GMP_DIR}/include/gmp
+    IMPORTED_LOCATION ${GMP_DIR}/lib/libgmp${CMAKE_SHARED_LIBRARY_SUFFIX}
+    INTERFACE_INCLUDE_DIRECTORIES ${GMP_DIR}/include
   )
   
+  set(GMP_INCLUDE_DIR "${GMP_DIR}/include")
   set(GMP_LIBRARY "${GMP_DIR}/lib")
-  set(GMP_INCLUDE_DIRS "${GMP_DIR}/include")
 
   # Dependencies:
+  # add GMP as dependencie to MPFR
+  list(APPEND mpfr_dependencies "gmp")
+
   # add GMP as dependencie to PETSc
   list(APPEND petsc_dependencies "gmp")
 
@@ -89,15 +91,19 @@ if(NOT GMP_FOUND)
   # add GMP as dependencie to LibFLAME
   list(APPEND libflame_dependencies "gmp")
 
+  # Add GMP to SuiteSparse (how to link GMP depends on wether we build GMP ourself or if we use the system package)
+  list(APPEND suitesparse_cmake_args "-D GMP_INCLUDE_DIR:PATH=${GMP_INCLUDE_DIR}")
+  list(APPEND suitesparse_cmake_args "-D GMP_LIBRARY:PATH=${GMP_LIBRARY}/libgmp${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  list(APPEND suitesparse_cmake_args "-D GMP_STATIC:PATH=${GMP_LIBRARY}/libgmp.a")
+
 endif()
+
+# add GMP to MPFR
+list(APPEND mpfr_autotool_args "--with-gmp=${GMP_DIR}")
 
 # add GMP to PETSc
 list(APPEND petsc_autotool_args "--with-gmp=true")
 list(APPEND petsc_autotool_args "--with-gmp-dir=${GMP_DIR}")
 
-# add GMP to SuiteSparse
-list(APPEND suitesparse_cmake_args "-D GMP_INCLUDE_DIR=${GMP_INCLUDE_DIRS}")
-list(APPEND suitesparse_cmake_args "-D GMP_LIBRARIES=${GMP_LIBRARY}")
-
 # add GMP to LibFLAME
-list(APPEND libflame_autotools_args "--with-gmp=${GMP_LIBRARY}")
+list(APPEND libflame_autotools_args "--with-gmp=${GMP_DIR}/lib")
