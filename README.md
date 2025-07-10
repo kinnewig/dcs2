@@ -12,6 +12,31 @@
 
 DCS2 simplifies the process of building and installing the **deal.II** library along with various third-party dependencies.
 
+![Fedora 42](https://github.com/kinnewig/dcs2/actions/workflows/fedora-42.yml/badge.svg)
+
+![Ubuntu 25.04](https://github.com/kinnewig/dcs2/actions/workflows/ubuntu-25.04.yml/badge.svg)
+
+## Quick start
+
+To use DCS2, follow these steps:
+1. Install the Requirements (see next section).
+
+2. Clone this repository:
+   ```bash
+   git clone https://github.com/kinnewig/dcs2.git
+   ```
+
+3. Start the install script
+   ```bash
+   cd dcs2
+   ./dcs2 -p <path/to/install> -j <Number of threads>
+   ```
+or if you want to install for exampe your own fork of deal.II
+   ```bash
+   cd dcs2
+   ./dcs2 -p <path/to/install> -j <Number of threads> --cmake-flags "DEALII_CUSTOM_URL=https://github.com/<username>/dealii.git -D DEALII_CUSTOM_TAG=<Your Branch Name>" 
+   ```
+
 ## Requirements
 DCS2 requires a modern MPI compiler, and a few additional programs that are not build by DCS2 itself.
 
@@ -24,6 +49,12 @@ To enable openmpi by default add the following lines to the ~/.bashrc
 ```bash
 source /etc/profile.d/modules.sh
 module load mpi/openmpi-x86_64
+```
+
+### Ubuntu/Debian
+Install the dependencies
+```bash
+sudo apt install build-essential libopenmpi-dev libboost-all-dev gfortran  git texinfo libssl-dev 
 ```
 
 ## DCS2 Options
@@ -150,21 +181,6 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `TBB` Intel One Thread Building Blocks (default version: "2021.13.0")
 - `VTK` (default version: "9.3.1", default "OFF")
 
-
-## Quick start
-
-To use DCS2, follow these steps:
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/kinnewig/dcs2.git
-   ```
-
-2. Create a new build directory:
-   ```bash
-   cd dcs2
-   ./dcs2 -p <path/to/install> -j <Number of threads>
-   ```
 
 ## Troubleshooting
 ### The build of deal.II fails
