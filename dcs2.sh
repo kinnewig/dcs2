@@ -41,7 +41,17 @@ download_and_install_cmake() {
     local root_dir=$(pwd)
 
     # Download CMake
-    curl -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
+    if command -v curl &>/dev/null; then
+      curl -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
+    elif command -v wget &>/dev/null; then
+      wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -O "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
+    else
+      cecho ${ERROR} "Error: Neither 'curl' nor 'wget' is available on this system."
+      cecho ${INFO} "Please install one of these tools to proceed:"
+      cecho ${INFO} "- Debian/Ubuntu: sudo apt install curl  # or wget"
+      cecho ${INFO} "- Red Hat/Fedora: sudo dnf install curl  # or wget"
+      exit 1
+    fi
 
     # Extract CMake
     tar -xf "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz" -C "${BUILD_DIR}/extracted"
@@ -160,7 +170,17 @@ download_and_extract_mold() {
       ARCHITECTURE=x86_64-linux
 
       # Download Mold
-      curl -L https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz -o "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
+      if command -v curl &>/dev/null; then
+        curl -L https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz -o "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
+      elif command -v wget &>/dev/null; then
+        wget https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz -O "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
+      else
+        cecho ${ERROR} "Error: Neither 'curl' nor 'wget' is available on this system."
+        cecho ${INFO} "Please install one of these tools to proceed:"
+        cecho ${INFO} "- Debian/Ubuntu: sudo apt install curl  # or wget"
+        cecho ${INFO} "- Red Hat/Fedora: sudo dnf install curl  # or wget"
+        exit 1
+      fi
 
       # Extract Mold
       mkdir -p ${PREFIX}/mold/
