@@ -81,6 +81,7 @@ else()
 
   # add SuiteSparse as dependencie to trilinos
   list(APPEND trilinos_dependencies "suitesparse")
+
 endif()
 
 # add SuiteSparse to deal.II
@@ -93,5 +94,5 @@ list(APPEND petsc_autotool_args "--with-suitesparse-dir=${SUITESPARSE_DIR}")
 
 # add SuiteSparse to Trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_UMFPACK=ON")
-list(APPEND trilinos_cmake_args "-D UMFPACK_LIBRARY_DIRS:PATH=${SUITESPARSE_DIR}/lib64")
+list(APPEND trilinos_cmake_args "-D UMFPACK_LIBRARY_DIRS:PATH=${SUITESPARSE_DIR}/lib;${SUITESPARSE_DIR}/lib64")
 list(APPEND trilinos_cmake_args "-D UMFPACK_INCLUDE_DIRS:PATH=${SUITESPARSE_DIR}/include/suitesparse")
