@@ -37,6 +37,9 @@ download_and_install_cmake() {
     # Read the CMake version from VERSIONS.cmake
     CMAKE_VERSION=4.0.3
 
+    # Save the current directory
+    local root_dir=$(pwd)
+
     # Download CMake
     curl -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
 
@@ -52,7 +55,7 @@ download_and_install_cmake() {
     # Link cmake binary to the bin folder
     ln -s "${PREFIX}/cmake/${CMAKE_VERSION}/bin/cmake" "${BIN_DIR}/cmake"
 
-    cd $(dirname $0)
+    cd ${root_dir}
 
     # Add CMake to the PATH
     export PATH=${BIN_DIR}:${PATH}
@@ -88,8 +91,7 @@ check_and_install_ninja() {
     else
         cecho ${WARN} "  attempting to install..."
         # Call the CMake script to install Ninja
-        NINJA_VERSION=1.11.1
-        cmake -S ninja -B ${BUILD_DIR}/ninja -D CMAKE_INSTALL_PREFIX=${PREFIX} -D NINJA_VERSION=${NINJA_VERSION} -D BIN_DIR=${BIN_DIR}
+        cmake -S ninja -B ${BUILD_DIR}/ninja -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
         cmake --build ${BUILD_DIR}/ninja -- -j ${THREADS}
         cmake --install ${BUILD_DIR}/ninja
 
@@ -124,8 +126,7 @@ check_and_install_mold() {
     else
         cecho ${WARN} "  attempting to install..."
         # Call the CMake script to install Ninja
-        MOLD_VERSION=2.30.0
-        cmake -S mold -B ${BUILD_DIR}/mold -D CMAKE_INSTALL_PREFIX=${PREFIX} -D MOLD_VERSION=${MOLD_VERSION} -D BIN_DIR=${BIN_DIR}
+        cmake -S mold -B ${BUILD_DIR}/mold -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
         cmake --build ${BUILD_DIR}/mold -- -j ${THREADS}
         cmake --install ${BUILD_DIR}/mold
 
