@@ -11,7 +11,9 @@ from urllib.parse import urlparse
 # --- Files to read/write ---
 JSON_FILE = Path("cmake/libraries.json")
 CMAKE_FILE = Path("CMakeLists.txt")
-
+CMAKE_FILE_NINJA = Path("ninja/CMakeLists.txt")
+CMAKE_FILE_MOLD = Path("mold/CMakeLists.txt")
+DCS2_FILE = Path("dcs2.sh")
 
 
 # --- Functions ---
@@ -128,26 +130,44 @@ def update_json(database, package_name, package_url, package_tag, cmake_tag, dry
         print(f"Updated {package_name} entry in {JSON_FILE}, by adding the new tag {cmake_tag} (with tag: {package_tag}).")
 
 
-def update_cmake(cmake_name, package_tag, package, dry_run=False):
+def update_cmake(cmake_name, package_tag, package, cmake_file, dry_run=False):
     version_pattern = re.compile(
         rf'set\({re.escape(cmake_name)}\s+"[^"]*"\s+CACHE STRING ".*?"\)'
     )
-    content = CMAKE_FILE.read_text()
+    content = cmake_file.read_text()
     new_line = f'set({cmake_name} "{package_tag}" CACHE STRING "Specify the version of {package.upper()} to be used")'
     updated = version_pattern.sub(new_line, content)
 
     if dry_run:
-        print(f"[Dry Run] Would update {cmake_name} in {CMAKE_FILE} (with tag: {package_tag}).")
+        print(f"[Dry Run] Would update {cmake_name} in {cmake_file} (with tag: {package_tag}).")
     else:
-        CMAKE_FILE.write_text(updated)
-        print(f"Updated {cmake_name} in {CMAKE_FILE} (with tag: {package_tag}).")
+        cmake_file.write_text(updated)
+        print(f"Updated {cmake_name} in {cmake_file} (with tag: {package_tag}).")
+
+
+def update_bash(package_tag, package_name, dcs2_file, dry_run=False):
+    if not dcs2_file.exists():
+        raise FileNotFoundError(f"{dcs2_file} not found")
+
+    version_pattern = re.compile(
+        rf'{re.escape(package_name)}=[^\n]+'
+    )
+    content = dcs2_file.read_text()
+    new_line = f'{package_name}={package_tag}'
+    updated = version_pattern.sub(new_line, content)
+
+    if dry_run:
+        print(f"[Dry Run] Would update {package_name} in {dcs2_file} (with tag: {package_tag}).")
+    else:
+        dcs2_file.write_text(updated)
+        print(f"Updated {package_name} in {dcs2_file} (with tag: {package_tag}).")
+
 
 
 def print_git_diff():
     result = subprocess.run(["git", "diff", "--stat"], capture_output=True, text=True)
     print("Git diff summary:")
     print(result.stdout)
-
 
 
 # --- Stitch everything together into the update package method ---
@@ -186,7 +206,16 @@ def update_package(database, package, parent_name="", dry_run=False):
             return 0 # this is not an error return code, we use this to count the number of updated packages
 
         update_json(database, package, package_url, latest_tag, cmake_tag, dry_run)
-        update_cmake(cmake_name, cmake_tag, package, dry_run)
+
+        if "cmake" in package:
+            update_bash(cmake_tag, "CMAKE_VERSION", DCS2_FILE, dry_run)
+        elif "ninja" in package:
+            update_cmake(cmake_name, cmake_tag, package, CMAKE_FILE_NINJA, dry_run)
+        elif "mold" in package:
+            update_cmake(cmake_name, cmake_tag, package, CMAKE_FILE_MOLD, dry_run)
+            update_bash(cmake_tag, "MOLD_VERSION", DCS2_FILE, dry_run)
+        else:
+            update_cmake(cmake_name, cmake_tag, package, CMAKE_FILE, dry_run)
         return 1 # this is not an error return code, we use this to count the number of updated packages
 
     except Exception as e:
@@ -206,7 +235,7 @@ def main():
 
     # Check if the CMakeLists.txt exists
     if not CMAKE_FILE.exists():
-        print(f"Could not find the CMakeLists.txt: 'CMAKE_FILE'")
+        print(f"Could not find the CMakeLists.txt: '{CMAKE_FILE}'")
         return
 
     # Read the database and perform some basic sanity checks:

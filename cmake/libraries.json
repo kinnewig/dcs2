@@ -1,4 +1,10 @@
 {
+  "cmake": {
+    "git": "https://github.com/Kitware/CMake.git",
+    "4.0.3": {
+      "tag": "v4.0.3"
+    }
+  },
   "mold": {
     "git": "https://github.com/rui314/mold.git",
     "2.30.0": {
