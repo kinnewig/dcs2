@@ -66,7 +66,7 @@ else()
   # Trilinos with BOOST
   if (DEFINED BOOST_DIR)
     #list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BOOST:BOOL=ON")
-    list(APPEND trilinos_cmake_args "-D Boost_LIBRARY_DIRS:PATH=${BOOST_DIR}/lib64")
+    list(APPEND trilinos_cmake_args "-D Boost_LIBRARY_DIRS:PATH=${BOOST_DIR}/lib;${BOOST_DIR}/lib64")
     list(APPEND trilinos_cmake_args "-D Boost_INCLUDE_DIRS:PATH=${BOOST_DIR}/include")
   endif()
   

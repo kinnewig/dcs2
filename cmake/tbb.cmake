@@ -77,7 +77,7 @@ else()
 endif()
 
 # add TBB to OpenCascade
-list(APPEND occt_cmake_args "-D 3RDPARTY_TBB_LIBRARY_DIR=${TBB_DIR}/lib64")
+list(APPEND occt_cmake_args "-D 3RDPARTY_TBB_LIBRARY_DIR=${TBB_DIR}/lib;${TBB_DIR}/lib64")
 
 # add TBB to deal.II
 list(APPEND dealii_cmake_args "-D TBB_DIR=${TBB_DIR}")
