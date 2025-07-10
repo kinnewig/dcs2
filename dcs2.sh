@@ -11,6 +11,12 @@ BLAS_OPTIONS=(AMD default system)
 BOOL_OPTIONS=(ON OFF)
 BOOL_WITH_DOWNLOAD_OPTIONS=(ON OFF download)
 
+# Installed packages:
+CMAKE_INSTALLED=NO 
+NINJA_INSTALLED=NO 
+MOLD_INSTALLED=NO
+AOCL_INSTALLED=NO
+
 # ++============================================================++
 # ||                         Premilaris                         ||
 # ++============================================================++
@@ -69,6 +75,8 @@ download_and_install_cmake() {
 
     # Add CMake to the PATH
     export PATH=${BIN_DIR}:${PATH}
+
+    CMAKE_INSTALLED=YES
 }
 
 check_and_install_cmake() {
@@ -118,6 +126,7 @@ check_and_install_ninja() {
             exit 1
         else
             cecho ${GOOD} "  Ninja has been installed successfully."
+            NINJA_INSTALLED=YES
         fi
     fi
     echo
@@ -153,6 +162,7 @@ check_and_install_mold() {
             exit 1
         else
             cecho ${GOOD} "  mold has been installed successfully."
+            MOLD_INSTALLED=YES
         fi
     fi
     echo
@@ -259,6 +269,7 @@ check_and_install_aocc() {
         clang --version
         AOCC_PATH="${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}"
         aocc_found=true
+        AOCL_INSTALLED=YES
       else
         cecho {ERROR} "  Automated installation of the AMD AOCC compiler failed. Please install AOCC manually."
         exit 1
@@ -628,7 +639,65 @@ check_compiler() {
 }
 
 
-
+# ++============================================================++
+# ||                        Print Summary                       ||
+# ++============================================================++
+print_summary() {
+  echo 
+  echo "==================================================="
+  echo "Summary:"
+  echo "==================================================="
+  if [ "${ADD_TO_PATH}" = "ON" ]; then
+    add_to_path
+  else
+    if [ "${CMAKE_INSTALLED}" = "NO" && "${NINJA_INSTALLED}" = "NO" && "${MOLD_INSTALLED}" = "NO"]; then
+      echo "No additional packages where installed."
+    else
+      echo "The following additional packages where installed"
+      if [ "${CMAKE_INSTALLED}" = "YES" ]; then
+        echo "  - CMake"
+      fi
+      if [ "${NINJA_INSTALLED}" = "YES" ]; then
+        echo "  - Ninja"
+      fi
+      if [ "${MOLD_INSTALLED}" = "YES" ]; then
+        echo "  - Mold"
+      fi
+      echo
+      echo "To make use of these run: " 
+        echo "In order to use these in future sessions, run:"
+        echo "export PATH=${BIN_DIR}:\$PATH"
+        if [ "${MOLD_INSTALLED}" = "YES" ]; then
+          echo "export LD_LIBRARY_PATH=${LIB_DIR}:\$LD_LIBRARY_PATH"
+        fi
+        echo
+        echo "Or to automatically load these, add the following to your ~/.bashrc:"
+        echo "if [ -f ${BIN_DIR} ]; then"
+        echo "  export PATH=${BIN_DIR}:\$PATH"
+        echo "fi"
+        echo "if [ -f ${LIB_DIR} ]; then"
+        echo "  export PATH=${BIN_DIR}:\$PATH"
+        echo "  export LD_LIBRARY_PATH=${LIB_DIR}:\$LD_LIBRARY_PATH"
+        echo "fi"
+        echo
+    fi
+  
+    if [ "${AOCL_INSTALLED}" = "YES" ]; then
+        echo "AOCC Installed:"
+        echo "In order to use AOCC in future sessions, run:"
+        echo "source ${AOCC_PATH}/setenv_AOCC.sh"
+        echo "Or to automatically load AOCC, add the following to your ~/.bashrc:"
+        echo "if [ -f ${AOCC_PATH}/setenv_AOCC.sh ]; then"
+        echo "  source ${AOCC_PATH}/setenv_AOCC.sh"
+        echo "fi"
+        echo
+    fi
+  
+  
+    echo "deal.II installed to: "
+    echo "${PREFIX}/dealii/$(ls ${PREFIX}/dealii| tail -n 1)"
+  fi
+}
 
 # ++============================================================++
 # ||                       Parse arguments                      ||
@@ -1135,6 +1204,12 @@ echo "Summary of packages, that will be build:"
 echo "==================================================="
 
 cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS} ${CMAKE_FLAGS}
+if [[ $? -eq 0 ]]; then
+    cecho ${GOOD} "Preperation succeeded"
+else
+    cecho ${ERROR} "Preperation failed"
+    exit 1
+fi
 
 echo 
 echo "==================================================="
@@ -1146,7 +1221,17 @@ echo "==================================================="
 echo 
 
 cmake --build ${BUILD_DIR} #-- -j ${THREADS}
-
-if [ "${ADD_TO_PATH}" = "ON" ]; then
-  add_to_path
+if [[ $? -eq 0 ]]; then
+    echo 
+    cecho ${GOOD} "Installation succeeded"
+    echo 
+else
+    echo 
+    cecho ${ERROR} "Installation failed"
+    exit 1
 fi
+
+if ! print_summary "$@"; then
+  exit 1
+fi
+
