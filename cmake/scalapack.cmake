@@ -101,13 +101,13 @@ list(APPEND dealii_cmake_args "-D SCALAPACK_DIR=${SCALAPACK_DIR}")
 
 # Add scalapack as dependecie to PETSc
 list(APPEND petsc_dependencies "scalapack")
-list(APPEND petsc_autotool_args "--with-scalapack-lib=${SCALAPACK_DIR}/lib64/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
+list(APPEND petsc_autotool_args "--with-scalapack-lib=${SCALAPACK_DIR}/lib/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX};${SCALAPACK_DIR}/lib64/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add scalapack to trilinos
 list(APPEND trilinos_dependencies "scalapack")
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_SCALAPACK:BOOL=ON")
 list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_NAMES='scalapack'")
-list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_DIRS:PATH=${SCALAPACK_DIR}/lib64")
+list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_DIRS:PATH=${SCALAPACK_DIR}/lib;${SCALAPACK_DIR}/lib64")
 list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_SCALAPACK:BOOL=ON")
 
 # Add scalapack to mumps

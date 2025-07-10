@@ -120,7 +120,7 @@ endif()
 list(APPEND dealii_dependencies "lapack")
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_LAPACK:BOOL=ON")
 list(APPEND dealii_cmake_args "-D LAPACK_DIR=${LAPACK_DIR}")
-list(APPEND dealii_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib64/liblapack.so")
+list(APPEND dealii_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib/liblapack.so;${LAPACK_DIR}/lib64/liblapack.so")
 
   # BLAS
   #list(APPEND dealii_cmake_args "-D DEAL_II_WITH_BLAS:BOOL=ON")
@@ -130,7 +130,7 @@ list(APPEND dealii_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib64/liblapack
 # Add LAPACK to trilinos
 list(APPEND trilinos_dependencies "lapack")
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_LAPACK:BOOL=ON")
-list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LAPACK_DIR}/lib64")
+list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LAPACK_DIR}/lib;${LAPACK_DIR}/lib64")
 
   # BLAS
   #list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
@@ -142,7 +142,7 @@ list(APPEND petsc_autotool_args " --with-lapack-dir=${LAPACK_DIR}")
 
 # Add LAPACK to SuiteSparse
 list(APPEND suitesparse_dependencies "lapack")
-list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib64/liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
+list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES=${LAPACK_DIR}/lib/liblapack${CMAKE_SHARED_LIBRARY_SUFFIX};${LAPACK_DIR}/lib64/liblapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add LAPACK to MUMPS
 list(APPEND mumps_dependencies "lapack")
