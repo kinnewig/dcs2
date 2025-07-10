@@ -14,14 +14,7 @@ if(MPFR_FOUND)
 else()
   message(STATUS "Building MPFR")
   
-  set(mpfr_cmake_args
-    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-    -D CMAKE_CXX_COMPILER:PATH=${CMAKE_CXX_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
-    -D CMAKE_BUILD_TYPE:STRING=Release
-    ${mpfr_cmake_args}
-  )
+  list(APPEND mpfr_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}")
   
   # get the download url for MPFR:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
@@ -49,7 +42,7 @@ else()
       BUILD_COMMAND make
       INSTALL_COMMAND make install
       CMAKE_ARGS ${mpfr_cmake_args}
-      CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION} 
+      CONFIGURE_COMMAND ./autogen.sh && ./configure ${mpfr_autotool_args}
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}
       BUILD_IN_SOURCE ON
       BUILD_BYPRODUCTS ${MPFR_LIBRARIES}
@@ -64,7 +57,7 @@ else()
       BUILD_COMMAND make
       INSTALL_COMMAND make install
       CMAKE_ARGS ${mpfr_cmake_args}
-      CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION} 
+      CONFIGURE_COMMAND ./autogen.sh && ./configure ${mpfr_autotool_args}
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}
       BUILD_IN_SOURCE ON
       BUILD_BYPRODUCTS ${MPFR_LIBRARIES}
