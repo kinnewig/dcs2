@@ -18,9 +18,11 @@ find_path(TCL_INCLUDE_DIR NAMES tcl.h
           HINTS ${TCL_DIR}/include ${CMAKE_INSTALL_PREFIX}/tcl/${TCL_VERSION}/include
           PATHS ${PC_TCL_INCLUDEDIR} ${PC_TCL_INCLUDE_DIRS})
 
-        find_library(TCL_LIBRARY NAMES tcl${TCL_VERSION_SHORT} tcl
-     HINTS ${TCL_DIR}/lib ${CMAKE_INSTALL_PREFIX}/tcl/${TCL_VERSION}/lib
-     PATHS ${PC_TCL_LIBDIR} ${PC_TCL_LIBRARY_DIRS})
+find_library(TCL_LIBRARY NAMES tcl${TCL_VERSION_SHORT} tcl
+             HINTS ${TCL_DIR} ${CMAKE_INSTALL_PREFIX}/tcl/${TCL_VERSION}
+             PATHS ${PC_TCL_LIBDIR} ${PC_TCL_LIBRARY_DIRS}
+             PATH_SUFFIXES lib lib64
+           )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TCL DEFAULT_MSG TCL_LIBRARY TCL_INCLUDE_DIR)

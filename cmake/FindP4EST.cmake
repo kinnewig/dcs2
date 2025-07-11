@@ -17,8 +17,10 @@ find_path(P4EST_INCLUDE_DIR NAMES p4est.h
           PATHS ${PC_P4EST_INCLUDEDIR} ${PC_P4EST_INCLUDE_DIRS})
 
 find_library(P4EST_LIBRARY NAMES p4est
-             HINTS ${P4EST_DIR}/lib ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION}/lib
-             PATHS ${PC_P4EST_LIBDIR} ${PC_P4EST_LIBRARY_DIRS})
+             HINTS ${P4EST_DIR} ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION}
+             PATHS ${PC_P4EST_LIBDIR} ${PC_P4EST_LIBRARY_DIRS}
+             PATH_SUFFIXES lib lib64
+           )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(P4EST DEFAULT_MSG P4EST_LIBRARY P4EST_INCLUDE_DIR)

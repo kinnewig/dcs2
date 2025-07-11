@@ -17,8 +17,10 @@ find_path(MPFR_INCLUDE_DIR NAMES mpfr.h
           PATHS ${PC_MPFR_INCLUDEDIR} ${PC_MPFR_INCLUDE_DIRS})
 
 find_library(MPFR_LIBRARY NAMES mpfr
-             HINTS ${MPFR_DIR}/lib ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}/lib
-             PATHS ${PC_MPFR_LIBDIR} ${PC_MPFR_LIBRARY_DIRS})
+             HINTS ${MPFR_DIR} ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}
+             PATHS ${PC_MPFR_LIBDIR} ${PC_MPFR_LIBRARY_DIRS}
+             PATH_SUFFIXES lib lib64
+           )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MPFR DEFAULT_MSG MPFR_LIBRARY MPFR_INCLUDE_DIR)

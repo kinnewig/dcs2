@@ -17,7 +17,8 @@ find_path(BLIS_INCLUDE_DIR NAMES blis.h
           PATHS ${PC_BLIS_INCLUDEDIR} ${PC_BLIS_INCLUDE_DIRS})
 
 find_library(BLIS_LIBRARY NAMES blis
-             HINTS ${BLIS_DIR}/lib ${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}/lib
+             HINTS ${BLIS_DIR} ${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}
+             PATH_SUFFIXES lib lib64
              PATHS ${PC_BLIS_LIBDIR} ${PC_BLIS_LIBRARY_DIRS})
 
 include(FindPackageHandleStandardArgs)

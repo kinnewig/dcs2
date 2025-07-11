@@ -16,11 +16,14 @@ string(REGEX REPLACE "\\.[0-9]+$" "" TK_VERSION_SHORT "${TK_VERSION}")
 
 find_path(TK_INCLUDE_DIR NAMES tk.h
           HINTS ${TK_DIR}/include ${CMAKE_INSTALL_PREFIX}/tk/${TK_VERSION}/include
-          PATHS ${PC_TK_INCLUDEDIR} ${PC_TK_INCLUDE_DIRS})
+          PATHS ${PC_TK_INCLUDEDIR} ${PC_TK_INCLUDE_DIRS}
+         )
 
-        find_library(TK_LIBRARY NAMES tk${TK_VERSION_SHORT} tk
-             HINTS ${TK_DIR}/lib ${CMAKE_INSTALL_PREFIX}/tk/${TK_VERSION}/lib
-             PATHS ${PC_TK_LIBDIR} ${PC_TK_LIBRARY_DIRS})
+find_library(TK_LIBRARY NAMES tk${TK_VERSION_SHORT} tk
+             HINTS ${TK_DIR} ${CMAKE_INSTALL_PREFIX}/tk/${TK_VERSION}
+             PATHS ${PC_TK_LIBDIR} ${PC_TK_LIBRARY_DIRS}
+             PATH_SUFFIXES lib lib64
+            )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TK DEFAULT_MSG TK_LIBRARY TK_INCLUDE_DIR)

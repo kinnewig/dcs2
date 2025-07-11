@@ -17,8 +17,10 @@ find_path(TBB_INCLUDE_DIR NAMES tbb.h
           PATHS ${PC_TBB_INCLUDEDIR} ${PC_TBB_INCLUDE_DIRS})
 
 find_library(TBB_LIBRARY NAMES libtbb${CMAKE_SHARED_LIBRARY_SUFFIX}
-             HINTS ${TBB_DIR}/lib64 ${CMAKE_INSTALL_PREFIX}/tbb/${TBB_VERSION}/lib64
-             PATHS ${PC_TBB_LIBDIR} ${PC_TBB_LIBRARY_DIRS})
+             HINTS ${TBB_DIR} ${CMAKE_INSTALL_PREFIX}/tbb/${TBB_VERSION}
+             PATHS ${PC_TBB_LIBDIR} ${PC_TBB_LIBRARY_DIRS}
+             PATH_SUFFIXES lib lib64
+           )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TBB DEFAULT_MSG TBB_LIBRARY TBB_INCLUDE_DIR)
