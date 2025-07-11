@@ -29,6 +29,12 @@
       "tag": "v1.13.1"
     }
   },
+  "boost": {
+    "git": "https://github.com/boostorg/boost.git",
+    "1.88.0": {
+      "tag": "boost-1.88.0"
+    }
+  },
   "blis": {
     "git": "https://github.com/flame/blis.git",
     "2.0.0": {

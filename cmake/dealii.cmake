@@ -15,11 +15,6 @@ set(dealii_cmake_args
   ${dealii_cmake_args}
 )
 
-# deal.II with Boost
-if(DEFINED BOOST_DIR)
-  list(APPEND dealii_cmake_args "-D BOOST_DIR=${BOOST_DIR}")
-endif()
-
 # get the download url for dealii:
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 string(JSON dealii_url GET ${json} dealii git)

@@ -62,16 +62,6 @@ else()
     list(APPEND trilinos_cmake_args "-D TPETRA_INST_INT_INT:BOOL=ON")
   endif()
   
-
-  # Trilinos with BOOST
-  if (DEFINED BOOST_DIR)
-    #list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BOOST:BOOL=ON")
-    list(APPEND trilinos_cmake_args "-D Boost_LIBRARY_DIRS:PATH=${BOOST_DIR}/lib;${BOOST_DIR}/lib64")
-    list(APPEND trilinos_cmake_args "-D Boost_INCLUDE_DIRS:PATH=${BOOST_DIR}/include")
-  endif()
-  
-
-  
   # Complex number support
   if ( DEALII_WITH_COMPLEX )
     list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_DOUBLE:BOOL=ON")
