@@ -17,8 +17,10 @@ find_path(OCCT_INCLUDE_DIR NAMES Vrml.hxx
           PATHS ${PC_OCCT_INCLUDEDIR} ${PC_OCCT_INCLUDE_DIRS})
 
 find_library(OCCT_LIBRARY NAMES libTKernel${CMAKE_SHARED_LIBRARY_SUFFIX}
-             HINTS ${OCCT_DIR}/lib ${CMAKE_INSTALL_PREFIX}/occt/${OCCT_VERSION}/lib
-             PATHS ${PC_OCCT_LIBDIR} ${PC_OCCT_LIBRARY_DIRS})
+             HINTS ${OCCT_DIR} ${CMAKE_INSTALL_PREFIX}/occt/${OCCT_VERSION}
+             PATHS ${PC_OCCT_LIBDIR} ${PC_OCCT_LIBRARY_DIRS}
+             PATH_SUFFIXES lib lib64
+           )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(OCCT DEFAULT_MSG OCCT_LIBRARY OCCT_INCLUDE_DIR)

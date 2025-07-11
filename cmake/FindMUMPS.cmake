@@ -17,8 +17,10 @@ find_path(MUMPS_INCLUDE_DIR NAMES dmumps_c.h
           PATHS ${PC_MUMPS_INCLUDEDIR} ${PC_MUMPS_INCLUDE_DIRS})
 
 find_library(MUMPS_LIBRARY NAMES dmumps
-             HINTS ${MUMPS_DIR}/lib ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}/lib
-             PATHS ${PC_MUMPS_LIBDIR} ${PC_MUMPS_LIBRARY_DIRS})
+             HINTS ${MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
+             PATHS ${PC_MUMPS_LIBDIR} ${PC_MUMPS_LIBRARY_DIRS}
+             PATH_SUFFIXES lib lib64
+           )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MUMPS DEFAULT_MSG MUMPS_LIBRARY MUMPS_INCLUDE_DIR)

@@ -14,11 +14,14 @@ set(TRILINOS_DIR "" CACHE PATH "The directory of the Trilinos installation")
 
 find_path(TRILINOS_INCLUDE_DIR NAMES Trilinos_version.h
           HINTS ${TRILINOS_DIR}/include ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}/include 
-          PATHS ${PC_TRILINOS_INCLUDEDIR} ${PC_TRILINOS_INCLUDE_DIRS})
+          PATHS ${PC_TRILINOS_INCLUDEDIR} ${PC_TRILINOS_INCLUDE_DIRS}
+         )
 
 find_library(TRILINOS_LIBRARY NAMES trilinosss
-             HINTS ${TRILINOS_DIR}/lib64 ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}/lib64
-             PATHS ${PC_TRILINOS_LIBDIR} ${PC_TRILINOS_LIBRARY_DIRS})
+             HINTS ${TRILINOS_DIR} ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
+             PATHS ${PC_TRILINOS_LIBDIR} ${PC_TRILINOS_LIBRARY_DIRS}
+             PATH_SUFFIXES lib lib64
+            )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TRILINOS DEFAULT_MSG TRILINOS_LIBRARY TRILINOS_INCLUDE_DIR)

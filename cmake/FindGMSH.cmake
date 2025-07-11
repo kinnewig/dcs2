@@ -14,11 +14,14 @@ set(GMSH_DIR "" CACHE PATH "The directory of the GMSH installation")
 
 find_path(GMSH_INCLUDE_DIR NAMES gmsh.h
           HINTS ${GMSH_DIR}/include ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}/include
-          PATHS ${PC_GMSH_INCLUDEDIR} ${PC_GMSH_INCLUDE_DIRS})
+          PATHS ${PC_GMSH_INCLUDEDIR} ${PC_GMSH_INCLUDE_DIRS}
+        )
 
 find_library(GMSH_LIBRARY NAMES libgmsh${CMAKE_SHARED_LIBRARY_SUFFIX}
-             HINTS ${GMSH_DIR}/lib64 ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}/lib64
-             PATHS ${PC_GMSH_LIBDIR} ${PC_GMSH_LIBRARY_DIRS})
+             HINTS ${GMSH_DIR} ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}
+             PATHS ${PC_GMSH_LIBDIR} ${PC_GMSH_LIBRARY_DIRS}
+             PATH_SUFFIXES lib lib64
+           )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GMSH DEFAULT_MSG GMSH_LIBRARY GMSH_INCLUDE_DIR)
