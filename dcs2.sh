@@ -176,7 +176,7 @@ download_and_extract_mold() {
     else
       cecho ${WARN} "  attempt to install..."
       # Read the mold version
-      MOLD_VERSION=2.30.0
+      MOLD_VERSION=2.40.2
       ARCHITECTURE=x86_64-linux
 
       # Download Mold

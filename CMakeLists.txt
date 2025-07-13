@@ -21,7 +21,7 @@ option(TPL_ENABLE_SCALAPACK   "Enable or disable the use of SCALAPACK as a third
 set(SCALAPACK_VERSION "2.2.2.1" CACHE STRING "Specify the version of SCALAPACK to be used")
 
 option(TPL_ENABLE_MUMPS       "Enable or disable the use of MUMPS as a third-party library"       ON)
-set(MUMPS_VERSION "5.8.0.2" CACHE STRING "Specify the version of MUMPS to be used")
+set(MUMPS_VERSION "5.8.0.3" CACHE STRING "Specify the version of MUMPS to be used")
 
 option(TPL_ENABLE_GMP         "Enable or disable the use of GMP as a third-party library"         ON)
 set(GMP_VERSION "6.2.1" CACHE STRING "Specify the version of GMP to be used")
