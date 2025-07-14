@@ -87,6 +87,14 @@ include(ExternalProject)
   set(SCALAPACK_DIR ${INSTALL_DIR})
   list(APPEND CMAKE_PREFIX_PATH "${SCALAPACK_DIR}")
   
+  # Check if lib64 exists, if it does not, create a symlink
+  ExternalProject_Add_Step(
+    scalapack scalapack_symlink
+    COMMAND bash -c "[ -d  ${SCALAPACK_DIR}/lib64 ] || ln -s ${SCALAPACK_DIR}/lib ${SCALAPACK_DIR}/lib64"
+    WORKING_DIRECTORY ${SCALAPACK_DIR}
+    DEPENDEES install
+  )
+
   # Linking
   add_library(SCALAPACK::SCALAPACK INTERFACE IMPORTED GLOBAL)
   set_target_properties(SCALAPACK::SCALAPACK PROPERTIES
@@ -100,8 +108,7 @@ list(APPEND dealii_cmake_args "-D DEAL_II_WITH_SCALAPACK:BOOL=ON")
 list(APPEND dealii_cmake_args "-D SCALAPACK_DIR=${SCALAPACK_DIR}")
 
 # Add scalapack as dependecie to PETSc
-list(APPEND petsc_dependencies "scalapack")
-list(APPEND petsc_autotool_args "--with-scalapack-lib=${SCALAPACK_DIR}/lib/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX};${SCALAPACK_DIR}/lib64/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
+list(APPEND petsc_autotool_args "--with-scalapack-lib=${SCALAPACK_DIR}/lib64/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add scalapack to trilinos
 list(APPEND trilinos_dependencies "scalapack")
