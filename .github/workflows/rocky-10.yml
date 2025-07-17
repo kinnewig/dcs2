@@ -1,0 +1,13 @@
+name: Platform Test Rocky 10
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rocky10-test:
+    name: Rocky-10
+    runs-on: [self-hosted, rocky-10]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: ./dcs2.sh -U OFF -A ON -j 12
