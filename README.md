@@ -14,6 +14,8 @@ DCS2 simplifies the process of building and installing the **deal.II** library a
 
 ![Fedora 42](https://github.com/kinnewig/dcs2/actions/workflows/fedora-42.yml/badge.svg)
 
+![Rocky 10](https://github.com/kinnewig/dcs2/actions/workflows/rocky-10.yml/badge.svg)
+
 ![Ubuntu 25.04](https://github.com/kinnewig/dcs2/actions/workflows/ubuntu-25.04.yml/badge.svg)
 
 ## Quick start
