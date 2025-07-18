@@ -42,16 +42,29 @@ or if you want to install for exampe your own fork of deal.II
 ## Requirements
 DCS2 requires a modern MPI compiler, and a few additional programs that are not build by DCS2 itself.
 
-### Fedora/Rocky/Redhat
+### Fedora
 Install the dependencies
 ```bash
- sudo dnf install @development-tools openmpi-devel boost-devel gcc-c++ git 
+sudo dnf install @development-tools openmpi-devel boost-devel gcc-c++ git 
 ```
 To enable openmpi by default add the following lines to the ~/.bashrc
 ```bash
 source /etc/profile.d/modules.sh
 module load mpi/openmpi-x86_64
 ```
+
+### Rocky / Redhat Linux
+Install the dependencies
+```bash
+sudo dnf groupinstall "Development Tools"
+sudo dnf install openmpi-devel boost-devel gcc-c++ git texinfo
+```
+To enable openmpi by default add the following lines to the ~/.bashrc
+```bash
+source /etc/profile.d/modules.sh
+module load mpi/openmpi-x86_64
+```
+
 
 ### Ubuntu/Debian
 Install the dependencies
@@ -166,8 +179,10 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 
 #### Grid generation
 - `GMSH` (default version: "4.12.2", default "OFF")
-#### Dependencies:
-   Only testes on Fedora 40/41/42 and Rocky 9, requires the following dependencies `dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
+
+   Extra dependencies of GMSH for Fedora / Rocky 9 `sudo dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
+
+   Extra dependencies of GMSH for Ubuntu / Debian `sudo apt install libfltk1.3 libfltk1.3-dev libglu1-mesa-dev libgl1-mesa-dev`.
 
 - `OCCT` OpenCascade (default version: "7.8.1", default "OFF")
 #### Dependencies:
