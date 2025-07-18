@@ -13,6 +13,7 @@ BOOL_WITH_DOWNLOAD_OPTIONS=(ON OFF download)
 
 # Installed packages:
 CMAKE_INSTALLED=NO 
+GIT_INSTALLED=NO 
 NINJA_INSTALLED=NO 
 MOLD_INSTALLED=NO
 AOCL_INSTALLED=NO
@@ -84,6 +85,7 @@ check_and_install_cmake() {
     if command -v cmake &>/dev/null; then
         cecho ${GOOD} "  already installed"
     else
+        cecho ${WARN} "  is not available but a hard requirement of dcs2"
         cecho ${WARN} "  attempt to install..."
         download_and_install_cmake
         if ! command -v cmake &>/dev/null; then
@@ -91,6 +93,43 @@ check_and_install_cmake() {
             exit 1
         else
             cecho ${GOOD} "  CMake ${CMAKE_VERSION} has been installed to ${PREFIX}/cmake/${CMAKE_VERSION}"
+        fi
+    fi
+    echo
+}
+
+
+
+# ++============================================================++
+# ||                            Git                            ||
+# ++============================================================++
+# Check if Git is installed and install if not
+check_and_install_git() {
+    cecho ${INFO} "Git:"
+    if command -v git &>/dev/null; then
+        cecho ${GOOD} "  already installed"
+    else
+        cecho ${WARN} "  is not available but a hard requirement of dcs2"
+        cecho ${WARN} "  attempting to install..."
+        # Call the CMake script to install Ninja
+        cmake -S git -B ${BUILD_DIR}/git -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
+        cmake --build ${BUILD_DIR}/git -- -j ${THREADS}
+        cmake --install ${BUILD_DIR}/git
+
+        # Check that ${BIN_DIR} is already in the path.
+        if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
+            cecho ${INFO} "  ${BIN_DIR} is already in the path."
+        else
+            # Add Git to the PATH
+            export PATH=${BIN_DIR}:${PATH}
+        fi
+
+        if ! command -v git &>/dev/null; then
+            cecho ${ERROR} "  ERROR: Failed to install Git automatically."
+            exit 1
+        else
+            cecho ${GOOD} "  Git has been installed successfully."
+            GIT_INSTALLED=YES
         fi
     fi
     echo
@@ -1151,6 +1190,12 @@ echo
 # Check wether CMake is available.
 # If it not available install it.
 if ! check_and_install_cmake "$@"; then
+  exit 1
+fi
+
+# Check wether Git is available.
+# If it not available install it.
+if ! check_and_install_git "$@"; then
   exit 1
 fi
 

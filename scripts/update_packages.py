@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 # --- Files to read/write ---
 JSON_FILE = Path("cmake/libraries.json")
 CMAKE_FILE = Path("CMakeLists.txt")
+CMAKE_FILE_GIT = Path("git/CMakeLists.txt")
 CMAKE_FILE_NINJA = Path("ninja/CMakeLists.txt")
 CMAKE_FILE_MOLD = Path("mold/CMakeLists.txt")
 DCS2_FILE = Path("dcs2.sh")
@@ -209,6 +210,8 @@ def update_package(database, package, parent_name="", dry_run=False):
 
         if "cmake" in package:
             update_bash(cmake_tag, "CMAKE_VERSION", DCS2_FILE, dry_run)
+        elif "git" in package:
+            update_cmake(cmake_name, cmake_tag, package, CMAKE_FILE_GIT, dry_run)
         elif "ninja" in package:
             update_cmake(cmake_name, cmake_tag, package, CMAKE_FILE_NINJA, dry_run)
         elif "mold" in package:

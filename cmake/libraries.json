@@ -5,6 +5,13 @@
       "tag": "v4.0.3"
     }
   },
+  "git": {
+    "git": "https://github.com/git/git.git",
+    "url": "https://github.com/git/git/archive/refs/tags",
+    "2.50.1": {
+      "tag": "v2.50.1"
+    }
+  },
   "mold": {
     "git": "https://github.com/rui314/mold.git",
     "2.30.0": {
