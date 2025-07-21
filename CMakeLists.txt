@@ -17,6 +17,9 @@ set(BOOST_VERSION "1.88.0" CACHE STRING "Specify the version of BOOST to be used
 option(TPL_ENABLE_BLIS        "Enable or disable the use of BLIS as a third-party library"        ON)
 set(BLIS_VERSION "2.0.0" CACHE STRING "Specify the version of BLIS to be used")
 
+option(TPL_ENABLE_HDF5        "Enable or disable the use of HDF5 as a third-party library"        ON)
+set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
+
 option(TPL_ENABLE_LIBFLAME    "Enable or disable the use of LIBFLAME as a third-party library"    ON)
 set(LIBFLAME_VERSION "master" CACHE STRING "Specify the version of LIBFLAME to be used")
 
