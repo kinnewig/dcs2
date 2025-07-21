@@ -44,6 +44,12 @@
       "tag": "14c86f66b20901b60ee276da355c1b62642c18d2"
     }
   },
+  "hdf5": {
+    "git": "https://github.com/HDFGroup/hdf5.git",
+    "1.14.6": {
+      "tag": "7bf340440909d468dbb3cf41f0ea0d87f5050cea"
+    }
+  },
   "libflame": {
     "git": "https://github.com/flame/libflame.git",
     "master": {
