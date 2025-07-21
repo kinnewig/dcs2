@@ -38,12 +38,13 @@ def normalize_version(tag):
 
 
 def is_valid_tag(tag):
-    # Reject tags with known pre-release or experimental markers
+    # Reject tags with pre-release or experimental markers even if attached
     blacklist = ["rc", "alpha", "beta", "preview", "test", "sample", "dev", "debug"]
-    if any(marker in tag.lower() for marker in blacklist):
+    tag_lower = tag.lower()
+    
+    if any(re.search(rf'\b{marker}\d*\b', tag_lower) or re.search(rf'\b{marker}\b', tag_lower) for marker in blacklist):
         return False
 
-    # Accept tags with 3 or 4 numeric parts
     return bool(re.search(r'(\d+)[_.\-](\d+)[_.\-](\d+)([_.\-](\d+))?$', tag))
 
 
