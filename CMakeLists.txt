@@ -42,6 +42,9 @@ set(LIBSC_VERSION "2.8.7" CACHE STRING "Specify the version of LIBSC to be used"
 option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-party library"       ON)
 set(PETSC_VERSION "3.23.4" CACHE STRING "Specify the version of PETSC to be used")
 
+option(TPL_ENABLE_SLEPSC       "Enable or disable the use of SLEPSc as a third-party library"       ON)
+set(SLEPSC_VERSION "3.23.2" CACHE STRING "Specify the version of SLEPSC to be used")
+
 option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-party library"    ON)
 set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of Trilinos to be used")
 
@@ -162,6 +165,15 @@ endif()
 
 if(TPL_ENABLE_PETSC)
   include(cmake/petsc.cmake)
+endif()
+
+if(TPL_ENABLE_SLEPSC)
+  include(cmake/petsc.cmake)
+  if(NOT TPL_ENABLE_PETSC)
+    message(STATUS "SLEPSc requires PETSc; therefore TPL_ENABLE_TCL is set to TRUE")
+    set(TPL_ENABLE_PETSC "ON")
+    include(cmake/petsc.cmake)
+  endif()
 endif()
 
 if(TPL_ENABLE_P4EST)

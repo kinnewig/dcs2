@@ -181,6 +181,12 @@
       "tag": "v3.23.4"
     }
   },
+  "slepsc": {
+    "git": "https://github.com/slepc/slepc.git",
+    "3.23.3": {
+      "tag": "461a363ab5c9860be73cbaec1e9a09e3e6d22db5"
+    }
+  },
   "trilinos": {
     "git": "https://github.com/trilinos/trilinos.git",
     "16.1.0": {
