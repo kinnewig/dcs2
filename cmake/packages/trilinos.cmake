@@ -68,58 +68,10 @@ else()
     list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_FLOAT:BOOL=ON")
     list(APPEND trilinos_cmake_args "-D Teuchos_ENABLE_COMPLEX:BOOL=ON")
   endif()
-  
-  # get the download url for trilinos:
-  file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
-  string(JSON trilinos_url GET ${json} trilinos git)
-  string(JSON trilinos_tag GET ${json} trilinos ${TRILINOS_VERSION} tag)
-  
-  # If a custom URL for trilinos is defined, use it.
-  if (DEFINED TRILINOS_CUSTOM_URL)
-    set(trilinos_url ${TRILINOS_CUSTOM_URL})
-    message("Using custom download URL for Trilinos: ${TRILINOS_CUSTOM_URL}")
-  endif()
-  
-  # If a custom tag for trilinos is defined, use it.
-  if (DEFINED TRILINOS_CUSTOM_TAG)
-    set(trilinos_tag ${TRILINOS_CUSTOM_TAG})
-    message("Using custom git tag for Trilinos: ${TRILINOS_CUSTOM_TAG}")
-  endif()
-  
-  if (DEFINED TRILINOS_SOURCE_DIR)
-    ExternalProject_Add(
-        trilinos
-        URL ${TRILINOS_SOURCE_DIR}
-        CMAKE_ARGS ${trilinos_cmake_args}
-        INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
-        CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-        DEPENDS ${trilinos_dependencies}
-    )
-  else()
-    ExternalProject_Add(
-        trilinos
-        GIT_REPOSITORY ${trilinos_url}
-        GIT_TAG ${trilinos_tag}
-        CMAKE_ARGS ${trilinos_cmake_args}
-        INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
-        CMAKE_GENERATOR ${DEFAULT_GENERATOR}
-        DEPENDS ${trilinos_dependencies}
-    )
-  endif()
-  
-  ExternalProject_Get_Property(trilinos INSTALL_DIR)
-  
-  # Populate the path
-  set(TRILINOS_DIR ${INSTALL_DIR})
-  list(APPEND CMAKE_PREFIX_PATH "${TRILINOS_DIR}")
-  
-  # Linking
-  # TODO: This is old method rework this to be more similar 
-  #       to ScaLAPACK and MUMPS
-  link_directories(${TRILINOS_DIR})
+ 
+  build_cmake_subproject("trilinos")
 
   # Dependencies:
-  # Add trilinos as dependencie to deal.II 
   list(APPEND dealii_dependencies "trilinos")
 endif()
 

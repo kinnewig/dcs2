@@ -16,9 +16,9 @@ set(dealii_cmake_args
 )
 
 # get the download url for dealii:
-file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
+file(READ ${CMAKE_CURRENT_LIST_DIR}/../libraries.json json)
 string(JSON dealii_url GET ${json} dealii git)
-string(JSON dealii_tag GET ${json} dealii ${DEALII_VERSION} tag)
+string(JSON dealii_tag GET ${json} dealii ${DEALII_VERSION})
 if (NOT dealii_tag)
   message(FATAL_ERROR "Git tag for DEALII version ${DEALII_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json.")
 endif()

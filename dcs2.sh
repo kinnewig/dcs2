@@ -415,8 +415,22 @@ check_compiler() {
   # Otherwise, just check that we have a C compilier
   else
     if [[ -n "$CC" ]]; then
-      cecho ${GOOD} "  Found CC compilier ${CC}"
-    else
+      # check that the compiler works:
+      if builtin command -v "${CC}" > /dev/null; then
+        cecho ${GOOD} "  Found CC compilier ${CC}"
+      else
+        cecho ${WARN} "  The compilier CC=${CC} does not work, attempt to restore default."
+        unset CC
+      fi
+
+      # Ensure that CC is not a MPI compiler
+      if [[ "$CC" == *mpi* ]]; then
+        cecho ${WARN} "  The variable CC should point to the default compilier, not an MPI compiler, attempt to restore default."
+        unset CC
+      fi
+    fi
+      
+    if [[ -z "$CC" ]]; then
       cecho ${WARN} "  CC Variable not set."
       if builtin command -v gcc > /dev/null; then
         cecho ${INFO} "  Found default gcc."
@@ -480,11 +494,25 @@ check_compiler() {
   # Otherwise, just check that we have a CXX compilier
   else
     if [[ -n "$CXX" ]]; then
-      cecho ${GOOD} "  Found CXX compilier ${CXX}"
-    else
+      # check that the compiler works:
+      if builtin command -v "${CXX}" > /dev/null; then
+        cecho ${GOOD} "  Found CXX compilier ${CXX}"
+      else
+        cecho ${WARN} "  The compilier CXX=${CXX} does not work, attempt to restore default."
+        unset CXX
+      fi
+
+      # Ensure that CC is not a MPI compiler
+      if [[ "$CXX" == *mpi* ]]; then
+        cecho ${WARN} "  The variable CXX should point to the default compilier, not an MPI compiler, attempt to restore default."
+        unset CXX
+      fi
+    fi
+    
+    if [[ -z "$CXX" ]]; then
       cecho ${WARN}   "  CXX Variable not set."
       if builtin command -v g++ > /dev/null; then
-        cecho ${INFO} "  Found default gcc."
+        cecho ${INFO} "  Found default g++."
         export CXX=g++
       else
         cecho ${ERROR} "  No CXX Compiler was found!"
@@ -545,8 +573,22 @@ check_compiler() {
   # Otherwise, just check that we have a CXX compilier
   else
     if [[ -n "$FC" ]]; then
-      cecho ${GOOD} "  Found FC compilier ${FC}"
-    else
+      # check that the compiler works:
+      if builtin command -v "${FC}" > /dev/null; then
+        cecho ${GOOD} "  Found FC compilier ${FC}"
+      else
+        cecho ${WARN} "  The compilier FC=${FC} does not work, attempt to restore default."
+        unset FC
+      fi
+
+      # Ensure that CC is not a MPI compiler
+      if [[ "$FC" == *mpi* ]]; then
+        cecho ${WARN} "  The variable FC should point to the default compilier, not an MPI compiler, attempt to restore default."
+        unset FC
+      fi
+    fi
+
+    if [[ -z "$FC" ]]; then
       cecho ${WARN} "  FC Variable not set."
       if builtin command -v gfortran > /dev/null; then
         cecho ${INFO} "  Found default gfortran."
@@ -567,8 +609,16 @@ check_compiler() {
 
   cecho ${INFO} "MPI C Compiler: "
   if [[ -n "$MPI_CC" ]]; then
-    cecho ${GOOD} "  Found MPI_CC compilier ${MPI_CC}"
-  else
+    # check that the compiler works:
+    if builtin command -v "${MPI_CC}" > /dev/null; then
+      cecho ${GOOD} "  Found MPI_CC compilier ${MPI_CC}"
+    else
+      cecho ${WARN} "  The compilier MPI_CC=${MPI_CC} does not work, attempt to restore default."
+      unset MPI_CC
+    fi
+  fi
+
+  if [[ -z "$MPI_CC" ]]; then
     cecho ${WARN} "  MPI_CC Variable not set."
     if builtin command -v mpicc > /dev/null; then
       cecho ${INFO} "  Found default mpicc."
@@ -588,8 +638,16 @@ check_compiler() {
 
   cecho ${INFO} "MPI CXX Compiler: "
   if [[ -n "$MPI_CXX" ]]; then
-    cecho ${GOOD} "  Found MPI_CXX compilier ${MPI_CXX}"
-  else
+    # check that the compiler works:
+    if builtin command -v "${MPI_CXX}" > /dev/null; then
+      cecho ${GOOD} "  Found MPI_CXX compilier ${MPI_CXX}"
+    else
+      cecho ${WARN} "  The compilier MPI_CXX=${MPI_CXX} does not work, attempt to restore default."
+      unset MPI_CXX
+    fi
+  fi
+
+  if [[ -z "$MPI_CXX" ]]; then
     cecho ${WARN} "  MPI_CXX Variable not set."
     if builtin command -v mpicxx > /dev/null; then
       cecho ${INFO} "  Found default mpicxx."
@@ -609,8 +667,16 @@ check_compiler() {
 
   cecho ${INFO} "MPI Fortran Compiler: "
   if [[ -n "$MPI_FC" ]]; then
-    echo "Found MPI_FC compilier ${MPI_FC}"
-  else
+    # check that the compiler works:
+    if builtin command -v "${MPI_FC}" > /dev/null; then
+      cecho ${GOOD} "  Found MPI_FC compilier ${MPI_FC}"
+    else
+      cecho ${WARN} "  The compilier MPI_FC=${MPI_FC} does not work, attempt to restore default."
+      unset MPI_FC
+    fi
+  fi
+
+  if [[ -z "$MPI_FC" ]]; then
     cecho ${WARN} "  MPI_FC Variable not set."
     if builtin command -v mpifort > /dev/null; then
       cecho ${INFO} "  Found default mpifort."

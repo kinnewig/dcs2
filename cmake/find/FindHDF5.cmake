@@ -12,11 +12,11 @@ pkg_check_modules(PC_HDF5 QUIET HDF5)
 
 set(HDF5_DIR "" CACHE PATH "The directory of the HDF5 installation")
 
-find_path(HDF5_INCLUDE_DIR NAMES dhdf5_c.h
+find_path(HDF5_INCLUDE_DIR NAMES H5version.h
           HINTS ${HDF5_DIR}/include ${CMAKE_INSTALL_PREFIX}/hdf5/${HDF5_VERSION}/include
           PATHS ${PC_HDF5_INCLUDEDIR} ${PC_HDF5_INCLUDE_DIRS})
 
-find_library(HDF5_LIBRARY NAMES dhdf5
+find_library(HDF5_LIBRARY NAMES libhdf5.so
              HINTS ${HDF5_DIR} ${CMAKE_INSTALL_PREFIX}/hdf5/${HDF5_VERSION}
              PATHS ${PC_HDF5_LIBDIR} ${PC_HDF5_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64

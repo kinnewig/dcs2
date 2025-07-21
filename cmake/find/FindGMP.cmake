@@ -38,7 +38,12 @@ if(GMP_FOUND)
 
   # Version check
   # First, read the version from the header file
-  file(STRINGS ${GMP_INCLUDE_DIR}/gmp-x86_64.h _gmp_version_line
+  if(EXISTS "${GMP_INCLUDE_DIR}/gmp.h")
+    set(gmp_version_file "${GMP_INCLUDE_DIR}/gmp.h")
+  else()
+    set(gmp_version_file "${GMP_INCLUDE_DIR}/gmp-x86_64.h")
+  endif()
+  file(STRINGS ${GMP_INCLUDE_DIR}/gmp.h _gmp_version_line
        REGEX "^#define __GNU_MP_VERSION.*|^#define __GNU_MP_VERSION_MINOR.*|^#define __GNU_MP_VERSION_PATCHLEVEL.*")
   
   # Parse the version information

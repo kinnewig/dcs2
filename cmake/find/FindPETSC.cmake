@@ -19,7 +19,7 @@ find_path(PETSC_INCLUDE_DIR NAMES petsc.h
   PATH_SUFFIXES finclude petsc petsc/finclude
 )
 
-find_library(PETSC_LIBRARY NAMES libpetsc
+find_library(PETSC_LIBRARY NAMES libpetsc.so
   HINTS ${PETSC_DIR} ${CMAKE_INSTALL_PREFIX}/petsc/${PETSC_VERSION}
   PATHS ${PC_PETSC_LIBDIR} ${PC_PETSC_LIBRARY_DIRS}
   PATH_SUFFIXES lib lib64
@@ -35,7 +35,5 @@ if(PETSC_FOUND)
   get_filename_component(PETSC_DIR "${PETSC_LIBRARY}" DIRECTORY)
   get_filename_component(PETSC_DIR ${PETSC_DIR} DIRECTORY)
 endif()
-
-message("${PETSC_DIR}")
 
 mark_as_advanced(PETSC_INCLUDE_DIR PETSC_LIBRARY)

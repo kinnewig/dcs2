@@ -1,4 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
+
+cmake_policy(SET CMP0167 NEW)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/modules")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/find")
+
+include(build_cmake_subproject)
+include(build_autotools_subproject)
+
 project(dcs)
 
 # We do not allow in place builds:
@@ -43,10 +52,10 @@ set(P4EST_VERSION "2.8.7" CACHE STRING "Specify the version of P4EST to be used"
 set(LIBSC_VERSION "2.8.7" CACHE STRING "Specify the version of LIBSC to be used")
 
 option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-party library"       ON)
-set(PETSC_VERSION "3.23.4" CACHE STRING "Specify the version of PETSC to be used")
+set(PETSC_VERSION "3.23.2" CACHE STRING "Specify the version of PETSC to be used")
 
-option(TPL_ENABLE_SLEPSC       "Enable or disable the use of SLEPSc as a third-party library"       ON)
-set(SLEPSC_VERSION "3.23.2" CACHE STRING "Specify the version of SLEPSC to be used")
+option(TPL_ENABLE_SLEPC       "Enable or disable the use of SLEPc as a third-party library"       ON)
+set(SLEPC_VERSION "3.23.2" CACHE STRING "Specify the version of SLEPC to be used")
 
 option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-party library"    ON)
 set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of Trilinos to be used")
@@ -73,27 +82,17 @@ set(DEALII_VERSION "9.6.2" CACHE STRING "Specify the version of DEALII to be use
 option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
 option(DEALII_WITH_COMPLEX    "Build deal.II with support for 64bit long numbers"                 OFF)
 
-#Compiler
-set(CMAKE_Fortran_COMPILER "mpifort")
-set(CMAKE_C_COMPILER "mpicc")
-set(CMAKE_CXX_COMPILER "mpicxx")
-
-set(CMAKE_MPI_Fortran_COMPILER "mpifort")
-set(CMAKE_MPI_C_COMPILER "mpicc")
-set(CMAKE_MPI_CXX_COMPILER "mpicxx")
 
 
 # AMD - AOCL
-set(AMD_BLIS_VERSION "5.1" CACHE STRING "Specify the version of BLIS to be used")
-set(AMD_LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of LIBFLAME to be used")
-set(AMD_AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AOCL-UTILS to be used")
-
 if (AMD)
-  include(cmake/aocl-utils.cmake)
+  set(AMD-BLIS_VERSION "5.1" CACHE STRING "Specify the version of BLIS to be used")
+  set(AMD-LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of LIBFLAME to be used")
+  set(AMD-AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AOCL-UTILS to be used")
 
-  set(CMAKE_Fortran_COMPILER "flang")
-  set(CMAKE_C_COMPILER "clang")
-  set(CMAKE_CXX_COMPILER "clang++")
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/aocl-utils.cmake")
+else()
+  option(TPL_ENABLE_AMD-SCALAPACK "Enable or disable the use of TK as a third-party library" OFF)
 endif()
 
 
@@ -112,109 +111,127 @@ if(MOLD)
   set(CMAKE_LINKER ${MOLD_FOUND})
 endif()
 
+
+
 # Dependencies:
-include(cmake/boost.cmake)
+list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/boost.cmake")
+
+if(TPL_ENABLE_BLIS)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/blis.cmake")
+endif()
 
 if(TPL_ENABLE_GMP)
-  include(cmake/gmp.cmake)
-endif()
-
-if(TPL_ENABLE_MPFR)
-  include(cmake/mpfr.cmake)
-endif()
-
-if(TPL_ENABLE_TCL)
-  include(cmake/tcl.cmake)
-endif()
-
-if(TPL_ENABLE_TK)
-  include(cmake/tk.cmake)
-endif()
-
-# Main TPL's
-if(TPL_ENABLE_BLIS)
-  include(cmake/blis.cmake)
-endif()
-
-if(TPL_ENABLE_LIBFLAME)
-  include(cmake/libflame.cmake)
-endif()
-
-if(TPL_ENABLE_SCALAPACK)
-  include(cmake/scalapack.cmake)
-endif()
-
-if(TPL_ENABLE_MUMPS)
-  include(cmake/mumps.cmake)
-endif()
-
-if(TPL_ENABLE_SUITESPARSE)
-  if(NOT TPL_ENABLE_GMP)
-    message(STATUS "Building SuiteSparse set TPL_ENABLE_GMP to TRUE")
-    set(TPL_ENABLE_GMP  "ON")
-    include(cmake/gmp.cmake)
-  endif()
-  if(NOT TPL_ENABLE_MPFR)
-    message(STATUS "Building SuiteSparse set TPL_ENABLE_MPFR to TRUE")
-    set(TPL_ENABLE_MPFR "ON")
-    include(cmake/mpfr.cmake)
-  endif()
-  include(cmake/suitesparse.cmake)
-endif()
-
-if(TPL_ENABLE_TRILINOS)
-  include(cmake/trilinos.cmake)
-endif()
-
-if(TPL_ENABLE_PETSC)
-  include(cmake/petsc.cmake)
-endif()
-
-if(TPL_ENABLE_SLEPSC)
-  include(cmake/petsc.cmake)
-  if(NOT TPL_ENABLE_PETSC)
-    message(STATUS "SLEPSc requires PETSc; therefore TPL_ENABLE_TCL is set to TRUE")
-    set(TPL_ENABLE_PETSC "ON")
-    include(cmake/petsc.cmake)
-  endif()
-endif()
-
-if(TPL_ENABLE_P4EST)
-  include(cmake/p4est.cmake)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/gmp.cmake")
 endif()
 
 if(TPL_ENABLE_GMSH)
-  include(cmake/gmsh.cmake)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/gmsh.cmake")
 endif()
 
-if(TPL_ENABLE_TBB)
-  include(cmake/tbb.cmake)
+if(TPL_ENABLE_HDF5)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/hdf5.cmake")
 endif()
 
-if(TPL_ENABLE_VTK)
-  include(cmake/vtk.cmake)
+if(TPL_ENABLE_LIBFLAME)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/libflame.cmake")
+endif()
+
+if(TPL_ENABLE_MPFR)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/mpfr.cmake")
+endif()
+
+if(TPL_ENABLE_MUMPS)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/mumps.cmake")
 endif()
 
 if(TPL_ENABLE_OCCT)
   if(NOT TPL_ENABLE_TBB)
     message(STATUS "Building OpenCascade set TPL_ENABLE_TBB to TRUE")
     set(TPL_ENABLE_TBB "ON")
-    include(cmake/tbb.cmake)
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tbb.cmake")
   endif()
   if(NOT TPL_ENABLE_TCL)
     message(STATUS "Building OpenCascade set TPL_ENABLE_TCL to TRUE")
     set(TPL_ENABLE_TCL "ON")
-    include(cmake/tcl.cmake)
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tcl.cmake")
   endif()
   if(NOT TPL_ENABLE_TK)
     message(STATUS "Building OpenCascade set TPL_ENABLE_TK to TRUE")
     set(TPL_ENABLE_TK  "ON")
-    include(cmake/tk.cmake)
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tk.cmake")
   endif()
-  include(cmake/occt.cmake)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/occt.cmake")
+endif()
+
+if(TPL_ENABLE_P4EST)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/p4est.cmake")
+endif()
+
+if(TPL_ENABLE_PETSC)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/petsc.cmake")
+endif()
+
+if(TPL_ENABLE_SCALAPACK)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/scalapack.cmake")
+endif()
+
+if(TPL_ENABLE_SLEPC)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/slepc.cmake")
+  if(NOT TPL_ENABLE_PETSC)
+    message(STATUS "SLEPc requires PETSc; therefore TPL_ENABLE_TCL is set to TRUE")
+    set(TPL_ENABLE_PETSC "ON")
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/petsc.cmake")
+  endif()
+endif()
+
+if(TPL_ENABLE_SUITESPARSE)
+  if(NOT TPL_ENABLE_GMP)
+    message(STATUS "Building SuiteSparse set TPL_ENABLE_GMP to TRUE")
+    set(TPL_ENABLE_GMP  "ON")
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/gmp.cmake")
+  endif()
+  if(NOT TPL_ENABLE_MPFR)
+    message(STATUS "Building SuiteSparse set TPL_ENABLE_MPFR to TRUE")
+    set(TPL_ENABLE_MPFR "ON")
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/mpfr.cmake")
+  endif()
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/suitesparse.cmake")
+endif()
+
+if(TPL_ENABLE_TBB)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tbb.cmake")
+endif()
+
+if(TPL_ENABLE_TCL)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tcl.cmake")
+endif()
+
+if(TPL_ENABLE_TK)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tk.cmake")
+endif()
+
+if(TPL_ENABLE_TRILINOS)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/trilinos.cmake")
+endif()
+
+if(TPL_ENABLE_VTK)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/vtk.cmake")
 endif()
 
 
+execute_process(
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/resolve_dependencies.py ${TPLS_TO_INCLUDE}
+  OUTPUT_VARIABLE sorted_packages_raw
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
+# Convert back to CMake list
+string(REPLACE ";" ";" sorted_packages "${sorted_packages_raw}")
 
-include(cmake/dealii.cmake)
+# Include in sorted order
+foreach(pkg ${sorted_packages})
+  include("${CMAKE_SOURCE_DIR}/cmake/packages/${pkg}.cmake")
+endforeach()
+
+# Finally deal.II itself!
+include(${CMAKE_SOURCE_DIR}/cmake/packages/dealii.cmake)
