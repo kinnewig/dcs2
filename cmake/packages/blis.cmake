@@ -51,12 +51,14 @@ if (NOT BLIS_FOUND)
 
   # Dependencies:
   if (AMD)
+    list(APPEND arpack-ng_dependencies "amd-blis")
     list(APPEND dealii_dependencies    "amd-blis")
     list(APPEND petsc_dependencies     "amd-blis")
     list(APPEND trilinos_dependencies  "amd-blis")
     list(APPEND scalapack_dependencies "amd-blis")
     list(APPEND libflame_dependencies  "amd-blis")
   else()
+    list(APPEND arpack-ng_dependencies "blis")
     list(APPEND dealii_dependencies    "blis")
     list(APPEND petsc_dependencies     "blis")
     list(APPEND trilinos_dependencies  "blis")
@@ -64,6 +66,9 @@ if (NOT BLIS_FOUND)
     list(APPEND libflame_dependencies  "blis")
   endif()
 endif()
+
+# Add blis to deal.II
+list(APPEND arpack-ng_cmake_args "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add blis to deal.II
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_BLAS:BOOL=ON")

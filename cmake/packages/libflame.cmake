@@ -61,12 +61,14 @@ else()
 
   # Dependencies:
   if (AMD)
+    list(APPEND arpackng_dependencies  "amd-libflame")
     list(APPEND dealii_dependencies    "amd-libflame")
     list(APPEND petsc_dependencies     "amd-libflame")
     list(APPEND trilinos_dependencies  "amd-libflame")
     list(APPEND scalapack_dependencies "amd-libflame")
     list(APPEND mumps_dependencies     "amd-libflame")
   else()
+    list(APPEND arpackng_dependencies  "libflame")
     list(APPEND dealii_dependencies    "libflame")
     list(APPEND petsc_dependencies     "libflame")
     list(APPEND trilinos_dependencies  "libflame")
@@ -76,6 +78,9 @@ else()
 endif()
 
 add_library(LIBFLAME::LIBFLAME INTERFACE IMPORTED GLOBAL)
+
+# Add libflame to ARPACK-NG
+list(APPEND arpack-ng_cmake_args "-D LAPACK_LIBRARIES:PATH=${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add libflame to deal.II
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_LAPACK:BOOL=ON")
