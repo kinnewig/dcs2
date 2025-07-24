@@ -1,4 +1,8 @@
 {
+  "adolc": {
+    "git": "https://github.com/coin-or/ADOL-C.git",
+    "2.7.2": "releases/2.7.2"
+  },
   "amd-aocl-utils": {
     "git": "https://github.com/amd/aocl-utils.git",
     "5.0.0": "91ae4d2cf4cbb67f66faeb7a3844c93691d126fd",
