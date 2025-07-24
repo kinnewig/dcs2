@@ -20,6 +20,9 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Options
+option(TPL_ENABLE_ADOLC       "Enable or disable the use of ADOL-C as a third-party library"      OFF)
+set(ADOLC_VERSION "2.7.2" CACHE STRING "Specify the version of ADOLC to be used")
+
 option(TPL_ENABLE_BOOST       "Enable or disable the use of BOOST as a third-party library"       ON)
 set(BOOST_VERSION "1.88.0" CACHE STRING "Specify the version of BOOST to be used")
 
@@ -114,6 +117,10 @@ endif()
 
 
 # Dependencies:
+if(TPL_ENABLE_ADOLC)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/adolc.cmake")
+endif()
+
 list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/boost.cmake")
 
 if(TPL_ENABLE_BLIS)

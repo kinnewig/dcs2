@@ -194,6 +194,9 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 
 - `TRILINOS` (default version: "16.1.0")
 
+#### Automatic Differentiation
+- `ADOL-C` (default "OFF")
+
 #### Miscellaneous
 - `TBB` Intel One Thread Building Blocks (default version: "2021.13.0")
 - `VTK` (default version: "9.3.1", default "OFF")
