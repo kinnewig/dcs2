@@ -192,6 +192,8 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `TK` (default version: "8.6.15", default "OFF")
 
 #### Algebra Packages
+- `GINKGO` (default "OFF")
+
 - `PETSC` (default version: "3.23.3")
 
 - `TRILINOS` (default version: "16.1.0")

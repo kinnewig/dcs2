@@ -57,6 +57,10 @@
     "9.6.0": "93113976b8ed7b11be3f0ab2035467af102fe0fa",
     "9.6.2": "v9.6.2"
   },
+  "ginkgo": {
+    "git": "https://github.com/ginkgo-project/ginkgo.git",
+    "1.10.0": "v1.10.0"
+  },
   "gmp": {
     "git": "https://github.com/alisw/GMP.git",
     "6.2.1": "2bbd52703e5af82509773264bfbd20ff8464804f"
