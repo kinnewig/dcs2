@@ -178,6 +178,8 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `P4EST` (default version: "2.8.5")
 
 #### Grid generation
+- `ASSIMP` is a portable Open Source library to import various well-known 3D model formats in a uniform manner (default "ON")
+
 - `GMSH` (default version: "4.12.2", default "OFF")
 
    Extra dependencies of GMSH for Fedora / Rocky 9 `sudo dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.

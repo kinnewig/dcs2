@@ -26,6 +26,9 @@ set(ADOLC_VERSION "2.7.2" CACHE STRING "Specify the version of ADOLC to be used"
 option(TPL_ENABLE_ARPACK-NG   "Enable or disable the use of ADOL-C as a third-party library"      OFF)
 set(ARPACK-NG_VERSION "3.9.1" CACHE STRING "Specify the version of ADOLC to be used")
 
+option(TPL_ENABLE_ASSIMP   "Enable or disable the use of Assimp as a third-party library"         ON)
+set(ASSIMP_VERSION "6.0.2" CACHE STRING "Specify the version of ASSIMP to be used")
+
 option(TPL_ENABLE_BOOST       "Enable or disable the use of BOOST as a third-party library"       ON)
 set(BOOST_VERSION "1.88.0" CACHE STRING "Specify the version of BOOST to be used")
 
@@ -126,6 +129,10 @@ endif()
 
 if(TPL_ENABLE_ARPACK-NG)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/arpack-ng.cmake")
+endif()
+
+if(TPL_ENABLE_ASSIMP)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/assimp.cmake")
 endif()
 
 list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/boost.cmake")
