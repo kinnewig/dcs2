@@ -28,6 +28,7 @@ function(build_cmake_subproject name)
       GIT_SHALLOW true
       CMAKE_ARGS ${${name}_cmake_args}
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${name}/${${name_upper}_VERSION}
+      BUILD_COMMAND cmake --build . --parallel ${THREADS}
       BUILD_BYPRODUCTS ${${name_upper}_LIBRARIES}
       CONFIGURE_HANDLED_BY_BUILD true
       CMAKE_GENERATOR ${DEFAULT_GENERATOR}
@@ -40,6 +41,7 @@ function(build_cmake_subproject name)
       GIT_SHALLOW true
       CMAKE_ARGS ${${name}_cmake_args}
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${name}/${${name_upper}_VERSION}
+      BUILD_COMMAND cmake --build . --parallel ${THREADS}
       BUILD_BYPRODUCTS ${${name_upper}_LIBRARIES}
       CONFIGURE_HANDLED_BY_BUILD true
       CMAKE_GENERATOR ${DEFAULT_GENERATOR}
