@@ -203,6 +203,7 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 
 #### Miscellaneous
 - `ARPACK`  is an open-source library designed to provide performance portable algorithms for geometric search, similarly to nanoflann and Boost Geometry. (default "OFF")
+- `GSL` GNU Scientific Library (default "OFF")
 - `TBB` Intel One Thread Building Blocks (default version: "2021.13.0")
 - `VTK` (default version: "9.3.1", default "OFF")
 

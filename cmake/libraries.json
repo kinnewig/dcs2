@@ -70,6 +70,10 @@
     "4.12.2": "bc6b651adf17a57698ee60d88b305afb4bb216b8",
     "4.14.0": "gmsh_4_14_0"
   },
+  "gsl": {
+    "git": "https://git.savannah.gnu.org/git/gsl.git",
+    "2.8": "release-2-8"
+  },
   "hdf5": {
     "git": "https://github.com/HDFGroup/hdf5.git",
     "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea"
