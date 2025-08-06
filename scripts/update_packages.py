@@ -121,7 +121,7 @@ def get_current_max_version(database):
 
 
 def update_json(database, package_name, package_url, package_tag, cmake_tag, dry_run=False):
-    database[package_name][cmake_tag] = {package_tag}
+    database[package_name][cmake_tag] = package_tag
 
     if dry_run:
         print(f"[Dry Run] Would updated {package_name} entry in {JSON_FILE}, by adding the new tag {cmake_tag} (with tag: {package_tag}).")
