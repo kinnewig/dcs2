@@ -44,6 +44,9 @@ set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 option(TPL_ENABLE_HDF5        "Enable or disable the use of HDF5 as a third-party library"        ON)
 set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
 
+option(TPL_ENABLE_HYPRE        "Enable or disable the use of hypre as a third-party library"      OFF)
+set(HYPRE_VERSION "2.33.0" CACHE STRING "Specify the version of HYPRE to be used")
+
 option(TPL_ENABLE_LIBFLAME    "Enable or disable the use of LIBFLAME as a third-party library"    ON)
 set(LIBFLAME_VERSION "master" CACHE STRING "Specify the version of LIBFLAME to be used")
 
@@ -165,6 +168,10 @@ endif()
 
 if(TPL_ENABLE_HDF5)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/hdf5.cmake")
+endif()
+
+if(TPL_ENABLE_HYPRE)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/hypre.cmake")
 endif()
 
 if(TPL_ENABLE_LIBFLAME)
