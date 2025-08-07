@@ -38,7 +38,7 @@ set(BLIS_VERSION "2.0.0" CACHE STRING "Specify the version of BLIS to be used")
 option(TPL_ENABLE_GINKGO   "Enable or disable the use of ginkgo as a third-party library"         OFF)
 set(GINKGO_VERSION "1.10.0" CACHE STRING "Specify the version of GINKGO to be used")
 
-option(TPL_ENABLE_GSL   "Enable or disable the use of GNU Scientific Library as a third-party library"  ON)
+option(TPL_ENABLE_GSL   "Enable or disable the use of GSL as a third-party library"               OFF)
 set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 
 option(TPL_ENABLE_HDF5        "Enable or disable the use of HDF5 as a third-party library"        ON)
