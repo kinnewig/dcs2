@@ -211,6 +211,10 @@ endif()
 
 if(TPL_ENABLE_PETSC)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/petsc.cmake")
+  if(NOT TPL_ENABLE_HYPRE)
+    message(STATUS "Building PERSC set TPL_ENABLE_HYPRE to TRUE")
+    set(TPL_ENABLE_HYPRE  "ON")
+  endif()
 endif()
 
 if(TPL_ENABLE_SCALAPACK)
