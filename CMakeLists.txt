@@ -56,6 +56,9 @@ set(SCALAPACK_VERSION "2.2.2.1" CACHE STRING "Specify the version of SCALAPACK t
 option(TPL_ENABLE_MUMPS       "Enable or disable the use of MUMPS as a third-party library"       ON)
 set(MUMPS_VERSION "5.8.0.3" CACHE STRING "Specify the version of MUMPS to be used")
 
+option(TPL_ENABLE_NUMDIFF       "Enable or disable the use of NUMDIFF as a third-party library"   ON)
+set(NUMDIFF_VERSION "5.9.0" CACHE STRING "Specify the version of NUMDIFF to be used")
+
 option(TPL_ENABLE_GMP         "Enable or disable the use of GMP as a third-party library"         ON)
 set(GMP_VERSION "6.2.1" CACHE STRING "Specify the version of GMP to be used")
 
@@ -184,6 +187,10 @@ endif()
 
 if(TPL_ENABLE_MUMPS)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/mumps.cmake")
+endif()
+
+if(TPL_ENABLE_NUMDIFF)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/numdiff.cmake")
 endif()
 
 if(TPL_ENABLE_OCCT)
