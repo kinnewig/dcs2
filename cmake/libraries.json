@@ -116,6 +116,10 @@
     "1.13.0": "v1.13.0",
     "1.13.1": "v1.13.1"
   },
+  "numdiff": {
+    "git": "https://download-mirror.savannah.gnu.org/releases/numdiff",
+    "5.9.0": "numdiff-5.9.0.tar.gz"
+  },
   "occt": {
     "git": "https://github.com/Open-Cascade-SAS/OCCT.git",
     "7.8.1": "bd2a789f15235755ce4d1a3b07379a2e062fdc2e",
