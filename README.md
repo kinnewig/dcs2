@@ -173,6 +173,7 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 #### Direct Solver
 - `MUMPS` (default version: "5.6.2")
 - `SUITESPARSE` (default version: "5.6.2")
+- `SUPERLU_DIST` (default: "ON")
 
 #### Graph partitioning
 - `P4EST` (default version: "2.8.5")
