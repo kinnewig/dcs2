@@ -92,6 +92,10 @@
     "2.8.5": "5f0e2f34b377066e9ba453aadf26dbc5cded4963",
     "2.8.7": "v2.8.7"
   },
+  "metis": {
+    "git": "https://github.com/KarypisLab/METIS.git",
+    "5.2.1": "v5.2.1"
+  },
   "mold": {
     "git": "https://github.com/rui314/mold.git",
     "2.30.0": "c7f6a91da512ef8a2634a1bef5d4ba82104659fe",
@@ -124,6 +128,10 @@
     "git": "https://github.com/Open-Cascade-SAS/OCCT.git",
     "7.8.1": "bd2a789f15235755ce4d1a3b07379a2e062fdc2e",
     "7.9.1": "V7_9_1"
+  },
+  "parmetis": {
+    "git": "https://github.com/KarypisLab/ParMETIS.git",
+    "master": "master"
   },
   "p4est": {
     "git": "https://github.com/cburstedde/p4est.git",
