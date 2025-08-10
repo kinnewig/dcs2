@@ -37,16 +37,18 @@
   },
   "blis": {
     "git": "https://github.com/flame/blis.git",
-    "2.0.0": "e8566eb3e773fb54d11b33e371d13f22d2941e50",
-    "0.9.0": "14c86f66b20901b60ee276da355c1b62642c18d2"
+    "0.9.0": "14c86f66b20901b60ee276da355c1b62642c18d2",
+    "2.0.0": "e8566eb3e773fb54d11b33e371d13f22d2941e50"
   },
   "boost": {
     "git": "https://github.com/boostorg/boost.git",
-    "1.88.0": "boost-1.88.0"
+    "1.88.0": "boost-1.88.0",
+    "1.89.0": "boost-1.89.0.beta1"
   },
   "cmake": {
     "git": "https://github.com/Kitware/CMake.git",
-    "4.0.3": "v4.0.3"
+    "4.0.3": "v4.0.3",
+    "4.1.0": "v4.1.0"
   },
   "dealii": {
     "git": "https://github.com/dealii/dealii",
@@ -55,7 +57,8 @@
     "9.4.2": "53a7623c7ce9dda2e2eb1d7952af2fe4c417d425",
     "9.5.2": "6f07117be556bf929220c50820b4dead54dc31d0",
     "9.6.0": "93113976b8ed7b11be3f0ab2035467af102fe0fa",
-    "9.6.2": "v9.6.2"
+    "9.6.2": "v9.6.2",
+    "9.7.0": "v9.7.0"
   },
   "ginkgo": {
     "git": "https://github.com/ginkgo-project/ginkgo.git",
@@ -76,7 +79,8 @@
   },
   "hdf5": {
     "git": "https://github.com/HDFGroup/hdf5.git",
-    "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea"
+    "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea",
+    "5.1.14.6": "hdf5_1.14.6"
   },
   "hypre": {
     "git": "https://github.com/hypre-space/hypre.git",
@@ -96,7 +100,8 @@
     "git": "https://github.com/rui314/mold.git",
     "2.30.0": "c7f6a91da512ef8a2634a1bef5d4ba82104659fe",
     "2.40.1": "v2.40.1",
-    "2.40.2": "v2.40.2"
+    "2.40.2": "v2.40.2",
+    "2.40.3": "v2.40.3"
   },
   "mpfr": {
     "git": "https://gitlab.inria.fr/mpfr/mpfr.git",
@@ -108,7 +113,8 @@
     "5.6.2": "47ba5ef2b67595b8d0d92bae1d485d6713bf3337",
     "5.6.1": "477ab2ce4450cfe357acbfbc3cfd61d1e41dd391",
     "5.8.0.2": "v5.8.0.2",
-    "5.8.0.3": "v5.8.0.3"
+    "5.8.0.3": "v5.8.0.3",
+    "5.8.1.0": "v5.8.1.0"
   },
   "ninja": {
     "git": "https://github.com/ninja-build/ninja.git",
@@ -132,13 +138,15 @@
   },
   "petsc": {
     "git": "https://gitlab.com/petsc/petsc.git",
-    "3.23.2": "v3.23.2"
+    "3.23.2": "v3.23.2",
+    "3.23.5": "v3.23.5"
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
     "2.2.1": "a8cc939fec988191d0267a9b39436d6f6cb66b08",
     "2.2.0": "7dbf35c74ceb77e06fdacf7056f78b5f56fe67fb",
-    "2.2.2.1": "v2.2.2.1"
+    "2.2.2.1": "v2.2.2.1",
+    "2.2.2.2": "v2.2.2.2"
   },
   "slepc": {
     "git": "https://github.com/slepc/slepc.git",
@@ -147,7 +155,8 @@
   "suitesparse": {
     "git": "https://github.com/DrTimothyAldenDavis/SuiteSparse.git",
     "7.7.0": "13806726cbf470914d012d132a85aea1aff9ee77",
-    "7.10.3": "1786fef52d4bea8fadb9f775f0fd5af459a14293"
+    "7.10.3": "1786fef52d4bea8fadb9f775f0fd5af459a14293",
+    "7.11.0": "v7.11.0"
   },
   "tbb": {
     "git": "https://github.com/oneapi-src/oneTBB.git",
@@ -156,11 +165,13 @@
   },
   "tcl": {
     "git": "https://github.com/tcltk/tcl.git",
-    "8.6.15": "1a98213e55128c8a2136379fedfaef0c8e15320b"
+    "8.6.15": "1a98213e55128c8a2136379fedfaef0c8e15320b",
+    "1.5.0": "tclpro-1-5-0"
   },
   "tk": {
     "git": "https://github.com/tcltk/tk.git",
-    "8.6.15": "56d86e87df03113f0a4190a503955417801c68da"
+    "8.6.15": "56d86e87df03113f0a4190a503955417801c68da",
+    "1.5.0": "tclpro-1-5-0"
   },
   "trilinos": {
     "git": "https://github.com/trilinos/trilinos.git",
