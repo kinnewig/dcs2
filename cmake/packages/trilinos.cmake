@@ -8,9 +8,9 @@ else()
 
   set(trilinos_cmake_args
     -D BUILD_SHARED_LIBS:BOOL=ON 
-    -D CMAKE_C_COMPILER=${CMAKE_MPI_C_COMPILER}
+    -D CMAKE_C_COMPILER=${MPI_C_COMPILER}
     -D CMAKE_C_FLAGS="${CMAKE_C_FLAGS}-Wno-error=implicit-function-declaration"
-    -D CMAKE_CXX_COMPILER=${CMAKE_MPI_CXX_COMPILER}
+    -D CMAKE_CXX_COMPILER=${MPI_CXX_COMPILER}
     -D CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}-Wno-error=implicit-function-declaration"
     -D CMAKE_Fortran_COMPILER=${CMAKE_MPI_Fortran_COMPILER}
     -D CMAKE_BUILD_TYPE:STRING=RELEASE 
@@ -37,7 +37,7 @@ else()
     -D Trilinos_ENABLE_Ifpack2:BOOL=ON 
     -D Trilinos_ENABLE_ML:BOOL=ON 
     -D Trilinos_ENABLE_MueLu:BOOL=ON 
-    -D Trilinos_ENABLE_OpenMP:BOOL=OFF 
+    -D Trilinos_ENABLE_OpenMP:BOOL=ON
     -D Trilinos_ENABLE_Sacado:BOOL=ON 
     -D Trilinos_ENABLE_Sacado:BOOL=ON 
     -D Trilinos_ENABLE_ShyLU_DD:BOOL=ON 
@@ -51,7 +51,10 @@ else()
     -D   Xpetra_ENABLE_DEPRECATED_CODE:BOOL=ON 
     -D Trilinos_ENABLE_Zoltan:BOOL=ON 
     -D Kokkos_ENABLE_SERIAL:BOOL=ON 
+    -D Kokkos_ENABLE_OPENMP:BOOL=ON
     -D Kokkos_ENABLE_TESTS:BOOL=OFF
+    -D Kokkos_C_COMPILER=${MPI_C_COMPILER}
+    -D Kokkos_CXX_COMPILER=${MPI_CXX_COMPILER}
     ${trilinos_cmake_args}
   )
 
