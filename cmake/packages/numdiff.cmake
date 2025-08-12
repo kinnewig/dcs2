@@ -7,7 +7,7 @@ if(NUMDIFF_EXECUTABLE)
 else()
   message(STATUS "Building NUMDIFF")
   
-  list(APPEND numdiff_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/petsc/${PETSC_VERSION}")
+  list(APPEND numdiff_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/numdiff/${NUMDIFF_VERSION}")
   list(APPEND numdiff_autotool_args "--disable-nls")
 
   # NUMDIFF does not exist as Git repository, so we have to fall back to an archive...

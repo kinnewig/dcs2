@@ -138,7 +138,8 @@ if(MOLD)
   set(CMAKE_LINKER ${MOLD_FOUND})
 endif()
 
-
+# First identify MPI, as MPI is required.
+find_package(MPI REQUIRED)
 
 # Dependencies:
 if(TPL_ENABLE_ADOLC)
