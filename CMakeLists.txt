@@ -58,7 +58,7 @@ set(SCALAPACK_VERSION "2.2.2.1" CACHE STRING "Specify the version of SCALAPACK t
 option(TPL_ENABLE_MUMPS       "Enable or disable the use of MUMPS as a third-party library"       ON)
 set(MUMPS_VERSION "5.8.0.3" CACHE STRING "Specify the version of MUMPS to be used")
 
-option(TPL_ENABLE_MUPARSER    "Enable or disable the use of MUMPS as a third-party library"       ON)
+option(TPL_ENABLE_MUPARSER    "Enable or disable the use of MUMPS as a third-party library"       OFF)
 set(MUPARSER_VERSION "2.3.5" CACHE STRING "Specify the version of MUMPS to be used")
 
 option(TPL_ENABLE_NUMDIFF       "Enable or disable the use of NUMDIFF as a third-party library"   ON)

@@ -112,7 +112,7 @@
   },
   "muparser": {
     "git": "https://github.com/beltoforion/muparser.git",
-    "2.3.5": "v.2.3.5"
+    "2.3.5": "v2.3.5"
   },
   "ninja": {
     "git": "https://github.com/ninja-build/ninja.git",
