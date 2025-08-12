@@ -125,6 +125,10 @@
     "7.8.1": "bd2a789f15235755ce4d1a3b07379a2e062fdc2e",
     "7.9.1": "V7_9_1"
   },
+  "parmetis": {
+    "git": "https://karypis.github.io/glaros/files/sw/parmetis",
+    "4.0.3": "parmetis-4.0.3.tar.gz"
+  },
   "p4est": {
     "git": "https://github.com/cburstedde/p4est.git",
     "2.8.5": "5f0e2f34b377066e9ba453aadf26dbc5cded4963",
