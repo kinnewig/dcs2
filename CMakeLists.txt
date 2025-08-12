@@ -58,6 +58,9 @@ set(SCALAPACK_VERSION "2.2.2.1" CACHE STRING "Specify the version of SCALAPACK t
 option(TPL_ENABLE_MUMPS       "Enable or disable the use of MUMPS as a third-party library"       ON)
 set(MUMPS_VERSION "5.8.0.3" CACHE STRING "Specify the version of MUMPS to be used")
 
+option(TPL_ENABLE_MUPARSER    "Enable or disable the use of MUMPS as a third-party library"       ON)
+set(MUPARSER_VERSION "2.3.5" CACHE STRING "Specify the version of MUMPS to be used")
+
 option(TPL_ENABLE_NUMDIFF       "Enable or disable the use of NUMDIFF as a third-party library"   ON)
 set(NUMDIFF_VERSION "5.9.0" CACHE STRING "Specify the version of NUMDIFF to be used")
 
@@ -196,6 +199,10 @@ endif()
 
 if(TPL_ENABLE_MUMPS)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/mumps.cmake")
+endif()
+
+if(TPL_ENABLE_MUPARSER)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/muparser.cmake")
 endif()
 
 if(TPL_ENABLE_NUMDIFF)

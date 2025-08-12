@@ -110,6 +110,10 @@
     "5.8.0.2": "v5.8.0.2",
     "5.8.0.3": "v5.8.0.3"
   },
+  "muparser": {
+    "git": "https://github.com/beltoforion/muparser.git",
+    "2.3.5": "v.2.3.5"
+  },
   "ninja": {
     "git": "https://github.com/ninja-build/ninja.git",
     "1.11.1": "a524bf3f6bacd1b4ad85d719eed2737d8562f27a",
