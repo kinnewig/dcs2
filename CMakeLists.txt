@@ -72,11 +72,17 @@ option(TPL_ENABLE_P4EST       "Enable or disable the use of P4EST as a third-par
 set(P4EST_VERSION "2.8.7" CACHE STRING "Specify the version of P4EST to be used")
 set(LIBSC_VERSION "2.8.7" CACHE STRING "Specify the version of LIBSC to be used")
 
+option(TPL_ENABLE_PARMETIS       "Enable or disable the use of PARMETIS as a third-party library" ON)
+set(PARMETIS_VERSION "4.0.3" CACHE STRING "Specify the version of PARMETIS to be used")
+
 option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-party library"       ON)
 set(PETSC_VERSION "3.23.2" CACHE STRING "Specify the version of PETSC to be used")
 
 option(TPL_ENABLE_SLEPC       "Enable or disable the use of SLEPc as a third-party library"       ON)
 set(SLEPC_VERSION "3.23.2" CACHE STRING "Specify the version of SLEPC to be used")
+
+option(TPL_ENABLE_SUPERLU_DIST "Enable or disable the use of superlu_dist as a third-party library" ON)
+set(SUPERLU_DIST_VERSION "9.1.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
 
 option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-party library"    ON)
 set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of Trilinos to be used")
@@ -217,6 +223,10 @@ if(TPL_ENABLE_P4EST)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/p4est.cmake")
 endif()
 
+if(TPL_ENABLE_PARMETIS)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/parmetis.cmake")
+endif()
+
 if(TPL_ENABLE_PETSC)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/petsc.cmake")
   if(NOT TPL_ENABLE_HYPRE)
@@ -250,6 +260,15 @@ if(TPL_ENABLE_SUITESPARSE)
     list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/mpfr.cmake")
   endif()
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/suitesparse.cmake")
+endif()
+
+if(TPL_ENABLE_SUPERLU_DIST)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/superlu_dist.cmake")
+  if(NOT TPL_ENABLE_PARMETIS)
+    message(STATUS "SUPERLU_DIST requires TPL_ENABLE_PARMETIS to be set TRUE")
+    set(TPL_ENABLE_PARMETIS "ON")
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/parmetis.cmake")
+  endif()
 endif()
 
 if(TPL_ENABLE_TBB)
