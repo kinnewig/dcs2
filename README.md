@@ -207,6 +207,7 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `GSL` GNU Scientific Library (default "OFF")
 - `HYPRE` HYPRE is a library of high performance preconditioners and solvers featuring multigrid methods for the solution of large, sparse linear systems of equations on massively parallel computers (default "ON", as dependency of PETSC)
 - `METIS` and `ParMETIS` Graph partitioner (default "ON")
+- `MUPARSER` is a fast math parser library for C/C++ with (optional) OpenMP support.  (default "OFF")
 - `NUMDIFF` is a little program that can be used to compare putatively similar files line by line and field by field, ignoring small numeric differences or/and different numeric formats. Used in the ctests of deal.II (default: "ON")
 - `TBB` Intel One Thread Building Blocks (default version: "2021.13.0")
 - `VTK` (default version: "9.3.1", default "OFF")
