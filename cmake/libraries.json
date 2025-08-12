@@ -149,6 +149,10 @@
     "7.7.0": "13806726cbf470914d012d132a85aea1aff9ee77",
     "7.10.3": "1786fef52d4bea8fadb9f775f0fd5af459a14293"
   },
+  "superlu_dist": {
+    "git": "https://github.com/xiaoyeli/superlu_dist.git",
+    "9.1.0": "v9.1.0"
+  },
   "tbb": {
     "git": "https://github.com/oneapi-src/oneTBB.git",
     "2021.13.0": "1c4c93fc5398c4a1acb3492c02db4699f3048dea",

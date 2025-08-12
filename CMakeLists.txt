@@ -78,6 +78,9 @@ set(PETSC_VERSION "3.23.2" CACHE STRING "Specify the version of PETSC to be used
 option(TPL_ENABLE_SLEPC       "Enable or disable the use of SLEPc as a third-party library"       ON)
 set(SLEPC_VERSION "3.23.2" CACHE STRING "Specify the version of SLEPC to be used")
 
+option(TPL_ENABLE_SUPERLU_DIST "Enable or disable the use of superlu_dist as a third-party library" ON)
+set(SUPERLU_DIST_VERSION "9.1.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
+
 option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-party library"    ON)
 set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of Trilinos to be used")
 
@@ -249,6 +252,10 @@ if(TPL_ENABLE_SUITESPARSE)
     list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/mpfr.cmake")
   endif()
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/suitesparse.cmake")
+endif()
+
+if(TPL_ENABLE_SUPERLU_DIST)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/superlu_dist.cmake")
 endif()
 
 if(TPL_ENABLE_TBB)
