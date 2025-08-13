@@ -88,6 +88,8 @@ list(APPEND trilinos_cmake_args "-D PARMETIS_LIBRARY_DIRS:PATH=${PARMETIS_DIR}/l
 list(APPEND trilinos_cmake_args "-D PARMETIS_INCLUDE_DIRS:PATH=${PARMETIS_DIR}/include")
 
 # add parmetis to PETSc
+list(APPEND petsc_autotool_args "--with-metis=true")
+list(APPEND petsc_autotool_args "--with-metis-dir=${PARMETIS_DIR}")
 list(APPEND petsc_autotool_args "--with-parmetis=true")
 list(APPEND petsc_autotool_args "--with-parmetis-dir=${PARMETIS_DIR}")
 

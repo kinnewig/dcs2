@@ -9,7 +9,7 @@ if(NOT SUPERLU_DIST_FOUND)
     -D BUILD_TESTING:BOOL=OFF
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/superlu_dist/${SUPERLU_DIST_VERSION}
     -D CMAKE_C_COMPILER:PATH=${MPI_C_COMPILER}
-    -D CMAKE_C_FLAGS:STRING="-fPIC"
+    -D CMAKE_C_FLAGS:STRING="-Wno-incompatible-pointer-types"
     -D CMAKE_C_STANDARD=99
     -D CMAKE_CXX_COMPILER:PATH=${MPI_CXX_COMPILER}
     -D CMAKE_CXX_STANDARD=11
@@ -24,6 +24,27 @@ if(NOT SUPERLU_DIST_FOUND)
   )
 
   build_cmake_subproject("superlu_dist")
+
+  if(${DEALII_WITH_64BIT})
+    # This flag should be enough...
+    list(APPEND superlu_dist_cmake_args "-D XSDK_INDEX_SIZE=64")
+
+    # ... but there are quite a fe modifications necessary
+    ExternalProject_Add_Step(
+      superlu_dist superlu_dist_64bit
+      COMMAND sed -i "/enable 64bit index mode/a #define XSDK_INDEX_SIZE 64" SRC/include/superlu_dist_config.h
+      #
+      COMMAND sed -i "/superlu_ddefs.h/a #include \"superlu_dist_config.h\"" SRC/prec-independent/psymbfact.c
+      #
+      #COMMAND sed -i "s/int [*]perm_c = CpivPtr/int_t *perm_c = (int_t*) CpivPtr/g" SRC/prec-independent/get_perm_c_batch.c
+      #COMMAND sed -i "s/int [*]perm_r = RpivPtr/int_t *perm_r = (int_t*) RpivPtr/g" SRC/double/dpivot_batch.c
+      #COMMAND sed -i "s/int [*]perm_r = RpivPtr/int_t *perm_r = (int_t*) RpivPtr/g" SRC/single/spivot_batch.c
+      #COMMAND sed -i "s/int [*]perm_r = RpivPtr/int_t *perm_r = (int_t*) RpivPtr/g" SRC/complex16/zpivot_batch.c
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/superlu_dist-prefix/src/superlu_dist
+      DEPENDEES configure
+      DEPENDERS build
+    )
+  endif()
 
   # Check if lib exists, if it does not, create a symlink
   ExternalProject_Add_Step(
