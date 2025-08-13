@@ -48,9 +48,7 @@ if(NOT HYPRE_FOUND)
       GIT_SHALLOW true
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/hypre/${HYPRE_VERSION}
       BUILD_BYPRODUCTS ${HYPRE_LIBRARIES}
-      CONFIGURE_COMMAND ${CMAKE_COMMAND}
-        ${hypre_cmake_args}
-        src
+      CONFIGURE_COMMAND ${CMAKE_COMMAND} ${hypre_cmake_args} src
       BUILD_COMMAND cmake --build . --parallel ${THREADS}
       CMAKE_GENERATOR ${DEFAULT_GENERATOR}
       DEPENDS ${hypre_dependencies}
@@ -62,9 +60,7 @@ if(NOT HYPRE_FOUND)
       GIT_SHALLOW true
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/hypre/${HYPRE_VERSION}
       BUILD_BYPRODUCTS ${HYPRE_LIBRARIES}
-      CONFIGURE_COMMAND ${CMAKE_COMMAND}
-        ${hypre_cmake_args}
-        ../hypre/src
+      CONFIGURE_COMMAND ${CMAKE_COMMAND} ${hypre_cmake_args} ../hypre/src
       BUILD_COMMAND cmake --build . --parallel ${THREADS}
       CMAKE_GENERATOR ${DEFAULT_GENERATOR}
       DEPENDS ${hypre_dependencies}
@@ -104,8 +100,14 @@ if(NOT HYPRE_FOUND)
 
   # Dependencies:
   list(APPEND petsc_dependencies "hypre")
+  list(APPEND trilinos_dependencies "hypre")
 endif()
 
 # add HYPRE to PETSc
 list(APPEND petsc_autotool_args "--with-hypre=true")
 list(APPEND petsc_autotool_args "--with-hypre-dir=${HYPRE_DIR}")
+
+# add HYPRE to Trilinos
+list(APPEND trilinos_cmake_args "-D TPL_ENABLE_HYPRE=ON")
+list(APPEND trilinos_cmake_args "-D HYPRE_LIBRARY_DIRS:PATH=${HYPRE_DIR}/lib")
+list(APPEND trilinos_cmake_args "-D HYPRE_INCLUDE_DIRS:PATH=${HYPRE_DIR}/include")

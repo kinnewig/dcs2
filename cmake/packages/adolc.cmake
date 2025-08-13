@@ -39,12 +39,18 @@ if(NOT ADOLC_FOUND)
 
   # Dependencies:
   list(APPEND petsc_dependencies "adolc")
+  list(APPEND trilinos_dependencies "adolc")
   list(APPEND dealii_dependencies "adolc")
 endif()
 
 # add ADOLC to PETSc
 list(APPEND petsc_autotool_args "--with-adolc=true")
 list(APPEND petsc_autotool_args "--with-adolc-dir=${ADOLC_DIR}")
+
+# add ADOLC to Trilinos
+list(APPEND trilinos_cmake_args "-D TPL_ENABLE_ADOLC=ON")
+list(APPEND trilinos_cmake_args "-D ADOLC_LIBRARY_DIRS:PATH=${ADOLC_DIR}/lib;${ADOLC_DIR}/lib64")
+list(APPEND trilinos_cmake_args "-D ADOLC_INCLUDE_DIRS:PATH=${ADOLC_DIR}/include/adolc")
 
 # Force deal.II to use ADOLC
 list(APPEND dealii_cmake_args "-D ADOLC_DIR:PATH=${ADOLC_DIR}")

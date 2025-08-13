@@ -83,9 +83,12 @@ list(APPEND dealii_cmake_args "-D DEAL_II_WITH_PARMETIS:BOOL=ON")
 list(APPEND dealii_cmake_args "-D PARMETIS_DIR=${PARMETIS_DIR}")
 
 # add parmetis to trilinos
-list(APPEND trilinos_cmake_args "-D TPL_ENABLE_PARMETIS=ON")
-list(APPEND trilinos_cmake_args "-D PARMETIS_LIBRARY_DIRS:PATH=${PARMETIS_DIR}/lib64")
-list(APPEND trilinos_cmake_args "-D PARMETIS_INCLUDE_DIRS:PATH=${PARMETIS_DIR}/include")
+list(APPEND trilinos_cmake_args "-D TPL_ENABLE_METIS:BOOL=ON")
+list(APPEND trilinos_cmake_args "-D METIS_LIBRARY_DIRS:PATH=${PARMETIS_DIR}/lib")
+list(APPEND trilinos_cmake_args "-D METIS_INCLUDE_DIRS:PATH=${PARMETIS_DIR}/include")
+list(APPEND trilinos_cmake_args "-D TPL_ENABLE_ParMETIS:BOOL=ON")
+list(APPEND trilinos_cmake_args "-D ParMETIS_LIBRARY_DIRS:PATH=${PARMETIS_DIR}/lib")
+list(APPEND trilinos_cmake_args "-D ParMETIS_INCLUDE_DIRS:PATH=${PARMETIS_DIR}/include")
 
 # add parmetis to PETSc
 list(APPEND petsc_autotool_args "--with-metis=true")

@@ -59,6 +59,6 @@ if(NOT SUPERLU_DIST_FOUND)
 endif()
 
 # add SUPERLU_DIST to trilinos
-list(APPEND trilinos_cmake_args "-D TPL_ENABLE_SUPERLU_DIST=ON")
-list(APPEND trilinos_cmake_args "-D SUPERLU_DIST_LIBRARY_DIRS:PATH=${SUPERLU_DIST_DIR}/lib")
-list(APPEND trilinos_cmake_args "-D SUPERLU_DIST_INCLUDE_DIRS:PATH=${SUPERLU_DIST_DIR}/include")
+list(APPEND trilinos_cmake_args "-D TPL_ENABLE_SuperLUDist:BOOL=ON")
+list(APPEND trilinos_cmake_args "-D SuperLUDist_LIBRARY_DIRS:PATH=${SUPERLU_DIST_DIR}/lib")
+list(APPEND trilinos_cmake_args "-D SuperLUDist_INCLUDE_DIRS:PATH=${SUPERLU_DIST_DIR}/include")
