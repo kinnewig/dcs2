@@ -23,6 +23,7 @@ else()
     CONFIGURE_COMMAND ./configure ${numdiff_autotool_args}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/numdiff/${NUMDIFF_VERSION}
     BUILD_IN_SOURCE ON
+    DOWNLOAD_EXTRACT_TIMESTAMP true
     CMAKE_GENERATOR ${DEFAULT_GENERATOR}
     DEPENDS ${numdiff_dependencies}
   )

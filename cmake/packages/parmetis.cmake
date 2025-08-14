@@ -22,6 +22,7 @@ if(NOT PARMETIS_FOUND)
     INSTALL_COMMAND cmake --install ${CMAKE_BINARY_DIR}/parmetis-prefix/src/parmetis/build/Linux-x86_64
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/parmetis/${PARMETIS_VERSION}
     BUILD_IN_SOURCE ON
+    DOWNLOAD_EXTRACT_TIMESTAMP true
     CMAKE_GENERATOR ${DEFAULT_GENERATOR}
     DEPENDS ${parmetis_dependencies}
   )
