@@ -689,8 +689,8 @@ check_compiler() {
     fi
   fi
 
-  echo "  Found:   $(which ${MPI_CC})"
-  echo "  Version: $(${MPI_CC} --version)"
+  echo "  Found:   $(which ${MPI_FC})"
+  echo "  Version: $(${MPI_FC} --version)"
   echo
 
   # -- ASK THE USER TO CONTINUE --
