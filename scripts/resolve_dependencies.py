@@ -19,41 +19,40 @@ def parse_dependencies(files):
 
     return dep_graph, list(package_map.keys())
 
-def topological_sort(dep_graph, input_packages):
-    reverse_graph = defaultdict(set)
-    for target, deps in dep_graph.items():
-        if target not in input_packages:
-            continue
-        for dep in deps:
-            if dep in input_packages:
-                reverse_graph[target].add(dep)
 
-    in_degree = {pkg: 0 for pkg in input_packages}
-    for deps in reverse_graph.values():
-        for dep in deps:
-            in_degree[dep] += 1
+def recursive_add(package, dependencie_graph, sorted_list):
+    if package in sorted_list:
+        return sorted_list
 
-    queue = deque([pkg for pkg in input_packages if in_degree[pkg] == 0])
-    sorted_order = []
+    package_dependencies = dependencie_graph[package]
+    if len(package_dependencies) == 0:
+        sorted_list.append(package)
+        return sorted_list
+    
+    for dependencie in package_dependencies:
+        sorted_list = recursive_add(dependencie, dependencie_graph, sorted_list)
+    sorted_list.append(package)
 
-    while queue:
-        pkg = queue.popleft()
-        sorted_order.append(pkg)
-        for neighbor in reverse_graph.get(pkg, []):
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
+    return sorted_list
+            
 
-    if len(sorted_order) != len(input_packages):
-        raise RuntimeError("Cycle detected or missing dependencies")
+def sort(dependencie_graph, unsorted_list):
+    sorted_list = []
+    for package in unsorted_list:
+        sorted_list = recursive_add(package, dependencie_graph, sorted_list)
 
-    return sorted_order
+    return sorted_list
+
 
 def main():
     input_files = sys.argv[1:]
-    dep_graph, input_packages = parse_dependencies(input_files)
-    sorted_packages = topological_sort(dep_graph, input_packages)
-    print(";".join(reversed(sorted_packages)))  # CMake-friendly output
+    dependencie_graph, unsorted_list = parse_dependencies(input_files)
+    sorted_list = sort(dependencie_graph, unsorted_list)
+
+    # Remove all packages that are not in the input list
+    sorted_list_filtered = list(filter(lambda package: package in unsorted_list, sorted_list))
+
+    print(";".join(sorted_list_filtered))
 
 
 if __name__ == "__main__":
