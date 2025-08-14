@@ -120,9 +120,10 @@ option(DEALII_WITH_COMPLEX    "Build deal.II with support for 64bit long numbers
 if (AMD)
   set(AMD-BLIS_VERSION "5.1" CACHE STRING "Specify the version of BLIS to be used")
   set(AMD-LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of LIBFLAME to be used")
+  set(AMD-SCALAPACK_VERSION "5.1" CACHE STRING "Specify the version of LIBFLAME to be used")
   set(AMD-AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AOCL-UTILS to be used")
 
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/aocl-utils.cmake")
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-aocl-utils.cmake")
 else()
   option(TPL_ENABLE_AMD-SCALAPACK "Enable or disable the use of TK as a third-party library" OFF)
 endif()
@@ -146,6 +147,12 @@ endif()
 # First identify MPI, as MPI is required.
 find_package(MPI REQUIRED)
 
+# Sometimes the MPI fortran compilier is not detected by the find_package MPI module
+if(NOT DEFINED MPI_Fortran_COMPILER)
+  get_filename_component(MPI_COMPILER_DIR "${MPI_C_COMPILER}" DIRECTORY)
+  set(MPI_Fortran_COMPILER "${MPI_COMPILER_DIR}/$ENV{MPI_FC}")
+endif()
+
 # Dependencies:
 if(TPL_ENABLE_ADOLC)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/adolc.cmake")
@@ -162,7 +169,11 @@ endif()
 list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/boost.cmake")
 
 if(TPL_ENABLE_BLIS)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/blis.cmake")
+  if(AMD)
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-blis.cmake")
+  else()
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/blis.cmake")
+  endif()
 endif()
 
 if(TPL_ENABLE_GINKGO)
@@ -190,7 +201,11 @@ if(TPL_ENABLE_HYPRE)
 endif()
 
 if(TPL_ENABLE_LIBFLAME)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/libflame.cmake")
+  if(AMD)
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-libflame.cmake")
+  else()
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/libflame.cmake")
+  endif()
 endif()
 
 if(TPL_ENABLE_MPFR)
@@ -245,7 +260,11 @@ if(TPL_ENABLE_PETSC)
 endif()
 
 if(TPL_ENABLE_SCALAPACK)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/scalapack.cmake")
+  if(AMD)
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-scalapack.cmake")
+  else()
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/scalapack.cmake")
+  endif()
 endif()
 
 if(TPL_ENABLE_SLEPC)
@@ -299,7 +318,6 @@ endif()
 if(TPL_ENABLE_VTK)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/vtk.cmake")
 endif()
-
 
 execute_process(
   COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/resolve_dependencies.py ${TPLS_TO_INCLUDE}

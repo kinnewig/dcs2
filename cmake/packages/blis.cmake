@@ -9,62 +9,29 @@ if (NOT BLIS_FOUND)
     set(BLIS_ARCHITECTURE auto)
   endif()
   
-  list(APPEND blis_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}")
   list(APPEND blis_autotool_args "--enable-cblas")
-  if (AMD)
-    list(APPEND blis_autotool_args "--enable-aocl-dynamic")
-  endif()
+  list(APPEND blis_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/blis/${BLIS_VERSION}")
   list(APPEND blis_autotool_args "CFLAGS='-DAOCL_F2C -fPIC'")
   list(APPEND blis_autotool_args "CXXFLAGS='-DAOCL_F2C -fPIC'")
   list(APPEND blis_autotool_args "CXXFLAGS='-DAOCL_F2C -fPIC'")
 
   list(APPEND blis_autotool_args "${BLIS_ARCHITECTURE}")
   
-  if (AMD)
-    # update the names:
-    if(DEFINED BLIS_CUSTOM_URL)
-      set(AMD-BLIS_CUSTOM_URL ${BLIS_CUSTOM_URL})
-    endif()
-    if(DEFINED BLIS_CUSTOM_TAG)
-      set(AMD-BLIS_CUSTOM_TAG ${BLIS_CUSTOM_TAG})
-    endif()
-    set(amd-blis_autotool_args ${blis_autotool_args})
-    set(amd-blis_dependencies ${blis_dependencies})
-    set(package_name "amd-blis")
-  else()
-    set(package_name "blis")
-  endif()
-
-  build_autotools_subproject(${package_name})
-
-  if (AMD)
-    # update the resulting dir name:
-    set(BLIS_DIR ${AMD-BLIS_DIR})
-  endif()
+  build_autotools_subproject(blis)
 
   ExternalProject_Add_Step(
-    ${package_name} blis_symlink_to_blas
+    blis blis_symlink_to_blas
     COMMAND ln -s libblis${CMAKE_SHARED_LIBRARY_SUFFIX} libblas${CMAKE_SHARED_LIBRARY_SUFFIX}
     WORKING_DIRECTORY ${BLIS_DIR}/lib
     DEPENDEES install
   )
 
-  # Dependencies:
-  if (AMD)
-    list(APPEND arpack-ng_dependencies "amd-blis")
-    list(APPEND dealii_dependencies    "amd-blis")
-    list(APPEND petsc_dependencies     "amd-blis")
-    list(APPEND trilinos_dependencies  "amd-blis")
-    list(APPEND scalapack_dependencies "amd-blis")
-    list(APPEND libflame_dependencies  "amd-blis")
-  else()
-    list(APPEND arpack-ng_dependencies "blis")
-    list(APPEND dealii_dependencies    "blis")
-    list(APPEND petsc_dependencies     "blis")
-    list(APPEND trilinos_dependencies  "blis")
-    list(APPEND scalapack_dependencies "blis")
-    list(APPEND libflame_dependencies  "blis")
-  endif()
+  list(APPEND arpack-ng_dependencies "blis")
+  list(APPEND dealii_dependencies    "blis")
+  list(APPEND petsc_dependencies     "blis")
+  list(APPEND trilinos_dependencies  "blis")
+  list(APPEND scalapack_dependencies "blis")
+  list(APPEND libflame_dependencies  "blis")
 endif()
 
 # Add blis to deal.II

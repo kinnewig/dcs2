@@ -11,7 +11,6 @@ if(NOT SCALAPACK_FOUND)
     -D BUILD_COMPLEX16:BOOL=${DEALII_WITH_COMPLEX}
     -D BUILD_SHARED_LIBS:BOOL=ON
     -D BUILD_TESTING:BOOL=OFF
-    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION}
     -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
     -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
     -D CMAKE_BUILD_TYPE:STRING=Release
@@ -19,46 +18,16 @@ if(NOT SCALAPACK_FOUND)
     ${scalapack_cmake_args}
   )
 
-  if (AMD)
-    list(APPEND scalapack_cmake_args -D CMAKE_C_FLAGS="-openmp")
-    list(APPEND scalapack_cmake_args -D CMAKE_Fortran_FLAGS="-openmp")
-    list(APPEND scalapack_cmake_args -D MPI_Fortran_WORKS:BOOL=ON)
-  endif()
+  list(APPEND scalapack_cmake_args -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION})
   
-  if (AMD)
-    # update the names:
-    if(DEFINED SCALAPACK_CUSTOM_URL)
-      set(AMD-SCALAPACK_CUSTOM_URL ${SCALAPACK_CUSTOM_URL})
-    endif()
-    if(DEFINED SCALAPACK_CUSTOM_TAG)
-      set(AMD-SCALAPACK_CUSTOM_TAG ${SCALAPACK_CUSTOM_TAG})
-    endif()
-    set(amd-scalapack_autotool_args ${scalapack_autotool_args})
-    set(amd-scalapack_dependencies ${scalapack_dependencies})
-    set(package_name "amd-scalapack")
-  else()
-    set(package_name "scalapack")
-  endif()
+  set(package_name "scalapack")
 
-  build_cmake_subproject(${package_name})
+  build_cmake_subproject(scalapack)
 
-  if (AMD)
-    # update the resulting dir name:
-    set(SCALAPACK_DIR ${AMD-SCALAPACK_DIR})
-  endif()
-
-  # Dependecies
-  if (AMD)
-    list(APPEND dealii_dependencies   "amd-scalapack")
-    list(APPEND petsc_dependencies    "amd-scalapack")
-    list(APPEND trilinos_dependencies "amd-scalapack")
-    list(APPEND mumps_dependencies    "amd-scalapack")
-  else ()
-    list(APPEND dealii_dependencies   "scalapack")
-    list(APPEND petsc_dependencies    "scalapack")
-    list(APPEND trilinos_dependencies "scalapack")
-    list(APPEND mumps_dependencies    "scalapack")
-  endif()
+  list(APPEND dealii_dependencies   "scalapack")
+  list(APPEND petsc_dependencies    "scalapack")
+  list(APPEND trilinos_dependencies "scalapack")
+  list(APPEND mumps_dependencies    "scalapack")
 endif()
   
 # Add scalapack to deal.II
