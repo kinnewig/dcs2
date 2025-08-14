@@ -15,6 +15,8 @@ else()
   message(STATUS "Building MPFR")
   
   list(APPEND mpfr_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}")
+  list(APPEND mpfr_autotool_args "CFLAGS=-std=c11")
+  list(APPEND mpfr_autotool_args "CXXFLAGS=-std=c11")
   
   build_autotools_subproject_with_custom_configure_and_update("mpfr" "./configure" "./autogen.sh")
 

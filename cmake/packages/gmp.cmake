@@ -10,6 +10,8 @@ if(GMP_FOUND)
 else()
   message(STATUS "Building GMP")
   
+  list(APPEND gmp_autotool_args "CFLAGS=-std=c11")
+  list(APPEND gmp_autotool_args "CXXFLAGS=-std=c11")
   list(APPEND gmp_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/gmp/${GMP_VERSION}")
 
   build_autotools_subproject("gmp")
