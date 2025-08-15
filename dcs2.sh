@@ -1251,19 +1251,21 @@ fi
 
 echo
 
-#if [[ -d "${BUILD_DIR}" ]]; then
-#  echo
-#  cecho ${WARN} "The build folder ${BUILD_DIR} already exists."
-#  echo "This can mean, that you simply aborted the last run and want to continue"
-#  echo "where you stopped. In this case you can ignore this message. Similar, if you want" 
-#  echo "to install an updated version of deal.II you can ignore this message aswell."
-#  echo "However, if you last build failed it could be a good idea to delete the build"
-#  echo "folder."
-#  echo "Note: Deleting the build folder only effects the packages that are not build yet."
-#  echo "DCS2 will attempt to find already installed packages in ${PREFIX}."
-#  echo
-#  read -p "Press Enter to continue... otherwise press STR+C"
-#fi
+if [[ -d "${BUILD_DIR}" ]]; then
+  echo
+  cecho ${WARN} "The build folder ${BUILD_DIR} already exists."
+  echo "This can mean, that you simply aborted the last run and want to continue"
+  echo "where you stopped. In this case you can ignore this message. Similar, if you want" 
+  echo "to install an updated version of deal.II you can ignore this message aswell."
+  echo "However, if you last build failed it could be a good idea to delete the build"
+  echo "folder."
+  echo "Note: Deleting the build folder only effects the packages that are not build yet."
+  echo "DCS2 will attempt to find already installed packages in ${PREFIX}."
+  echo
+  if [[ "${USER_INTERACTION}" == "ON" ]]; then
+    read -p "Press Enter to continue... otherwise press STR+C"
+  fi
+fi
 
 echo "==================================================="
 echo "Summary of packages, that will be build:"

@@ -42,10 +42,10 @@ or if you want to install for exampe your own fork of deal.II
 ## Requirements
 DCS2 requires a modern MPI compiler, and a few additional programs that are not build by DCS2 itself.
 
-### Fedora
+### Fedora (>=41)
 Install the dependencies
 ```bash
-sudo dnf install @development-tools openmpi-devel boost-devel gcc-c++ git 
+sudo dnf install @development-tools openmpi-devel boost-devel gcc-c++ gcc-gfortran git 
 ```
 To enable openmpi by default add the following lines to the ~/.bashrc
 ```bash
@@ -54,6 +54,14 @@ module load mpi/openmpi-x86_64
 ```
 
 ### Rocky / Redhat Linux
+In Redhat Linux 10/Rocky 10 some dependencies where moved into EPEL.
+So first activate EPEL:
+```bash
+dnf install epel-release
+dnf config-manager --set-enabled crb
+dnf update
+```
+
 Install the dependencies
 ```bash
 sudo dnf groupinstall "Development Tools"
