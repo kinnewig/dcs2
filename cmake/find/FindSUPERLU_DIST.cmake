@@ -18,7 +18,7 @@ find_path(SUPERLU_DIST_INCLUDE_DIR NAMES superlu_defs.h
           PATH_SUFFIXES superlu_dist
          )
 
-find_library(SUPERLU_DIST_LIBRARY NAMES dsuperlu_dist.so
+find_library(SUPERLU_DIST_LIBRARY NAMES libsuperlu_dist.so
              HINTS ${SUPERLU_DIST_DIR} ${CMAKE_INSTALL_PREFIX}/superlu_dist/${SUPERLU_DIST_VERSION}
              PATHS ${PC_SUPERLU_DIST_LIBDIR} ${PC_SUPERLU_DIST_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
