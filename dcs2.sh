@@ -41,7 +41,7 @@ cecho() {
 # Download and install CMake
 download_and_install_cmake() {
     # Read the CMake version from VERSIONS.cmake
-    CMAKE_VERSION=4.0.3
+    CMAKE_VERSION=4.1.0
 
     # Save the current directory
     local root_dir=$(pwd)
@@ -176,7 +176,7 @@ download_and_extract_mold() {
     else
       cecho ${WARN} "  attempt to install..."
       # Read the mold version
-      MOLD_VERSION=2.40.2
+      MOLD_VERSION=2.40.3
       ARCHITECTURE=x86_64-linux
 
       # Download Mold
