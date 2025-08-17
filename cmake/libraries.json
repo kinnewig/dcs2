@@ -5,26 +5,26 @@
   },
   "amd-aocl-utils": {
     "git": "https://github.com/amd/aocl-utils.git",
-    "5.0.0": "91ae4d2cf4cbb67f66faeb7a3844c93691d126fd",
     "4.2.0": "661527c6cc42bdde7086d752d56a44d9d2de01e3",
+    "5.0.0": "91ae4d2cf4cbb67f66faeb7a3844c93691d126fd",
     "5.1": "5.1"
   },
   "amd-libflame": {
     "git": "https://github.com/amd/libflame.git",
-    "5.0.0": "3279fc59b292bc521d072560c0340a30fb7e16df",
     "4.2.0": "b51ceb238bb3a597c014f371822fc6963b1d5893",
+    "5.0.0": "3279fc59b292bc521d072560c0340a30fb7e16df",
     "5.1": "5.1"
   },
   "amd-blis": {
     "git": "https://github.com/amd/blis.git",
-    "5.0.0": "34d4bbade33a4384cfaff2208c833fc33a311c5d",
     "4.2.0": "7c564c74e103249b52636e6cfc5a93ba8c2b0406",
+    "5.0.0": "34d4bbade33a4384cfaff2208c833fc33a311c5d",
     "5.1": "5.1"
   },
   "amd-scalapack": {
     "git": "https://github.com/amd/aocl-scalapack.git",
-    "5.0.0": "255f4082871b3c25198ca7603dab2891fc9b72f4",
     "4.2.0": "46ce83a5e0be9133c11e1bb057105abb97dbfc22",
+    "5.0.0": "255f4082871b3c25198ca7603dab2891fc9b72f4",
     "5.1": "5.1"
   },
   "arpack-ng": {
@@ -37,16 +37,18 @@
   },
   "blis": {
     "git": "https://github.com/flame/blis.git",
-    "2.0.0": "e8566eb3e773fb54d11b33e371d13f22d2941e50",
-    "0.9.0": "14c86f66b20901b60ee276da355c1b62642c18d2"
+    "0.9.0": "14c86f66b20901b60ee276da355c1b62642c18d2",
+    "2.0.0": "e8566eb3e773fb54d11b33e371d13f22d2941e50"
   },
   "boost": {
     "git": "https://github.com/boostorg/boost.git",
-    "1.88.0": "boost-1.88.0"
+    "1.88.0": "boost-1.88.0",
+    "1.89.0": "boost-1.89.0"
   },
   "cmake": {
     "git": "https://github.com/Kitware/CMake.git",
-    "4.0.3": "v4.0.3"
+    "4.0.3": "v4.0.3",
+    "4.1.0": "v4.1.0"
   },
   "dealii": {
     "git": "https://github.com/dealii/dealii",
@@ -55,7 +57,8 @@
     "9.4.2": "53a7623c7ce9dda2e2eb1d7952af2fe4c417d425",
     "9.5.2": "6f07117be556bf929220c50820b4dead54dc31d0",
     "9.6.0": "93113976b8ed7b11be3f0ab2035467af102fe0fa",
-    "9.6.2": "v9.6.2"
+    "9.6.2": "v9.6.2",
+    "9.7.0": "v9.7.0"
   },
   "ginkgo": {
     "git": "https://github.com/ginkgo-project/ginkgo.git",
@@ -85,7 +88,7 @@
   "libflame": {
     "git": "https://github.com/flame/libflame.git",
     "master": "master",
-    "5.2.0": "53bd60c50bf057715da59fd2b570c26ef854e25e"
+    "5.2.0": "5.2.0"
   },
   "libsc": {
     "git": "https://github.com/cburstedde/libsc.git",
@@ -96,7 +99,8 @@
     "git": "https://github.com/rui314/mold.git",
     "2.30.0": "c7f6a91da512ef8a2634a1bef5d4ba82104659fe",
     "2.40.1": "v2.40.1",
-    "2.40.2": "v2.40.2"
+    "2.40.2": "v2.40.2",
+    "2.40.3": "v2.40.3"
   },
   "mpfr": {
     "git": "https://gitlab.inria.fr/mpfr/mpfr.git",
@@ -108,7 +112,8 @@
     "5.6.2": "47ba5ef2b67595b8d0d92bae1d485d6713bf3337",
     "5.6.1": "477ab2ce4450cfe357acbfbc3cfd61d1e41dd391",
     "5.8.0.2": "v5.8.0.2",
-    "5.8.0.3": "v5.8.0.3"
+    "5.8.0.3": "v5.8.0.3",
+    "5.8.1.0": "v5.8.1.0"
   },
   "muparser": {
     "git": "https://github.com/beltoforion/muparser.git",
@@ -140,13 +145,15 @@
   },
   "petsc": {
     "git": "https://gitlab.com/petsc/petsc.git",
-    "3.23.2": "v3.23.2"
+    "3.23.2": "v3.23.2",
+    "3.23.5": "v3.23.5"
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
     "2.2.1": "a8cc939fec988191d0267a9b39436d6f6cb66b08",
     "2.2.0": "7dbf35c74ceb77e06fdacf7056f78b5f56fe67fb",
-    "2.2.2.1": "v2.2.2.1"
+    "2.2.2.1": "v2.2.2.1",
+    "2.2.2.2": "v2.2.2.2"
   },
   "slepc": {
     "git": "https://github.com/slepc/slepc.git",
@@ -155,7 +162,8 @@
   "suitesparse": {
     "git": "https://github.com/DrTimothyAldenDavis/SuiteSparse.git",
     "7.7.0": "13806726cbf470914d012d132a85aea1aff9ee77",
-    "7.10.3": "1786fef52d4bea8fadb9f775f0fd5af459a14293"
+    "7.10.3": "1786fef52d4bea8fadb9f775f0fd5af459a14293",
+    "7.11.0": "v7.11.0"
   },
   "superlu_dist": {
     "git": "https://github.com/xiaoyeli/superlu_dist.git",
@@ -168,20 +176,22 @@
   },
   "tcl": {
     "git": "https://github.com/tcltk/tcl.git",
-    "8.6.15": "1a98213e55128c8a2136379fedfaef0c8e15320b"
+    "8.6.15": "1a98213e55128c8a2136379fedfaef0c8e15320b",
+    "1.5.0": "tclpro-1-5-0"
   },
   "tk": {
     "git": "https://github.com/tcltk/tk.git",
-    "8.6.15": "56d86e87df03113f0a4190a503955417801c68da"
+    "8.6.15": "56d86e87df03113f0a4190a503955417801c68da",
+    "1.5.0": "tclpro-1-5-0"
   },
   "trilinos": {
     "git": "https://github.com/trilinos/trilinos.git",
-    "16.1.0": "11a16481fa1af48e3cfdb0aa84c29617ce94479f",
-    "16.0.0": "c6f6bea715046c00b327f5ddaacdc372dccd3f64",
-    "15.1.0": "6af5f44df4eb9be0799961afcdbcbf2c2ea3f5ca",
-    "15.0.0": "3703c194db5ba3d9f2353aa0f1bb4731c7e53d45",
+    "13.4.0": "0976cf2a8f9ee2991f4fb479f1056ca569eb22b9",
     "14.4.0": "975307431d60d0859ebaa27c9169cbb1d4287513",
-    "13.4.0": "0976cf2a8f9ee2991f4fb479f1056ca569eb22b9"
+    "15.0.0": "3703c194db5ba3d9f2353aa0f1bb4731c7e53d45",
+    "15.1.0": "6af5f44df4eb9be0799961afcdbcbf2c2ea3f5ca",
+    "16.0.0": "c6f6bea715046c00b327f5ddaacdc372dccd3f64",
+    "16.1.0": "11a16481fa1af48e3cfdb0aa84c29617ce94479f"
   },
   "vtk": {
     "git": "https://github.com/Kitware/VTK.git",
