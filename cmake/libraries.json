@@ -133,7 +133,7 @@
   },
   "netcdf": {
     "git": "https://github.com/Unidata/netcdf-c.git",
-    "4.9.3": "v.4.9.3"
+    "4.9.3": "v4.9.3"
   },
   "ninja": {
     "git": "https://github.com/ninja-build/ninja.git",
