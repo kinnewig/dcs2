@@ -27,6 +27,10 @@
     "5.0.0": "255f4082871b3c25198ca7603dab2891fc9b72f4",
     "5.1": "5.1"
   },
+  "arborx": {
+    "git": "https://github.com/arborx/ArborX.git",
+    "2.0.1": "v2.0.1"
+  },
   "arpack-ng": {
     "git": "https://github.com/opencollab/arpack-ng.git",
     "3.9.1": "3.9.1"
@@ -45,6 +49,10 @@
     "1.88.0": "boost-1.88.0",
     "1.89.0": "boost-1.89.0"
   },
+  "cgal": {
+    "git": "https://github.com/CGAL/cgal.git",
+    "6.0.1": "v6.0.1"
+  },
   "cmake": {
     "git": "https://github.com/Kitware/CMake.git",
     "4.0.3": "v4.0.3",
@@ -59,6 +67,10 @@
     "9.6.0": "93113976b8ed7b11be3f0ab2035467af102fe0fa",
     "9.6.2": "v9.6.2",
     "9.7.0": "v9.7.0"
+  },
+  "fltk": {
+    "git": "https://github.com/fltk/fltk.git",
+    "1.4.4": "release-1.4.4"
   },
   "ginkgo": {
     "git": "https://github.com/ginkgo-project/ginkgo.git",
@@ -119,6 +131,10 @@
     "git": "https://github.com/beltoforion/muparser.git",
     "2.3.5": "v2.3.5"
   },
+  "netcdf": {
+    "git": "https://github.com/Unidata/netcdf-c.git",
+    "4.9.3": "v.4.9.3"
+  },
   "ninja": {
     "git": "https://github.com/ninja-build/ninja.git",
     "1.11.1": "a524bf3f6bacd1b4ad85d719eed2737d8562f27a",
@@ -165,9 +181,17 @@
     "7.10.3": "1786fef52d4bea8fadb9f775f0fd5af459a14293",
     "7.11.0": "v7.11.0"
   },
+  "sundials": {
+    "git": "https://github.com/LLNL/sundials.git",
+    "7.4.0": "v7.4.0"
+  },
   "superlu_dist": {
     "git": "https://github.com/xiaoyeli/superlu_dist.git",
     "9.1.0": "v9.1.0"
+  },
+  "symengine": {
+    "git": "https://github.com/symengine/symengine.git",
+    "0.14.0": "v0.14.0"
   },
   "tbb": {
     "git": "https://github.com/oneapi-src/oneTBB.git",
@@ -197,5 +221,9 @@
     "git": "https://github.com/Kitware/VTK.git",
     "9.3.1": "4f02ae83179c6a1542ac3c335c73dea976578c63",
     "9.5.0": "v9.5.0"
+  },
+  "zlib-ng": {
+    "git": "https://github.com/zlib-ng/zlib-ng.git",
+    "2.2.5": "2.2.5"
   }
 }
