@@ -7,7 +7,7 @@ if(NOT HDF5_FOUND)
   set(hdf5_cmake_args
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/hdf5/${HDF5_VERSION}
     -D CMAKE_C_COMPILER:PATH=${CMAKE_MPI_C_COMPILER}
-    -D CMAKE_C_COMPILER:PATH=${CMAKE_MPI_CXX_COMPILER}
+    -D CMAKE_CXX_COMPILER:PATH=${CMAKE_MPI_CXX_COMPILER}
     -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_MPI_Fortran_COMPILER}
     -D CMAKE_BUILD_TYPE:STRING=Release
     ${hdf5_cmake_args}
@@ -16,10 +16,14 @@ if(NOT HDF5_FOUND)
   build_cmake_subproject("hdf5")
 
   # Dependencies:
+  list(APPEND netcdf_dependencies "hdf5")
   list(APPEND petsc_dependencies "hdf5")
   #list(APPEND trilinos_dependencies "hdf5")
   list(APPEND dealii_dependencies "hdf5")
 endif()
+
+# add HDF5 to netcdf
+list(APPEND netcdf_cmake_args "-D HDF5_ROOT:PATH=${HDF5_DIR}")
 
 # add HDF5 to PETSc
 list(APPEND petsc_autotool_args "--with-hdf5=true")
