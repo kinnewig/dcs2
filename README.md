@@ -153,6 +153,9 @@ DCS2 provides a list of installation tools.
 - `DEALII_WITH_64BIT`: Build deal.II with 64bit indice support (default: OFF)
 - `DEALII_WITH_COMPLEX`: Build deal.II with complex number support (default: OFF)
 
+#### BOOST
+- `BOOST_DIR`: If Boost is installed on a custom path, the path has to be provided, otherwise deal.II will not find BOOST.
+
 #### Developing
 For deal.II and any TPL a custom path can be provided via `-D <PACKAGE>_SOURCE_DIR`. The custom path can either be a local folder containing the package, an archive or an URL.
 This feature is meant for development (e.g. you can provide your local deal.II folder, which is handy if you are working on deal.II itself), or it can be used to install deal.II and it dependecies on computers/servers without direct internet access.
@@ -165,40 +168,42 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `<PACKAGE>_CUSTOM_URL`: If defined, this variable allows you to specify a custom Git URL for <PACKAGE>. You can use this to point to a different repository or a specific fork.
 - `<PACKAGE>_CUSTOM_TAG`: If defined, this variable sets a custom Git tag (commit hash, branch, or release) for <PACKAGE>. Use this to select a specific version or snapshot.
 
+
 ### Available Third-Party Libraries
-
-#### BOOST
-- `BOOST_DIR`: If Boost is installed on a custom path, the path has to be provided, otherwise deal.II will not find BOOST.
-
-#### Dependencies:
-- `MPFR` (default version: "4.2.1")
-- `GMP` (default version: "6.2.1")
 
 #### BLAS/LAPACK Packages
 - `FLAME`: i.e.: `BLIS` (default version: "0.9.0") and `LIBFLAME` (default version: "5.2.0")
 - `ScaLAPACK` (default version: "2.2.1")
 
+#### Data Formats
+- `HDF5`  (Hierarchical Data Format version 5) is an open-source file format and data model designed to store and organize large, complex, heterogeneous data in a flexible and efficient way. (default "ON")
+- `NetCDF` (The Unidata network Common Data Form) is a set of software libraries and machine-independent data formats designed to store, access, and share array-oriented scientific data in a self-describing and portable way. (default "OFF")
 #### Direct Solver
 - `MUMPS` (default version: "5.6.2")
 - `SUITESPARSE` (default version: "5.6.2")
 - `SUPERLU_DIST` (default: "ON")
+- `SUNDIALS` a SUite of Nonlinear and DIfferential/ALgebraic equation Solvers (default "OFF"). 
 
 #### Graph partitioning
 - `P4EST` (default version: "2.8.5")
+- `METIS` and `ParMETIS` Graph partitioner (default "ON")
 
 #### Grid generation
 - `ASSIMP` is a portable Open Source library to import various well-known 3D model formats in a uniform manner (default "ON")
 
 - `GMSH` (default version: "4.12.2", default "OFF")
 
+  Extra dependencie for OCCT: `FLTK` 
+
    Extra dependencies of GMSH for Fedora / Rocky 9 `sudo dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
 
    Extra dependencies of GMSH for Ubuntu / Debian `sudo apt install libfltk1.3 libfltk1.3-dev libglu1-mesa-dev libgl1-mesa-dev`.
 
 - `OCCT` OpenCascade (default version: "7.8.1", default "OFF")
-#### Dependencies:
-- `TCL` (default version: "8.6.15", default "OFF")
-- `TK` (default version: "8.6.15", default "OFF")
+
+  Extra dependencie for OCCT: `TCL` 
+
+  Extra dependencie for OCCT: `TK` 
 
 #### Algebra Packages
 - `GINKGO` (default "OFF")
@@ -209,14 +214,22 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 
 #### Automatic Differentiation
 - `ADOL-C` (default "OFF")
+- `SymEngine` is a fast symbolic manipulation library, written in C++. (default "OFF")
+
+#### Tools
+- `NUMDIFF` is a little program that can be used to compare putatively similar files line by line and field by field, ignoring small numeric differences or/and different numeric formats. Used in the ctests of deal.II (default "ON")
+- `zlib-ng` zlib replacement with optimizations for "next generation" systems (default "ON"). 
 
 #### Miscellaneous
+- `ArborX` Performance-portable geometric search library (default "OFF")
 - `ARPACK`  is an open-source library designed to provide performance portable algorithms for geometric search, similarly to nanoflann and Boost Geometry. (default "OFF")
+- `boost` (default "OFF")
+- `CGAL` (The Computational Geometry Algorithms Library)  is a C++ library that aims to provide easy access to efficient and reliable algorithms in computational geometry. (default "OFF")
+- `GMP` (default version: "6.2.1")
 - `GSL` GNU Scientific Library (default "OFF")
 - `HYPRE` HYPRE is a library of high performance preconditioners and solvers featuring multigrid methods for the solution of large, sparse linear systems of equations on massively parallel computers (default "ON", as dependency of PETSC)
-- `METIS` and `ParMETIS` Graph partitioner (default "ON")
+- `MPFR` (default version: "4.2.1")
 - `MUPARSER` is a fast math parser library for C/C++ with (optional) OpenMP support.  (default "OFF")
-- `NUMDIFF` is a little program that can be used to compare putatively similar files line by line and field by field, ignoring small numeric differences or/and different numeric formats. Used in the ctests of deal.II (default: "ON")
 - `TBB` Intel One Thread Building Blocks (default version: "2021.13.0")
 - `VTK` (default version: "9.3.1", default "OFF")
 

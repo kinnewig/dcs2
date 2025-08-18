@@ -25,6 +25,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 option(TPL_ENABLE_ADOLC       "Enable or disable the use of ADOL-C as a third-party library"      OFF)
 set(ADOLC_VERSION "2.7.2" CACHE STRING "Specify the version of ADOLC to be used")
 
+option(TPL_ENABLE_ARBORX      "Enable or disable the use of ARBORX as a third-party library"      OFF)
+set(ARBORX_VERSION "2.0.1" CACHE STRING "Specify the version of ARBORX to be used")
+
 option(TPL_ENABLE_ARPACK-NG   "Enable or disable the use of ADOL-C as a third-party library"      OFF)
 set(ARPACK-NG_VERSION "3.9.1" CACHE STRING "Specify the version of ARPACK-NG to be used")
 
@@ -34,8 +37,14 @@ set(ASSIMP_VERSION "6.0.2" CACHE STRING "Specify the version of ASSIMP to be use
 option(TPL_ENABLE_BOOST       "Enable or disable the use of BOOST as a third-party library"       ON)
 set(BOOST_VERSION "1.89.0" CACHE STRING "Specify the version of BOOST to be used")
 
+option(TPL_ENABLE_CGAL       "Enable or disable the use of CGAL as a third-party library"         OFF)
+set(CGAL_VERSION "6.0.1" CACHE STRING "Specify the version of CGAL to be used")
+
 option(TPL_ENABLE_BLIS        "Enable or disable the use of BLIS as a third-party library"        ON)
 set(BLIS_VERSION "2.0" CACHE STRING "Specify the version of BLIS to be used")
+
+option(TPL_ENABLE_FLTK   "Enable or disable the use of FLTK as a third-party library"             OFF)
+set(FLTK_VERSION "1.4.4" CACHE STRING "Specify the version of FLTK to be used")
 
 option(TPL_ENABLE_GINKGO   "Enable or disable the use of ginkgo as a third-party library"         OFF)
 set(GINKGO_VERSION "1.10.0" CACHE STRING "Specify the version of GINKGO to be used")
@@ -61,17 +70,26 @@ set(MUMPS_VERSION "5.8.1.0" CACHE STRING "Specify the version of MUMPS to be use
 option(TPL_ENABLE_MUPARSER    "Enable or disable the use of MUMPS as a third-party library"       OFF)
 set(MUPARSER_VERSION "2.3.5" CACHE STRING "Specify the version of MUPARSER to be used")
 
+option(TPL_ENABLE_NETCDF   "Enable or disable the use of NETCDF as a third-party library"         OFF)
+set(NETCDF_VERSION "4.9.3" CACHE STRING "Specify the version of NETCDF to be used")
+
 option(TPL_ENABLE_NUMDIFF       "Enable or disable the use of NUMDIFF as a third-party library"   ON)
 set(NUMDIFF_VERSION "5.9.0" CACHE STRING "Specify the version of NUMDIFF to be used")
 
 option(TPL_ENABLE_GMP         "Enable or disable the use of GMP as a third-party library"         ON)
 set(GMP_VERSION "6.2.1" CACHE STRING "Specify the version of GMP to be used")
 
-option(TPL_ENABLE_MPFR        "Enable or disable the use of MMPFR as a third-party library"       ON)
+option(TPL_ENABLE_MPFR        "Enable or disable the use of MPFR as a third-party library"        ON)
 set(MPFR_VERSION "4.2.2" CACHE STRING "Specify the version of MPFR to be used")
 
 option(TPL_ENABLE_SUITESPARSE "Enable or disable the use of SuiteSparse as a third-party library" ON)
 set(SUITESPARSE_VERSION "7.11.0" CACHE STRING "Specify the version of SUITESPARSE to be used")
+
+option(TPL_ENABLE_SUNDIALS   "Enable or disable the use of SUNDIALS as a third-party library"     OFF)
+set(SUNDIALS_VERSION "7.4.0" CACHE STRING "Specify the version of SUNDIALS to be used")
+
+option(TPL_ENABLE_SYMENGINE   "Enable or disable the use of SYMENGINE as a third-party library"   OFF)
+set(SYMENGINE_VERSION "0.14.0" CACHE STRING "Specify the version of SYMENGINE to be used")
 
 option(TPL_ENABLE_P4EST       "Enable or disable the use of P4EST as a third-party library"       ON)
 set(P4EST_VERSION "2.8.7" CACHE STRING "Specify the version of P4EST to be used")
@@ -109,6 +127,9 @@ set(TCL_VERSION "1.5.0" CACHE STRING "Specify the version of TCL to be used")
 
 option(TPL_ENABLE_TK        "Enable or disable the use of TK as a third-party library"            OFF)
 set(TK_VERSION "1.5.0" CACHE STRING "Specify the version of TK to be used")
+
+option(TPL_ENABLE_ZLIB-NG   "Enable or disable the use of ZLIB-NG as a third-party library"       OFF)
+set(ZLIB-NG_VERSION "" CACHE STRING "Specify the version of ZLIB-NG to be used")
 
 set(DEALII_VERSION "9.7.0" CACHE STRING "Specify the version of DEALII to be used")
 option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
@@ -158,6 +179,10 @@ if(TPL_ENABLE_ADOLC)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/adolc.cmake")
 endif()
 
+if(TPL_ENABLE_ARBORX)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/arborx.cmake")
+endif()
+
 if(TPL_ENABLE_ARPACK-NG)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/arpack-ng.cmake")
 endif()
@@ -173,6 +198,17 @@ if(TPL_ENABLE_BLIS)
     list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-blis.cmake")
   else()
     list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/blis.cmake")
+  endif()
+endif()
+
+if(TPL_ENABLE_CGAL)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/cgal.cmake")
+endif()
+
+if(TPL_ENABLE_fltk)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/fltk.cmake")
+  if(NOT TPL_ENABLE_GMSH)
+    message(FATAL_ERROR "fltk is only required by GMSH. Either set TPL_ENABLE_GMSH=TRUE or TPL_ENABLE_FLTK=FALSE")
   endif()
 endif()
 
@@ -220,6 +256,13 @@ if(TPL_ENABLE_MUPARSER)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/muparser.cmake")
 endif()
 
+if(TPL_ENABLE_NETCDF)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/netcdf.cmake")
+  if(NOT TPL_ENABLE_TRILINOS)
+    message(FATAL_ERROR "netcdf is only usable via Trilinos. Either set TPL_ENABLE_TRILINOS=TRUE or TPL_ENABLE_NETCDF=FALSE")
+  endif()
+endif()
+
 if(TPL_ENABLE_NUMDIFF)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/numdiff.cmake")
 endif()
@@ -253,10 +296,6 @@ endif()
 
 if(TPL_ENABLE_PETSC)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/petsc.cmake")
-  if(NOT TPL_ENABLE_HYPRE)
-    message(STATUS "Building PETSc set TPL_ENABLE_HYPRE to TRUE")
-    set(TPL_ENABLE_HYPRE  "ON")
-  endif()
 endif()
 
 if(TPL_ENABLE_SCALAPACK)
@@ -270,9 +309,7 @@ endif()
 if(TPL_ENABLE_SLEPC)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/slepc.cmake")
   if(NOT TPL_ENABLE_PETSC)
-    message(STATUS "SLEPc requires PETSc; therefore TPL_ENABLE_TCL is set to TRUE")
-    set(TPL_ENABLE_PETSC "ON")
-    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/petsc.cmake")
+    message(FATAL_ERROR "SLEPc requires PETSc. Either set TPL_ENABLE_PETSC=TRUE or TPL_ENABLE_SLEPC=FALSE")
   endif()
 endif()
 
@@ -290,13 +327,22 @@ if(TPL_ENABLE_SUITESPARSE)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/suitesparse.cmake")
 endif()
 
+if(TPL_ENABLE_SUNDIALS)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/sundials.cmake")
+endif()
+
 if(TPL_ENABLE_SUPERLU_DIST)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/superlu_dist.cmake")
   if(NOT TPL_ENABLE_PARMETIS)
-    message(STATUS "SUPERLU_DIST requires TPL_ENABLE_PARMETIS to be set TRUE")
-    set(TPL_ENABLE_PARMETIS "ON")
-    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/parmetis.cmake")
+    message(FATAL_ERROR "SUPERLU_DIST requires ParMETIS. Either set TPL_ENABLE_PARMETIS=TRUE or TPL_ENABLE_SUPERLU_DIST=FALSE")
   endif()
+  if(NOT TPL_ENABLE_TRILINOS)
+    message(FATAL_ERROR "SUPERLU_DIST is only usable via Trilinos. Either set TPL_ENABLE_TRILINOS=TRUE or TPL_ENABLE_SUPERLU_DIST=FALSE")
+  endif()
+endif()
+
+if(TPL_ENABLE_SYMENGINE)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/symengine.cmake")
 endif()
 
 if(TPL_ENABLE_TBB)
@@ -305,10 +351,16 @@ endif()
 
 if(TPL_ENABLE_TCL)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tcl.cmake")
+  if(NOT TPL_ENABLE_OCCT)
+    message(FATAL_ERROR "tcl is only required by OCCT. Either set TPL_ENABLE_OCCT=TRUE or TPL_ENABLE_TCL=FALSE")
+  endif()
 endif()
 
 if(TPL_ENABLE_TK)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tk.cmake")
+  if(NOT TPL_ENABLE_OCCT)
+    message(FATAL_ERROR "tk is only required by OCCT. Either set TPL_ENABLE_OCCT=TRUE or TPL_ENABLE_TK=FALSE")
+  endif()
 endif()
 
 if(TPL_ENABLE_TRILINOS)
@@ -317,6 +369,10 @@ endif()
 
 if(TPL_ENABLE_VTK)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/vtk.cmake")
+endif()
+
+if(TPL_ENABLE_ZLIB)
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/zlib-ng.cmake")
 endif()
 
 execute_process(
