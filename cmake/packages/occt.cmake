@@ -21,13 +21,18 @@ else()
   build_cmake_subproject("occt")
   
   # Dependencies:
-  list(APPEND dealii_dependencies "occt")
+  list(APPEND gmsh_dependencies "occt")
   list(APPEND petsc_dependencies "occt")
+  list(APPEND dealii_dependencies "occt")
 endif()
 
-# Force deal.II to use OCCT
-list(APPEND dealii_cmake_args "-D OPENCASCADE_DIR=${OCCT_DIR}")
+# add OCCT to GMSH
+list(APPEND gmsh_cmake_args "-D ENABLE_OCC:BOOL=ON")
+list(APPEND gmsh_cmake_args "-D OPENCASCADE_ROOT:PATH=${OCCT_DIR}")
 
 # add OCCT to PETSc
 list(APPEND petsc_autotool_args "--with-opencascade=true")
 list(APPEND petsc_autotool_args "--with-opencascade-dir=${OCCT_DIR}")
+
+# add OCCT to deal.II
+list(APPEND dealii_cmake_args "-D OPENCASCADE_DIR=${OCCT_DIR}")

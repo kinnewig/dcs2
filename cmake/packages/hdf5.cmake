@@ -16,11 +16,15 @@ if(NOT HDF5_FOUND)
   build_cmake_subproject("hdf5")
 
   # Dependencies:
+  list(APPEND gmsh_dependencies "hdf5")
   list(APPEND netcdf_dependencies "hdf5")
   list(APPEND petsc_dependencies "hdf5")
   #list(APPEND trilinos_dependencies "hdf5")
   list(APPEND dealii_dependencies "hdf5")
 endif()
+
+# add HDF5 to GMSH
+list(APPEND gmsh_cmake_args "-D HDF5_ROOT:PATH=${OCCT_DIR}")
 
 # add HDF5 to netcdf
 list(APPEND netcdf_cmake_args "-D HDF5_ROOT:PATH=${HDF5_DIR}")
