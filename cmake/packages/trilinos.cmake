@@ -88,7 +88,11 @@ else()
 
   # Dependencies:
   list(APPEND dealii_dependencies "trilinos")
+  list(APPEND arborx_dependencies "trilinos")
 endif()
+
+# Add trilinos to arborx
+list(APPEND arborx_cmake_args "-D Kokkos_ROOT:PATH=${TRILINOS_DIR}")
 
 # Add trilinos to deal.II
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_TRILINOS:BOOL=ON")
