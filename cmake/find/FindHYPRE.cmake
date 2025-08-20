@@ -12,13 +12,13 @@ pkg_check_modules(PC_HYPRE QUIET HYPRE)
 
 set(HYPRE_DIR "" CACHE PATH "The directory of the HYPRE installation")
 
-find_path(HYPRE_INCLUDE_DIR NAMES hypre_version.h
+find_path(HYPRE_INCLUDE_DIR NAMES HYPRE.h
           HINTS ${HYPRE_DIR}/include ${CMAKE_INSTALL_PREFIX}/hypre/${HYPRE_VERSION}/include/
           PATHS ${PC_HYPRE_INCLUDEDIR} ${PC_HYPRE_INCLUDE_DIRS}
           PATH_SUFFIXES hypre
         )
 
-find_library(HYPRE_LIBRARY NAMES libhypre.so
+find_library(HYPRE_LIBRARY NAMES libHYPRE.so
              HINTS ${HYPRE_DIR} ${CMAKE_INSTALL_PREFIX}/hypre/${HYPRE_VERSION}
              PATHS ${PC_HYPRE_LIBDIR} ${PC_HYPRE_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64

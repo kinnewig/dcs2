@@ -26,12 +26,13 @@ if (NOT BLIS_FOUND)
     DEPENDEES install
   )
 
-  list(APPEND arpack-ng_dependencies "blis")
-  list(APPEND dealii_dependencies    "blis")
-  list(APPEND petsc_dependencies     "blis")
-  list(APPEND trilinos_dependencies  "blis")
-  list(APPEND scalapack_dependencies "blis")
-  list(APPEND libflame_dependencies  "blis")
+  list(APPEND arpack-ng_dependencies   "blis")
+  list(APPEND libflame_dependencies    "blis")
+  list(APPEND scalapack_dependencies   "blis")
+  list(APPEND suitesparse_dependencies "blis")
+  list(APPEND petsc_dependencies       "blis")
+  list(APPEND trilinos_dependencies    "blis")
+  list(APPEND dealii_dependencies      "blis")
 endif()
 
 # Add blis to deal.II

@@ -35,4 +35,3 @@ endif()
 
 # Force deal.II to use ginkgo
 list(APPEND dealii_cmake_args "-D GINKGO_DIR:PATH=${GINKGO_DIR}")
-message("dealii_cmake_args = ${dealii_cmake_args}")

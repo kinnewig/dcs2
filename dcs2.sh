@@ -1142,6 +1142,11 @@ parse_arguments() {
     fi
     echo
 
+    # Set mold as linker
+    if [[ "${USE_MOLD}" = "ON" ]]; then
+      export LD=mold
+      export LDFLAGS="-fuse-ld=mold"
+    fi
 
     # -- SET_AOCC_PATH --
     if [ -z "${SET_AOCC_PATH}" ]; then
@@ -1238,7 +1243,7 @@ if [ "${USE_MOLD}" = "ON" ]; then
   if ! check_and_install_mold "$@"; then
     exit 1
   fi
-elif [ "${USE_MOLD}" = "DOWNLOAD" ]; then
+elif [ "${USE_MOLD}" = "download" ]; then
   if ! download_and_extract_mold "$@"; then
     exit 1
   fi

@@ -9,6 +9,9 @@ else()
   
   list(APPEND numdiff_autotool_args "--prefix=${CMAKE_INSTALL_PREFIX}/numdiff/${NUMDIFF_VERSION}")
   list(APPEND numdiff_autotool_args "--disable-nls")
+  list(APPEND numdiff_autotool_args "--disable-gmp") # GMP leads to linking issues on modern systems
+  list(APPEND numdiff_autotool_args "CFLAGS=-std=c17")
+  list(APPEND numdiff_autotool_args "CXXFLAGS=-std=c17")
 
   # NUMDIFF does not exist as Git repository, so we have to fall back to an archive...
   file(READ ${CMAKE_CURRENT_LIST_DIR}/../libraries.json json)

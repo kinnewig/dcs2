@@ -12,6 +12,7 @@ if(NOT HYPRE_FOUND)
     -D CMAKE_CXX_FLAGS="-fPIC"
     -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_MPI_Fortran_COMPILER}
     -D CMAKE_BUILD_TYPE:STRING=Release
+    -D BUILD_SHARED_LIBS:BOOL=ON
     ${hypre_cmake_args}
   )
 
@@ -108,6 +109,9 @@ list(APPEND petsc_autotool_args "--with-hypre=true")
 list(APPEND petsc_autotool_args "--with-hypre-dir=${HYPRE_DIR}")
 
 # add HYPRE to Trilinos
-list(APPEND trilinos_cmake_args "-D TPL_ENABLE_HYPRE=ON")
-list(APPEND trilinos_cmake_args "-D HYPRE_LIBRARY_DIRS:PATH=${HYPRE_DIR}/lib")
-list(APPEND trilinos_cmake_args "-D HYPRE_INCLUDE_DIRS:PATH=${HYPRE_DIR}/include")
+# TODO: HYPRE with 64-bit does not work with Epetra... 
+# As Epetra will be removed in the next release of Trilinos no patch can be expected.
+# Once Epetra is removed, this can be reenabled, but for the moment, deal.II requires Epetra
+#list(APPEND trilinos_cmake_args "-D TPL_ENABLE_HYPRE=ON")
+#list(APPEND trilinos_cmake_args "-D HYPRE_LIBRARY_DIRS:PATH=${HYPRE_DIR}/lib")
+#list(APPEND trilinos_cmake_args "-D HYPRE_INCLUDE_DIRS:PATH=${HYPRE_DIR}/include")

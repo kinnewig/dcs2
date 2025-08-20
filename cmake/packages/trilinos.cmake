@@ -24,7 +24,6 @@ else()
     -D Trilinos_ENABLE_EXPLICIT_INSTANTIATION:BOOL=ON 
     -D Trilinos_ENABLE_ALL_PACKAGES:BOOL=OFF 
     -D Trilinos_ENABLE_ALL_OPTIONAL_PACKAGES:BOOL=OFF 
-    -D Trilinos_SHOW_DEPRECATED_WARNINGS:BOOL=OFF
     -D Trilinos_ENABLE_Amesos:BOOL=ON 
     -D Trilinos_ENABLE_Amesos2:BOOL=ON 
     -D Trilinos_ENABLE_AztecOO:BOOL=ON 
@@ -55,9 +54,18 @@ else()
     ${trilinos_cmake_args}
   )
 
+  # TODO: The Epetra-stack is deprecated.
+  # At the moment deal.II requires Epetra. So for the moment, we disable the warnings.
+  list(APPEND trilinos_cmake_args "-D Trilinos_SHOW_DEPRECATED_WARNINGS:BOOL=OFF")
+
   # Trilinos index
   if(${DEALII_WITH_64BIT})
     list(APPEND trilinos_cmake_args "-D Tpetra_INST_INT_LONG_LONG:BOOL=ON")
+
+    # TODO: ML and METIS/ParMETIS 64-bit do not play nicely together. 
+    # As ML is deprecated and will be removed in the next Trilinos version no patch can be expected.
+    list(APPEND trilinos_cmake_args "-D ML_ENABLE_METIS:BOOL=OFF")
+    list(APPEND trilinos_cmake_args "-D ML_ENABLE_ParMETIS:BOOL=OFF")
   else()
     list(APPEND trilinos_cmake_args "-D TPETRA_INST_INT_INT:BOOL=ON")
   endif()

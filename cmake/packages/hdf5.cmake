@@ -13,6 +13,8 @@ if(NOT HDF5_FOUND)
     ${hdf5_cmake_args}
   )
 
+  list(APPEND hdf5_cmake_args "-D HDF5_ENABLE_PARALLEL:BOOL=ON")
+
   build_cmake_subproject("hdf5")
 
   # Dependencies:
@@ -34,6 +36,7 @@ list(APPEND petsc_autotool_args "--with-hdf5=true")
 list(APPEND petsc_autotool_args "--with-hdf5-dir=${HDF5_DIR}")
 
 # add HDF5 to trilinos
+# TODO:
 #list(APPEND trilinos_cmake_args "-D TPL_ENABLE_HDF5=ON")
 #list(APPEND trilinos_cmake_args "-D HDF5_LIBRARY_DIRS:PATH=${HDF5_DIR}/lib64")
 #list(APPEND trilinos_cmake_args "-D HDF5_INCLUDE_DIRS:PATH=${HDF5_DIR}/include")

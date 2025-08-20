@@ -31,7 +31,7 @@ set(ARBORX_VERSION "2.0.1" CACHE STRING "Specify the version of ARBORX to be use
 option(TPL_ENABLE_ARPACK-NG   "Enable or disable the use of ADOL-C as a third-party library"      OFF)
 set(ARPACK-NG_VERSION "3.9.1" CACHE STRING "Specify the version of ARPACK-NG to be used")
 
-option(TPL_ENABLE_ASSIMP   "Enable or disable the use of Assimp as a third-party library"         ON)
+option(TPL_ENABLE_ASSIMP   "Enable or disable the use of Assimp as a third-party library"         OFF)
 set(ASSIMP_VERSION "6.0.2" CACHE STRING "Specify the version of ASSIMP to be used")
 
 option(TPL_ENABLE_BOOST       "Enable or disable the use of BOOST as a third-party library"       ON)
@@ -371,7 +371,7 @@ if(TPL_ENABLE_VTK)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/vtk.cmake")
 endif()
 
-if(TPL_ENABLE_ZLIB)
+if(TPL_ENABLE_ZLIB-NG)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/zlib-ng.cmake")
 endif()
 

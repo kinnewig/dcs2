@@ -4,19 +4,6 @@ find_package(SCALAPACK)
 if(NOT SCALAPACK_FOUND)
   message(STATUS "Building AMD SCALAPACK")
 
-  set(scalapack_cmake_args
-    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/amd-scalapack/${AMD-SCALAPACK_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${MPI_C_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${MPI_Fortran_COMPILER}
-    -D CMAKE_BUILD_TYPE:STRING=Release
-    -D BUILD_SHARED_LIBS:BOOL=ON 
-    ${amd-scalapack_cmake_args}
-  )
-
-  get_filename_component(MPI_BASE_DIR "${MPI_C_LIBRARIES}" DIRECTORY)
-  get_filename_component(MPI_BASE_DIR "${MPI_BASE_DIR}" DIRECTORY)
-  list(APPEND amd-scalapack_cmake_args "-D MPI_BASE_DIR:PATH='${MPI_BASE_DIR}'")
-
   if(${DEALII_WITH_64BIT})
     list(APPEND amd-scalapack_cmake_args "-D ENABLE_ILP64:BOOL=ON")
   endif()

@@ -42,10 +42,12 @@ or if you want to install for exampe your own fork of deal.II
 ## Requirements
 DCS2 requires a modern MPI compiler, and a few additional programs that are not build by DCS2 itself.
 
+Note the packages: `boost-devel`, `cmake`, `ninja-build` and `mold` are recommended but not strictly required, as DCS2 can install these packages, if they are not present.
+
 ### Fedora (>=41)
 Install the dependencies
 ```bash
-sudo dnf install @development-tools openmpi-devel boost-devel gcc-c++ gcc-gfortran git 
+sudo dnf install @c-development @development-tools openmpi-devel gcc-c++ gcc-gfortran git texinfo boost-devel cmake ninja-build mold
 ```
 To enable openmpi by default add the following lines to the ~/.bashrc
 ```bash
@@ -65,7 +67,8 @@ dnf update
 Install the dependencies
 ```bash
 sudo dnf groupinstall "Development Tools"
-sudo dnf install openmpi-devel boost-devel gcc-c++ git texinfo
+sudo dnf install openmpi-devel gcc-c++ git texinfo boost-devel cmake ninja-build mold
+
 ```
 To enable openmpi by default add the following lines to the ~/.bashrc
 ```bash
@@ -77,7 +80,7 @@ module load mpi/openmpi-x86_64
 ### Ubuntu/Debian
 Install the dependencies
 ```bash
-sudo apt install build-essential libopenmpi-dev libboost-all-dev gfortran  git texinfo libssl-dev 
+sudo apt install build-essential libopenmpi-dev gfortran git texinfo libssl-dev libboost-all-dev cmake ninja-build mold 
 ```
 
 ## DCS2 Options
@@ -189,7 +192,7 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 - `METIS` and `ParMETIS` Graph partitioner (default "ON")
 
 #### Grid generation
-- `ASSIMP` is a portable Open Source library to import various well-known 3D model formats in a uniform manner (default "ON")
+- `ASSIMP` is a portable Open Source library to import various well-known 3D model formats in a uniform manner (default "OFF")
 
 - `GMSH` (default version: "4.12.2", default "OFF")
 

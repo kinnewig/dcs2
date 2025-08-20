@@ -12,8 +12,6 @@ if(NOT PARMETIS_FOUND)
   string(JSON parmetis_url GET ${json} parmetis git)
   string(JSON parmetis_tag GET ${json} parmetis ${PARMETIS_VERSION})
 
-  message(STATUS "make config prefix=${CMAKE_INSTALL_PREFIX}/parmetis/${PARMETIS_VERSION} shared=1 cc=${MPI_C_COMPILER} cxx=${MPI_CXX_COMPILER}")
-
   # build ParMETIS
   ExternalProject_Add(parmetis
     URL ${parmetis_url}/${parmetis_tag}

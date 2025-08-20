@@ -31,8 +31,9 @@ list(APPEND gmsh_cmake_args "-D ENABLE_OCC:BOOL=ON")
 list(APPEND gmsh_cmake_args "-D OPENCASCADE_ROOT:PATH=${OCCT_DIR}")
 
 # add OCCT to PETSc
-list(APPEND petsc_autotool_args "--with-opencascade=true")
-list(APPEND petsc_autotool_args "--with-opencascade-dir=${OCCT_DIR}")
+# TODO: This leads to an linking issue (petsc does not find tk)
+#list(APPEND petsc_autotool_args "--with-opencascade=true")
+#list(APPEND petsc_autotool_args "--with-opencascade-dir=${OCCT_DIR}")
 
 # add OCCT to deal.II
 list(APPEND dealii_cmake_args "-D OPENCASCADE_DIR=${OCCT_DIR}")
