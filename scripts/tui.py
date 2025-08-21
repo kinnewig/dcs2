@@ -1,6 +1,8 @@
 import curses
 import os
 import re
+import subprocess
+from packaging import version as v
 
 def tpls_read_from_cmake(file_path):
     pattern = re.compile(r'option\(\s*(TPL_ENABLE_\w+)\s*"([^"]*)"\s*(ON|OFF)\s*\)')
@@ -84,6 +86,18 @@ def tpls_update_cmake(tpls, file_path="CMakeLists.txt"):
         f.writelines(updated_lines)
 
 
+def program_available(program, min_version="0.0.0"):
+    try:
+        output = subprocess.check_output([f"{program}", "--version"], stderr=subprocess.STDOUT)
+        line = output.decode().splitlines()[0]
+
+        if v.parse(line.split()[-1]) >= v.parse(min_version):
+            return True 
+        else:
+            return False
+    except Exception:
+        return False
+
 
 def tui_prefix_path(stdscr, default_prefix="~/dcs2/"):
     curses.curs_set(1)
@@ -158,17 +172,32 @@ def tui_install_tools(stdscr):
 
 
 if __name__ == "__main__":
+    # === Package selection ===
+    # Read the TPLs from the CMakeLists.txt
     tpls = tpls_read_from_cmake("CMakeLists.txt")
-    selected_tpls = curses.wrapper(lambda stdscr: tpls_tui_select(tpls))
-    tpls_update_cmake(selected_tpls)
+
+    # These TPLs are handeled by the BLAS stack option
+    excluded_tpls = {"TPL_ENABLE_BLIS", "TPL_ENABLE_LIBFLAME", "TPL_ENABLE_SCALAPACK"}
+    filtered_tpls = [tpl for tpl in tpls if tpl["name"] not in excluded_tpls]
+
+    # Let's the user select
+    selected_tpls = curses.wrapper(lambda stdscr: tpls_tui_select(filtered_tpls))
+
+    # Write the changes to the CMakeLists.txt
+    tpls_update_cmake(selected_tpls, "CMakeLists.txt")
 
     dcs2_args = []
     prefix = curses.wrapper(tui_prefix_path)
     dcs2_args.append(f"--path {prefix}")
 
-    install_tools = curses.wrapper(tui_install_tools)
+    install_tools = curses.wrapper(lambda stdscr: tui_install_tools())
     for tool, enabled in install_tools.items():
         dcs2_args.append(f"--{tool} {enabled}")
+
+    cmake_available = program_available("cmake")
+    ninja_available = program_available("ninja")
+    mold_available  = program_available("mold")
+    
 
     #print(" ".join(cmake_args))
     #print(cmake_args)
