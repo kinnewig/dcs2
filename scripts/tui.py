@@ -25,14 +25,21 @@ def tpls_tui_select(tpls):
     curses.curs_set(0)
     current = 0
 
+    # Precompute the max width of the name field for alignment
+    name_width     = max(len(opt["name"].removeprefix("TPL_ENABLE_")) for opt in tpls)
+    desc_start_col = name_width + 4 + 1  # +4 for "[x] " or "[ ] " and +1 for spacing
+
     while True:
         stdscr = curses.initscr()
         stdscr.clear()
-        stdscr.addstr(0, 0, "Select TPL packages (space to toggle, enter to confirm):")
+        stdscr.addstr(0, 0, "Select TPL packages (space to toggle, enter to confirm:")
 
         for idx, opt in enumerate(tpls):
             mark = "[x]" if opt["enabled"] else "[ ]"
-            line = f"{mark} {opt['name'].removeprefix('TPL_ENABLE_')}"
+            name = opt["name"].removeprefix("TPL_ENABLE_")
+            line = f"{mark} {name}"
+            if "description" in opt:
+                line = line.ljust(desc_start_col) + f"- {opt['description']}"
             if idx == current:
                 stdscr.addstr(idx + 2, 0, line, curses.A_REVERSE)
             else:
@@ -49,6 +56,7 @@ def tpls_tui_select(tpls):
             break
 
     return tpls
+
  
 def tpls_update_cmake(tpls, file_path="CMakeLists.txt"):
     # Create a lookup dictionary keyed by full name
