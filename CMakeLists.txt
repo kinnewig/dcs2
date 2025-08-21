@@ -26,113 +26,113 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Options
-option(TPL_ENABLE_ADOLC       "Enable or disable the use of ADOL-C as a third-party library"      OFF)
+option(TPL_ENABLE_ADOLC "Automatic differentiation library" OFF)
 set(ADOLC_VERSION "2.7.2" CACHE STRING "Specify the version of ADOLC to be used")
 
-option(TPL_ENABLE_ARBORX      "Enable or disable the use of ARBORX as a third-party library"      OFF)
+option(TPL_ENABLE_ARBORX "Performance-portable spatial data structures" OFF)
 set(ARBORX_VERSION "2.0.1" CACHE STRING "Specify the version of ARBORX to be used")
 
-option(TPL_ENABLE_ARPACK-NG   "Enable or disable the use of ADOL-C as a third-party library"      OFF)
+option(TPL_ENABLE_ARPACK-NG "Eigenvalue solver for large sparse matrices" OFF)
 set(ARPACK-NG_VERSION "3.9.1" CACHE STRING "Specify the version of ARPACK-NG to be used")
 
-option(TPL_ENABLE_ASSIMP   "Enable or disable the use of Assimp as a third-party library"         OFF)
+option(TPL_ENABLE_ASSIMP "3D model import/export library" OFF)
 set(ASSIMP_VERSION "6.0.2" CACHE STRING "Specify the version of ASSIMP to be used")
 
-option(TPL_ENABLE_BOOST       "Enable or disable the use of BOOST as a third-party library"       ON)
+option(TPL_ENABLE_BOOST "General-purpose C++ libraries" ON)
 set(BOOST_VERSION "1.89.0" CACHE STRING "Specify the version of BOOST to be used")
 
-option(TPL_ENABLE_CGAL       "Enable or disable the use of CGAL as a third-party library"         OFF)
+option(TPL_ENABLE_CGAL "Computational geometry algorithms" OFF)
 set(CGAL_VERSION "6.1" CACHE STRING "Specify the version of CGAL to be used")
 
-option(TPL_ENABLE_BLIS        "Enable or disable the use of BLIS as a third-party library"        ON)
+option(TPL_ENABLE_BLIS "High-performance BLAS-like library" ON)
 set(BLIS_VERSION "2.0" CACHE STRING "Specify the version of BLIS to be used")
 
-option(TPL_ENABLE_FLTK   "Enable or disable the use of FLTK as a third-party library"             OFF)
+option(TPL_ENABLE_FLTK "Lightweight GUI toolkit" OFF)
 set(FLTK_VERSION "1.4.4" CACHE STRING "Specify the version of FLTK to be used")
 
-option(TPL_ENABLE_GINKGO   "Enable or disable the use of ginkgo as a third-party library"         OFF)
+option(TPL_ENABLE_GINKGO "Sparse linear algebra library" OFF)
 set(GINKGO_VERSION "1.10.0" CACHE STRING "Specify the version of GINKGO to be used")
 
-option(TPL_ENABLE_GSL   "Enable or disable the use of GSL as a third-party library"               OFF)
+option(TPL_ENABLE_GSL "GNU scientific computing library" OFF)
 set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 
-option(TPL_ENABLE_HDF5        "Enable or disable the use of HDF5 as a third-party library"        ON)
+option(TPL_ENABLE_HDF5 "Hierarchical data format for large datasets" ON)
 set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
 
-option(TPL_ENABLE_HYPRE        "Enable or disable the use of hypre as a third-party library"      OFF)
+option(TPL_ENABLE_HYPRE "Scalable linear solvers and preconditioners" OFF)
 set(HYPRE_VERSION "3.0.0" CACHE STRING "Specify the version of HYPRE to be used")
 
-option(TPL_ENABLE_LIBFLAME    "Enable or disable the use of LIBFLAME as a third-party library"    ON)
+option(TPL_ENABLE_LIBFLAME "Dense linear algebra library" ON)
 set(LIBFLAME_VERSION "5.2.0" CACHE STRING "Specify the version of LIBFLAME to be used")
 
-option(TPL_ENABLE_SCALAPACK   "Enable or disable the use of SCALAPACK as a third-party library"   ON)
+option(TPL_ENABLE_SCALAPACK "Parallel linear algebra routines" ON)
 set(SCALAPACK_VERSION "2.2.2.2" CACHE STRING "Specify the version of SCALAPACK to be used")
 
-option(TPL_ENABLE_MUMPS       "Enable or disable the use of MUMPS as a third-party library"       ON)
+option(TPL_ENABLE_MUMPS "Sparse direct solver for linear systems" ON)
 set(MUMPS_VERSION "5.8.1.0" CACHE STRING "Specify the version of MUMPS to be used")
 
-option(TPL_ENABLE_MUPARSER    "Enable or disable the use of MUMPS as a third-party library"       OFF)
+option(TPL_ENABLE_MUPARSER "Math expression parser library" OFF)
 set(MUPARSER_VERSION "2.3.5" CACHE STRING "Specify the version of MUPARSER to be used")
 
-option(TPL_ENABLE_NETCDF   "Enable or disable the use of NETCDF as a third-party library"         OFF)
+option(TPL_ENABLE_NETCDF "Scientific data storage format" OFF)
 set(NETCDF_VERSION "4.9.3" CACHE STRING "Specify the version of NETCDF to be used")
 
-option(TPL_ENABLE_NUMDIFF       "Enable or disable the use of NUMDIFF as a third-party library"   ON)
+option(TPL_ENABLE_NUMDIFF "Numerical differentiation tool" ON)
 set(NUMDIFF_VERSION "5.9.0" CACHE STRING "Specify the version of NUMDIFF to be used")
 
-option(TPL_ENABLE_GMP         "Enable or disable the use of GMP as a third-party library"         ON)
+option(TPL_ENABLE_GMP "Arbitrary precision arithmetic library" ON)
 set(GMP_VERSION "6.2.1" CACHE STRING "Specify the version of GMP to be used")
 
-option(TPL_ENABLE_MPFR        "Enable or disable the use of MPFR as a third-party library"        ON)
+option(TPL_ENABLE_MPFR "Multiple-precision floating-point library" ON)
 set(MPFR_VERSION "4.2.2" CACHE STRING "Specify the version of MPFR to be used")
 
-option(TPL_ENABLE_SUITESPARSE "Enable or disable the use of SuiteSparse as a third-party library" ON)
+option(TPL_ENABLE_SUITESPARSE "Sparse matrix algorithms collection" ON)
 set(SUITESPARSE_VERSION "7.11.0" CACHE STRING "Specify the version of SUITESPARSE to be used")
 
-option(TPL_ENABLE_SUNDIALS   "Enable or disable the use of SUNDIALS as a third-party library"     OFF)
+option(TPL_ENABLE_SUNDIALS "Nonlinear and differential equation solvers" OFF)
 set(SUNDIALS_VERSION "7.5.0" CACHE STRING "Specify the version of SUNDIALS to be used")
 
-option(TPL_ENABLE_SYMENGINE   "Enable or disable the use of SYMENGINE as a third-party library"   OFF)
+option(TPL_ENABLE_SYMENGINE "Symbolic math library in C++" OFF)
 set(SYMENGINE_VERSION "0.14.0" CACHE STRING "Specify the version of SYMENGINE to be used")
 
-option(TPL_ENABLE_P4EST       "Enable or disable the use of P4EST as a third-party library"       ON)
+option(TPL_ENABLE_P4EST "Adaptive mesh refinement on forests of quadtrees" ON)
 set(P4EST_VERSION "2.8.7" CACHE STRING "Specify the version of P4EST to be used")
 set(LIBSC_VERSION "2.8.7" CACHE STRING "Specify the version of LIBSC to be used")
 
-option(TPL_ENABLE_PARMETIS       "Enable or disable the use of PARMETIS as a third-party library" ON)
+option(TPL_ENABLE_PARMETIS "Parallel graph partitioning library" ON)
 set(PARMETIS_VERSION "4.0.3" CACHE STRING "Specify the version of PARMETIS to be used")
 
-option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-party library"       ON)
+option(TPL_ENABLE_PETSC "Scalable solver toolkit for PDEs" ON)
 set(PETSC_VERSION "3.24.0" CACHE STRING "Specify the version of PETSC to be used")
 
-option(TPL_ENABLE_SLEPC       "Enable or disable the use of SLEPc as a third-party library"       ON)
+option(TPL_ENABLE_SLEPC "Eigenvalue problem solvers built on PETSc" ON)
 set(SLEPC_VERSION "3.24.0" CACHE STRING "Specify the version of SLEPC to be used")
 
-option(TPL_ENABLE_SUPERLU_DIST "Enable or disable the use of superlu_dist as a third-party library" ON)
+option(TPL_ENABLE_SUPERLU_DIST "Distributed-memory sparse direct solver" ON)
 set(SUPERLU_DIST_VERSION "9.1.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
 
-option(TPL_ENABLE_TRILINOS    "Enable or disable the use of Trilinos as a third-party library"    ON)
+option(TPL_ENABLE_TRILINOS "Scientific computing framework" ON)
 set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of TRILINOS to be used")
 
-option(TPL_ENABLE_TBB       "Enable or disable the use of oneTBB as a third-party library"        ON)
+option(TPL_ENABLE_TBB "Intel's Threading Building Blocks" ON)
 set(TBB_VERSION "2022.2.0" CACHE STRING "Specify the version of TBB to be used")
 
-option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party library"         OFF)
+option(TPL_ENABLE_GMSH "Mesh generation and visualization tool" OFF)
 set(GMSH_VERSION "4.14.1" CACHE STRING "Specify the version of GMSH to be used")
 
-option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"          OFF)
+option(TPL_ENABLE_VTK "Visualization toolkit for 3D graphics" OFF)
 set(VTK_VERSION "9.5.2" CACHE STRING "Specify the version of VTK to be used")
 
-option(TPL_ENABLE_OCCT       "Enable or disable the use of OpenCascade as a third-party library"  OFF)
+option(TPL_ENABLE_OCCT "CAD kernel for 3D modeling" OFF)
 set(OCCT_VERSION "7.9.1" CACHE STRING "Specify the version of OCCT to be used")
 
-option(TPL_ENABLE_TCL        "Enable or disable the use of TCL as a third-party library"          OFF)
+option(TPL_ENABLE_TCL "Scripting language for embedded applications" OFF)
 set(TCL_VERSION "1.5.0" CACHE STRING "Specify the version of TCL to be used")
 
-option(TPL_ENABLE_TK        "Enable or disable the use of TK as a third-party library"            OFF)
+option(TPL_ENABLE_TK "GUI toolkit for TCL" OFF)
 set(TK_VERSION "1.5.0" CACHE STRING "Specify the version of TK to be used")
 
-option(TPL_ENABLE_ZLIB-NG   "Enable or disable the use of ZLIB-NG as a third-party library"       OFF)
+option(TPL_ENABLE_ZLIB-NG "Next-gen compression library (Zlib-compatible)" OFF)
 set(ZLIB-NG_VERSION "2.2.5" CACHE STRING "Specify the version of ZLIB-NG to be used")
 
 set(DEALII_VERSION "9.7.1" CACHE STRING "Specify the version of DEALII to be used")
