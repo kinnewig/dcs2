@@ -5,13 +5,6 @@ set(AOCL-UTILS_FOUND FALSE)
 if(NOT AOCL-UTILS_FOUND)
   message(STATUS "Building AOCL-UTILS")
   
-  set(amd-aocl-utils_cmake_args
-    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/amd-aocl-utils/${AMD-AOCL-UTILS_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
-    ${aocl-utils_cmake_args}
-  )
-
   build_cmake_subproject(amd-aocl-utils)
 
   # Dependencies:

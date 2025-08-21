@@ -3,12 +3,7 @@ include(ExternalProject)
 find_package(LAPACK)
 if(NOT LAPACK_FOUND)
   set(lapack_cmake_args
-    -D BUILD_SHARED_LIBS:BOOL=ON
     -D BUILD_TESTING:BOOL=OFF
-    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/lapack/${LAPACK_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
-    -D CMAKE_BUILD_TYPE:STRING=Release
     -D CMAKE_TLS_VERIFY:BOOL=${CMAKE_TLS_VERIFY}
     ${lapack_cmake_args}
   )

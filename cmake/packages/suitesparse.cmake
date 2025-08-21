@@ -6,14 +6,9 @@ if(SUITESPARSE_FOUND)
 else()
   message(STATUS "Building SuiteSparse")
   
-  set(suitesparse_cmake_args
-    -D SUITESPARSE_USE_64BIT_BLAS:BOOL=ON
-    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/suitesparse/${SUITESPARSE_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
-    -D CMAKE_BUILD_TYPE:STRING=Release
-    ${suitesparse_cmake_args}
-  )
+  if(${DEALII_WITH_64BIT})
+    list(APPEND suitesparse_cmake_args "-D SUITESPARSE_USE_64BIT_BLAS:BOOL=ON")
+  endif()
   
   build_cmake_subproject(suitesparse)
 

@@ -22,6 +22,18 @@ function(build_cmake_subproject name)
     message("Using custom git tag for ${name_upper}: ${${name_upper}_CUSTOM_TAG}")
   endif()
 
+  # Set default CMake build flags:
+  # (the flags are written in the beginning, so they can be overwritten)
+  set(${name}_cmake_args
+    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/${name}/${${name_upper}_VERSION}
+    -D CMAKE_C_COMPILER:PATH=${MPI_C_COMPILER}
+    -D CMAKE_CXX_COMPILER:PATH=${MPI_CXX_COMPILER}
+    -D CMAKE_Fortran_COMPILER:PATH=${MPI_Fortran_COMPILER}
+    -D BUILD_SHARED_LIBS:BOOL=ON 
+    -D CMAKE_BUILD_TYPE:STRING=Release
+    ${${name}_cmake_args}
+  )
+
   if (DEFINED ${name_upper}_SOURCE_DIR)
     ExternalProject_Add(${name}
       URL ${${name_upper}_SOURCE_DIR}

@@ -3,15 +3,6 @@ include(ExternalProject)
 if(NOT VTK_FOUND)
   message(STATUS "Building VTK")
   
-  set(vtk_cmake_args
-    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/vtk/${VTK_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
-    -D CMAKE_CXX_COMPILER:PATH=${CMAKE_CXX_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
-    -D CMAKE_BUILD_TYPE:STRING=Release
-    ${vtk_cmake_args}
-  )
- 
   build_cmake_subproject("vtk")
   
   set(VTK_LIBRARY "${VTK_DIR}/lib64")

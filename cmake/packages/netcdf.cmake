@@ -5,9 +5,6 @@ if(NOT NETCDF_FOUND)
   message(STATUS "Building netcdf")
   
   set(netcdf_cmake_args
-    -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/netcdf/${NETCDF_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${MPI_C_COMPILER}
-    -D CMAKE_BUILD_TYPE:STRING=Release
     -D NETCDF_ENABLE_DAP:BOOL=OFF 
     -D NETCDF_ENABLE_NETCDF_4:BOOL=ON
     ${netcdf_cmake_args}
