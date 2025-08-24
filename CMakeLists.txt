@@ -41,7 +41,7 @@ option(TPL_ENABLE_CGAL       "Enable or disable the use of CGAL as a third-party
 set(CGAL_VERSION "6.0.1" CACHE STRING "Specify the version of CGAL to be used")
 
 option(TPL_ENABLE_BLIS        "Enable or disable the use of BLIS as a third-party library"        ON)
-set(BLIS_VERSION "2.0.0" CACHE STRING "Specify the version of BLIS to be used")
+set(BLIS_VERSION "2.0" CACHE STRING "Specify the version of BLIS to be used")
 
 option(TPL_ENABLE_FLTK   "Enable or disable the use of FLTK as a third-party library"             OFF)
 set(FLTK_VERSION "1.4.4" CACHE STRING "Specify the version of FLTK to be used")
@@ -129,7 +129,7 @@ option(TPL_ENABLE_TK        "Enable or disable the use of TK as a third-party li
 set(TK_VERSION "1.5.0" CACHE STRING "Specify the version of TK to be used")
 
 option(TPL_ENABLE_ZLIB-NG   "Enable or disable the use of ZLIB-NG as a third-party library"       OFF)
-set(ZLIB-NG_VERSION "" CACHE STRING "Specify the version of ZLIB-NG to be used")
+set(ZLIB-NG_VERSION "2.2.5" CACHE STRING "Specify the version of ZLIB-NG to be used")
 
 set(DEALII_VERSION "9.7.0" CACHE STRING "Specify the version of DEALII to be used")
 option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
