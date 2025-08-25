@@ -29,13 +29,14 @@ find_library(GMP_LIBRARY NAMES gmp
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GMP DEFAULT_MSG GMP_LIBRARY GMP_INCLUDE_DIR)
 
-#if(GMP_FOUND)
-#  set(GMP_LIBRARIES ${GMP_LIBRARY})
-#  set(GMP_INCLUDE_DIRS ${GMP_INCLUDE_DIR})
-#
-#  get_filename_component(GMP_DIR "${GMP_LIBRARY}" DIRECTORY)
-#  get_filename_component(GMP_DIR "${GMP_DIR}" DIRECTORY)
-#
+if(GMP_FOUND)
+  set(GMP_LIBRARIES ${GMP_LIBRARY})
+  set(GMP_INCLUDE_DIRS ${GMP_INCLUDE_DIR})
+
+  get_filename_component(GMP_DIR "${GMP_LIBRARY}" DIRECTORY)
+  get_filename_component(GMP_DIR "${GMP_DIR}" DIRECTORY)
+
+# Skip the version check:
 #  # Version check
 #  # First, read the version from the header file
 #  if(EXISTS "${GMP_INCLUDE_DIR}/gmp.h")
@@ -59,7 +60,7 @@ find_package_handle_standard_args(GMP DEFAULT_MSG GMP_LIBRARY GMP_INCLUDE_DIR)
 #    set(GMP_FOUND FALSE)
 #    message("    Found GMP version ${FOUND_GMP_VERSION}, mark GMP as not FOUND")
 #  endif()
-#
-#endif()
+
+endif()
 
 mark_as_advanced(GMP_INCLUDE_DIR GMP_LIBRARY)

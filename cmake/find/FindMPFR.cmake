@@ -25,13 +25,14 @@ find_library(MPFR_LIBRARY NAMES mpfr
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MPFR DEFAULT_MSG MPFR_LIBRARY MPFR_INCLUDE_DIR)
 
-#if(MPFR_FOUND)
-#  set(MPFR_LIBRARIES ${MPFR_LIBRARY})
-#  set(MPFR_INCLUDE_DIRS ${MPFR_INCLUDE_DIR})
-#
-#  get_filename_component(MPFR_DIR "${MPFR_LIBRARY}" DIRECTORY)
-#  get_filename_component(MPFR_DIR "${MPFR_DIR}" DIRECTORY)
-#
+if(MPFR_FOUND)
+  set(MPFR_LIBRARIES ${MPFR_LIBRARY})
+  set(MPFR_INCLUDE_DIRS ${MPFR_INCLUDE_DIR})
+
+  get_filename_component(MPFR_DIR "${MPFR_LIBRARY}" DIRECTORY)
+  get_filename_component(MPFR_DIR "${MPFR_DIR}" DIRECTORY)
+
+# Skip version check
 #  # Version check
 #  # First, read the version from the header file
 #  file(STRINGS ${MPFR_INCLUDE_DIR}/mpfr.h _mpfr_version_line
@@ -50,6 +51,6 @@ find_package_handle_standard_args(MPFR DEFAULT_MSG MPFR_LIBRARY MPFR_INCLUDE_DIR
 #    set(MPFR_FOUND FALSE)
 #    message("    Found MPFR version ${FOUND_MPFR_VERSION}, mark MPFR as not FOUND")
 #  endif()
-#endif()
+endif()
 
 mark_as_advanced(MPFR_INCLUDE_DIR MPFR_LIBRARY)
