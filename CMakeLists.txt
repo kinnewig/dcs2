@@ -41,7 +41,7 @@ option(TPL_ENABLE_CGAL       "Enable or disable the use of CGAL as a third-party
 set(CGAL_VERSION "6.0.1" CACHE STRING "Specify the version of CGAL to be used")
 
 option(TPL_ENABLE_BLIS        "Enable or disable the use of BLIS as a third-party library"        ON)
-set(BLIS_VERSION "2.0.0" CACHE STRING "Specify the version of BLIS to be used")
+set(BLIS_VERSION "2.0" CACHE STRING "Specify the version of BLIS to be used")
 
 option(TPL_ENABLE_FLTK   "Enable or disable the use of FLTK as a third-party library"             OFF)
 set(FLTK_VERSION "1.4.4" CACHE STRING "Specify the version of FLTK to be used")
@@ -53,7 +53,7 @@ option(TPL_ENABLE_GSL   "Enable or disable the use of GSL as a third-party libra
 set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 
 option(TPL_ENABLE_HDF5        "Enable or disable the use of HDF5 as a third-party library"        ON)
-set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
+set(HDF5_VERSION "5.1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
 
 option(TPL_ENABLE_HYPRE        "Enable or disable the use of hypre as a third-party library"      OFF)
 set(HYPRE_VERSION "2.33.0" CACHE STRING "Specify the version of HYPRE to be used")
@@ -99,7 +99,7 @@ option(TPL_ENABLE_PARMETIS       "Enable or disable the use of PARMETIS as a thi
 set(PARMETIS_VERSION "4.0.3" CACHE STRING "Specify the version of PARMETIS to be used")
 
 option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-party library"       ON)
-set(PETSC_VERSION "3.23.5" CACHE STRING "Specify the version of PETSC to be used")
+set(PETSC_VERSION "3.23.6" CACHE STRING "Specify the version of PETSC to be used")
 
 option(TPL_ENABLE_SLEPC       "Enable or disable the use of SLEPc as a third-party library"       ON)
 set(SLEPC_VERSION "3.23.2" CACHE STRING "Specify the version of SLEPC to be used")
@@ -117,7 +117,7 @@ option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party
 set(GMSH_VERSION "4.14.0" CACHE STRING "Specify the version of GMSH to be used")
 
 option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"          OFF)
-set(VTK_VERSION "9.5.0" CACHE STRING "Specify the version of VTK to be used")
+set(VTK_VERSION "9.5.1" CACHE STRING "Specify the version of VTK to be used")
 
 option(TPL_ENABLE_OCCT       "Enable or disable the use of OpenCascade as a third-party library"  OFF)
 set(OCCT_VERSION "7.9.1" CACHE STRING "Specify the version of OCCT to be used")
@@ -129,7 +129,7 @@ option(TPL_ENABLE_TK        "Enable or disable the use of TK as a third-party li
 set(TK_VERSION "1.5.0" CACHE STRING "Specify the version of TK to be used")
 
 option(TPL_ENABLE_ZLIB-NG   "Enable or disable the use of ZLIB-NG as a third-party library"       OFF)
-set(ZLIB-NG_VERSION "" CACHE STRING "Specify the version of ZLIB-NG to be used")
+set(ZLIB-NG_VERSION "2.2.5" CACHE STRING "Specify the version of ZLIB-NG to be used")
 
 set(DEALII_VERSION "9.7.0" CACHE STRING "Specify the version of DEALII to be used")
 option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
