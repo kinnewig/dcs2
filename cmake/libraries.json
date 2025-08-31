@@ -42,7 +42,7 @@
   "blis": {
     "git": "https://github.com/flame/blis.git",
     "0.9.0": "14c86f66b20901b60ee276da355c1b62642c18d2",
-    "2.0.0": "e8566eb3e773fb54d11b33e371d13f22d2941e50"
+    "2.0": "2.0"
   },
   "boost": {
     "git": "https://github.com/boostorg/boost.git",
@@ -56,7 +56,8 @@
   "cmake": {
     "git": "https://github.com/Kitware/CMake.git",
     "4.0.3": "v4.0.3",
-    "4.1.0": "v4.1.0"
+    "4.1.0": "v4.1.0",
+    "4.1.1": "v4.1.1"
   },
   "dealii": {
     "git": "https://github.com/dealii/dealii",
@@ -78,7 +79,7 @@
   },
   "gmp": {
     "git": "https://github.com/alisw/GMP.git",
-    "6.2.1": "2bbd52703e5af82509773264bfbd20ff8464804f"
+    "6.2.1": "v6.2.1"
   },
   "gmsh": {
     "git": "https://gitlab.onelab.info/gmsh/gmsh.git",
@@ -112,7 +113,8 @@
     "2.30.0": "c7f6a91da512ef8a2634a1bef5d4ba82104659fe",
     "2.40.1": "v2.40.1",
     "2.40.2": "v2.40.2",
-    "2.40.3": "v2.40.3"
+    "2.40.3": "v2.40.3",
+    "2.40.4": "v2.40.4"
   },
   "mpfr": {
     "git": "https://gitlab.inria.fr/mpfr/mpfr.git",
@@ -162,7 +164,8 @@
   "petsc": {
     "git": "https://gitlab.com/petsc/petsc.git",
     "3.23.2": "v3.23.2",
-    "3.23.5": "v3.23.5"
+    "3.23.5": "v3.23.5",
+    "3.23.6": "v3.23.6"
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
@@ -173,7 +176,7 @@
   },
   "slepc": {
     "git": "https://github.com/slepc/slepc.git",
-    "3.23.2": "461a363ab5c9860be73cbaec1e9a09e3e6d22db5"
+    "3.23.2": "v3.23.2"
   },
   "suitesparse": {
     "git": "https://github.com/DrTimothyAldenDavis/SuiteSparse.git",
@@ -215,12 +218,13 @@
     "15.0.0": "3703c194db5ba3d9f2353aa0f1bb4731c7e53d45",
     "15.1.0": "6af5f44df4eb9be0799961afcdbcbf2c2ea3f5ca",
     "16.0.0": "c6f6bea715046c00b327f5ddaacdc372dccd3f64",
-    "16.1.0": "11a16481fa1af48e3cfdb0aa84c29617ce94479f"
+    "16.1.0": "trilinos-release-16-1-0"
   },
   "vtk": {
     "git": "https://github.com/Kitware/VTK.git",
     "9.3.1": "4f02ae83179c6a1542ac3c335c73dea976578c63",
-    "9.5.0": "v9.5.0"
+    "9.5.0": "v9.5.0",
+    "9.5.1": "v9.5.1"
   },
   "zlib-ng": {
     "git": "https://github.com/zlib-ng/zlib-ng.git",
