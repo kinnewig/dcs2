@@ -60,6 +60,7 @@ def tpls_tui_select(tpls):
     return tpls
 
  
+
 def tpls_update_cmake(tpls, file_path="CMakeLists.txt"):
     # Create a lookup dictionary keyed by full name
     tpl_lookup = {tpl["name"]: tpl for tpl in tpls}
@@ -86,9 +87,10 @@ def tpls_update_cmake(tpls, file_path="CMakeLists.txt"):
         f.writelines(updated_lines)
 
 
-def program_available(program, min_version="0.0.0"):
+
+def program_available(program, env, min_version="0.0.0"):
     try:
-        output = subprocess.check_output([f"{program}", "--version"], stderr=subprocess.STDOUT)
+        output = subprocess.check_output([f"{program}", "--version"], stderr=subprocess.STDOUT, env=env)
         line = output.decode().splitlines()[0]
 
         if v.parse(line.split()[-1]) >= v.parse(min_version):
@@ -99,12 +101,13 @@ def program_available(program, min_version="0.0.0"):
         return False
 
 
-def tui_prefix_path(stdscr, default_prefix="~/dcs2/"):
+
+def tui_read_path(default_path, instructions):
+    stdscr = curses.initscr()
     curses.curs_set(1)
-    prefix = os.path.expanduser(default_prefix)
+    prefix = os.path.expanduser(default_path)
     max_y, max_x = stdscr.getmaxyx()
 
-    instructions = "Please enter the path where to install deal.II (Enter to confirm, ESC to cancel):"
     input_y = 2
 
     while True:
@@ -130,7 +133,8 @@ def tui_prefix_path(stdscr, default_prefix="~/dcs2/"):
 
 
 
-def tui_install_tools(stdscr):
+def tui_install_tools():
+    stdscr = curses.initscr()
     curses.curs_set(0)
     modes = ["download", "ON", "OFF"]  # Order matters for toggling
     tools = [
@@ -180,26 +184,69 @@ if __name__ == "__main__":
     excluded_tpls = {"TPL_ENABLE_BLIS", "TPL_ENABLE_LIBFLAME", "TPL_ENABLE_SCALAPACK"}
     filtered_tpls = [tpl for tpl in tpls if tpl["name"] not in excluded_tpls]
 
-    # Let's the user select
+    # Let the user select
     selected_tpls = curses.wrapper(lambda stdscr: tpls_tui_select(filtered_tpls))
 
     # Write the changes to the CMakeLists.txt
     tpls_update_cmake(selected_tpls, "CMakeLists.txt")
 
     dcs2_args = []
-    prefix = curses.wrapper(tui_prefix_path)
-    dcs2_args.append(f"--path {prefix}")
+    instructions = "Please enter the path where to install deal.II (Enter to confirm, ESC to cancel):"
+    prefix = curses.wrapper(lambda stdscr: tui_read_path("~/dcs2", instructions))
+
+    instructions = "Please enter the path where to store the temporarie build files (Enter to confirm, ESC to cancel):"
+    build = curses.wrapper(lambda stdscr: tui_read_path("~/dcs2/tmp", instructions))
+    dcs2_args.append(f"--build {build}")
+
+    instructions = "Please enter the path where to store binary files (Enter to confirm, ESC to cancel):"
+    bin_dir = curses.wrapper(lambda stdscr: tui_read_path("~/dcs2/bin", instructions))
+    dcs2_args.append(f"--bin-dir {bin_dir}")
+
+    # Set the prefix, in case CMake, Ninja or mold where already installed.
+    current_prefix = os.environ.get("PREFIX", "")
+    os.environ["PREFIX"] = f"{bin_dir}:{current_prefix}"
 
     install_tools = curses.wrapper(lambda stdscr: tui_install_tools())
     for tool, enabled in install_tools.items():
         dcs2_args.append(f"--{tool} {enabled}")
 
-    cmake_available = program_available("cmake")
-    ninja_available = program_available("ninja")
-    mold_available  = program_available("mold")
+    cmake_available = program_available("cmake", os.environ)
+    ninja_available = program_available("ninja", os.environ)
+    mold_available  = program_available("mold", os.environ)
     
 
     #print(" ".join(cmake_args))
     #print(cmake_args)
     #print(dcs2_args)
 
+    #subprocess.run(f"bash scripts/install_cmake.sh {}", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    #subprocess.run(f"./test.sh {prefix} {build} {bin_dir}", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    #if result.returncode != 0:
+    #    print("Script failed.")
+
+    if cmake_available = False
+        script_path = ".scripts/install_cmake.sh"
+        args = [f"{prefix}", f"{build}", f"{bin_dir}"]
+
+        result = subprocess.run([script_path] + args, capture_output=True, text=True)
+        if result.returncode != 0:
+            print("STDERR:", result.stderr)
+            exit 1
+
+    if ninja_available = False
+        script_path = ".scripts/install_ninja.sh"
+        args = [f"{prefix}", f"{build}", f"{bin_dir}"]
+
+        result = subprocess.run([script_path] + args, capture_output=True, text=True)
+        if result.returncode != 0:
+            print("STDERR:", result.stderr)
+            exit 1
+
+    if mold_available = False
+        script_path = ".scripts/install_mold.sh"
+        args = [f"{prefix}", f"{build}", f"{bin_dir}"]
+
+        result = subprocess.run([script_path] + args, capture_output=True, text=True)
+        if result.returncode != 0:
+            print("STDERR:", result.stderr)
+            exit 1

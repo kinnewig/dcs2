@@ -39,45 +39,7 @@ cecho() {
 # ||                           CMake                            ||
 # ++============================================================++
 # Download and install CMake
-download_and_install_cmake() {
-    # Read the CMake version from VERSIONS.cmake
-    CMAKE_VERSION=4.1.0
-
-    # Save the current directory
-    local root_dir=$(pwd)
-
-    # Download CMake
-    if command -v curl &>/dev/null; then
-      curl -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
-    elif command -v wget &>/dev/null; then
-      wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -O "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
-    else
-      cecho ${ERROR} "Error: Neither 'curl' nor 'wget' is available on this system."
-      cecho ${INFO} "Please install one of these tools to proceed:"
-      cecho ${INFO} "- Debian/Ubuntu: sudo apt install curl  # or wget"
-      cecho ${INFO} "- Red Hat/Fedora: sudo dnf install curl  # or wget"
-      exit 1
-    fi
-
-    # Extract CMake
-    tar -xf "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz" -C "${BUILD_DIR}/extracted"
-
-    # Build CMake
-    cd "${BUILD_DIR}/extracted/cmake-${CMAKE_VERSION}"
-    ./bootstrap --prefix="${PREFIX}/cmake/${CMAKE_VERSION}" 
-    make -C "${BUILD_DIR}/extracted/cmake-${CMAKE_VERSION}" -j ${THREADS}
-    make install
-
-    # Link cmake binary to the bin folder
-    ln -s "${PREFIX}/cmake/${CMAKE_VERSION}/bin/cmake" "${BIN_DIR}/cmake"
-
-    cd ${root_dir}
-
-    # Add CMake to the PATH
-    export PATH=${BIN_DIR}:${PATH}
-
-    CMAKE_INSTALLED=YES
-}
+source "scripts/install.cmake.sh"
 
 check_and_install_cmake() {
     cecho ${INFO} "CMake:"
