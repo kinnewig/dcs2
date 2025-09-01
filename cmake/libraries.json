@@ -42,7 +42,6 @@
   "blis": {
     "git": "https://github.com/flame/blis.git",
     "0.9.0": "14c86f66b20901b60ee276da355c1b62642c18d2",
-    "2.0.0": "e8566eb3e773fb54d11b33e371d13f22d2941e50",
     "2.0": "2.0"
   },
   "boost": {
@@ -93,8 +92,7 @@
   },
   "hdf5": {
     "git": "https://github.com/HDFGroup/hdf5.git",
-    "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea",
-    "5.1.14.6": "hdf5_1.14.6"
+    "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea"
   },
   "hypre": {
     "git": "https://github.com/hypre-space/hypre.git",

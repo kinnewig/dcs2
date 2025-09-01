@@ -53,7 +53,7 @@ option(TPL_ENABLE_GSL   "Enable or disable the use of GSL as a third-party libra
 set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 
 option(TPL_ENABLE_HDF5        "Enable or disable the use of HDF5 as a third-party library"        ON)
-set(HDF5_VERSION "5.1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
+set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
 
 option(TPL_ENABLE_HYPRE        "Enable or disable the use of hypre as a third-party library"      OFF)
 set(HYPRE_VERSION "2.33.0" CACHE STRING "Specify the version of HYPRE to be used")
