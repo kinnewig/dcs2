@@ -39,23 +39,22 @@ cecho() {
 # ||                           CMake                            ||
 # ++============================================================++
 # Download and install CMake
-source "scripts/install.cmake.sh"
-
 check_and_install_cmake() {
-    cecho ${INFO} "CMake:"
-    if command -v cmake &>/dev/null; then
-        cecho ${GOOD} "  already installed"
+  cecho ${INFO} "CMake:"
+  if command -v cmake &>/dev/null; then
+    cecho ${GOOD} "  already installed"
+  else
+    cecho ${WARN} "  attempt to install..."
+    ./scripts/install_cmake.sh ${PREFIX} ${BUILD_DIR} ${BIN_DIR}
+    if ! command -v cmake &>/dev/null; then
+      echo ${ERROR} "  ERROR: Failed to install CMake automatically."
+      exit 1
     else
-        cecho ${WARN} "  attempt to install..."
-        download_and_install_cmake
-        if ! command -v cmake &>/dev/null; then
-            echo ${ERROR} "  ERROR: Failed to install CMake automatically."
-            exit 1
-        else
-            cecho ${GOOD} "  CMake ${CMAKE_VERSION} has been installed to ${PREFIX}/cmake/${CMAKE_VERSION}"
-        fi
+      cecho ${GOOD} "  CMake ${CMAKE_VERSION} has been installed to ${PREFIX}/cmake/${CMAKE_VERSION}"
+      CMAKE_INSTALLED=YES
     fi
-    echo
+  fi
+  echo
 }
 
 
@@ -65,33 +64,21 @@ check_and_install_cmake() {
 # ++============================================================++
 # Check if Ninja is installed and install if not
 check_and_install_ninja() {
-    cecho ${INFO} "Ninja:"
-    if command -v ninja &>/dev/null; then
-        cecho ${GOOD} "  already installed"
+  cecho ${INFO} "Ninja:"
+  if command -v ninja &>/dev/null; then
+    cecho ${GOOD} "  already installed"
+  else
+    cecho ${WARN} "  attempting to install..."
+    ./scripts/install_ninja.sh ${PREFIX} ${BUILD_DIR} ${BIN_DIR} ${USE_NINJA}
+    if ! command -v ninja &>/dev/null; then
+      cecho ${ERROR} "  ERROR: Failed to install Ninja automatically."
+      exit 1
     else
-        cecho ${WARN} "  attempting to install..."
-        # Call the CMake script to install Ninja
-        cmake -S ninja -B ${BUILD_DIR}/ninja -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
-        cmake --build ${BUILD_DIR}/ninja -- -j ${THREADS}
-        cmake --install ${BUILD_DIR}/ninja
-
-        # Check that ${BIN_DIR} is already in the path.
-        if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
-            cecho ${INFO} "  ${BIN_DIR} is already in the path."
-        else
-            # Add Ninja to the PATH
-            export PATH=${BIN_DIR}:${PATH}
-        fi
-
-        if ! command -v ninja &>/dev/null; then
-            cecho ${ERROR} "  ERROR: Failed to install Ninja automatically."
-            exit 1
-        else
-            cecho ${GOOD} "  Ninja has been installed successfully."
-            NINJA_INSTALLED=YES
-        fi
+      cecho ${GOOD} "  Ninja has been installed successfully."
+      NINJA_INSTALLED=YES
     fi
-    echo
+  fi
+  echo
 }
 
 
@@ -101,80 +88,21 @@ check_and_install_ninja() {
 # ++============================================================++
 # Check if mold is installed and install if not
 check_and_install_mold() {
-    cecho ${INFO} "mold:"
-    if command -v mold &>/dev/null; then
-        cecho ${GOOD} "  already installed"
-    else
-        cecho ${WARN} "  attempting to install..."
-        # Call the CMake script to install Ninja
-        cmake -S mold -B ${BUILD_DIR}/mold -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
-        cmake --build ${BUILD_DIR}/mold -- -j ${THREADS}
-        cmake --install ${BUILD_DIR}/mold
-
-        # Check that ${BIN_DIR} is already in the path.
-        if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
-            cecho ${INFO} "  ${BIN_DIR} is already in the path."
-        else
-            # Add mold to the PATH
-            export PATH=${BIN_DIR}:${PATH}
-        fi
-
-        if ! command -v mold &>/dev/null; then
-            cecho ${ERROR} "  ERROR: Failed to install mold automatically."
-            exit 1
-        else
-            cecho ${GOOD} "  mold has been installed successfully."
-            MOLD_INSTALLED=YES
-        fi
-    fi
-    echo
-}
-
-# Download and extract mold
-download_and_extract_mold() {
   cecho ${INFO} "mold:"
-    if command -v mold &>/dev/null; then
-        cecho ${GOOD} "  already installed"
+  if command -v mold &>/dev/null; then
+    cecho ${GOOD} "  already installed"
+  else
+    cecho ${WARN} "  attempting to install..."
+    ./scripts/install_mold.sh ${PREFIX} ${BUILD_DIR} ${BIN_DIR} ${USE_MOLD}
+    if ! command -v mold &>/dev/null; then
+      cecho ${ERROR} "  ERROR: Failed to install mold automatically."
+      exit 1
     else
-      cecho ${WARN} "  attempt to install..."
-      # Read the mold version
-      MOLD_VERSION=2.40.3
-      ARCHITECTURE=x86_64-linux
-
-      # Download Mold
-      if command -v curl &>/dev/null; then
-        curl -L https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz -o "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
-      elif command -v wget &>/dev/null; then
-        wget https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz -O "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
-      else
-        cecho ${ERROR} "Error: Neither 'curl' nor 'wget' is available on this system."
-        cecho ${INFO} "Please install one of these tools to proceed:"
-        cecho ${INFO} "- Debian/Ubuntu: sudo apt install curl  # or wget"
-        cecho ${INFO} "- Red Hat/Fedora: sudo dnf install curl  # or wget"
-        exit 1
-      fi
-
-      # Extract Mold
-      mkdir -p ${PREFIX}/mold/
-      tar -xf "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz" -C "${PREFIX}/mold/"
-
-      # Link the Mold binary to the bin folder
-      ln -s "${PREFIX}/mold/mold-${MOLD_VERSION}-${ARCHITECTURE}/bin/mold" "${BIN_DIR}/mold"
-
-      cd $(dirname $0)
-
-      # Add Mold to the PATH
-      export PATH=${BIN_DIR}:${PATH}
-
-      # Check mold
-      if ! command -v mold &>/dev/null; then
-          cecho ${ERROR} "  ERROR: Failed to install mold automatically."
-          exit 1
-      else
-          cecho ${GOOD} "  mold has been downloaded successfully."
-      fi
+      cecho ${GOOD} "  mold has been installed successfully."
+      MOLD_INSTALLED=YES
     fi
-    echo
+  fi
+  echo
 }
 
 
@@ -1180,6 +1108,14 @@ echo "==================================================="
 echo "Automated install of pre-CMake dependencies:"
 echo "==================================================="
 echo
+
+# Check that ${BIN_DIR} is already in the path.
+if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
+  cecho ${INFO} "  ${BIN_DIR} is already in the path."
+else
+  # Add Ninja to the PATH
+  export PATH=${BIN_DIR}:${PATH}
+fi
 
 # Check wether CMake is available.
 # If it not available install it.
