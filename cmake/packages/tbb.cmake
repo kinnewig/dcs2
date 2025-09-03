@@ -9,6 +9,9 @@ else()
   
   set(tbb_cmake_args
     -D TBB_STRICT:BOOL=OFF
+    -D CMAKE_C_COMPILER:PATH=${CMAKE_MPI_C_COMPILER}
+    -D CMAKE_CXX_COMPILER:PATH=${CMAKE_MPI_CXX_COMPILER}
+    -D CMAKE_Fortran_COMPILER:PATH=${CMAKE_MPI_Fortran_COMPILER}
     ${tbb_cmake_args}
   )
 
