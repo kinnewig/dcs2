@@ -1142,7 +1142,7 @@ if [ "${USE_MOLD}" = "ON" ]; then
     exit 1
   fi
 elif [ "${USE_MOLD}" = "download" ]; then
-  if ! download_and_extract_mold "$@"; then
+  if ! check_and_install_mold "$@"; then
     exit 1
   fi
 fi
