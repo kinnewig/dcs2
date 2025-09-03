@@ -28,9 +28,9 @@ INFO="\033[1;34m"
 BOLD="\033[1m"
 
 cecho() {
-    # Display messages in a specified colour
-    COL=$1; shift
-    echo -e "${COL}$@\033[0m"
+  # Display messages in a specified colour
+  COL=$1; shift
+  echo -e "${COL}$@\033[0m"
 }
 
 
@@ -46,6 +46,10 @@ check_and_install_cmake() {
   else
     cecho ${WARN} "  attempt to install..."
     ./scripts/install_cmake.sh ${PREFIX} ${BUILD_DIR} ${BIN_DIR}
+    if [[ $? -ne 0 ]]; then
+      exit 1
+    fi
+    
     if ! command -v cmake &>/dev/null; then
       echo ${ERROR} "  ERROR: Failed to install CMake automatically."
       exit 1
@@ -70,6 +74,10 @@ check_and_install_ninja() {
   else
     cecho ${WARN} "  attempting to install..."
     ./scripts/install_ninja.sh ${PREFIX} ${BUILD_DIR} ${BIN_DIR} ${USE_NINJA}
+    if [[ $? -ne 0 ]]; then
+      exit 1
+    fi
+    
     if ! command -v ninja &>/dev/null; then
       cecho ${ERROR} "  ERROR: Failed to install Ninja automatically."
       exit 1
@@ -94,6 +102,10 @@ check_and_install_mold() {
   else
     cecho ${WARN} "  attempting to install..."
     ./scripts/install_mold.sh ${PREFIX} ${BUILD_DIR} ${BIN_DIR} ${USE_MOLD}
+    if [[ $? -ne 0 ]]; then
+      exit 1
+    fi
+    
     if ! command -v mold &>/dev/null; then
       cecho ${ERROR} "  ERROR: Failed to install mold automatically."
       exit 1
@@ -111,9 +123,6 @@ check_and_install_mold() {
 # ||                      AMD AOCC                              ||
 # ++============================================================++
 check_and_install_aocc() {
-  local aocc_found=false
-  local aocc_in_path=false
-
   AOCC_VERSION=5.0.0
   ARCHITECTURE=x86_64-linux
 
@@ -121,85 +130,34 @@ check_and_install_aocc() {
   cecho ${INFO} "AMD AOCC"
   if clang --version 2>/dev/null | grep -q "AMD"; then
     cecho ${GOOD} "  already installed"
-    aocc_found=true
-    aocc_in_path=true
+    exit 0
   fi
 
-  # Check if AOCC is installed at the default path
-  if [[ "$aocc_found" == false ]]; then
-    if ls /opt/AMD/aocc-compiler-* &>/dev/null; then
-      echo "  AMD AOCC found in /opt/AMD/, trying to activate it..."
-      source /opt/AMD/aocc-compiler-*/setenv_AOCC.sh
-
-      if clang --version 2>/dev/null | grep -q "AMD"; then
-        cecho ${GOOD} "  Found AMD AOCC Compiler"
-        clang --version
-        AOCC_VERSION=$(clang --version | grep -oP 'AOCC_\K[\d.]+')
-        AOCC_PATH="/opt/AMD/aocc-compiler-${AOCC_VERSION}"
-        aocc_found=true
-      fi
-    fi
-  fi
-
-  # Attempt to install AOCC from local archive
-  if [[ "$aocc_found" == false ]]; then
-    if [[ -f "aocc-compiler-${AOCC_VERSION}.tar" ]]; then
-      cecho ${INFO} "  Found AMD AOCC archive, attempting automatic installation..."
-
-      mkdir -p "${PREFIX}/aocc/"
-      tar -xf "aocc-compiler-${AOCC_VERSION}.tar" -C "${PREFIX}/aocc/"
-
-      cd "${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}" || exit 1
-      ./install.sh
-      source "${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}/setenv_AOCC.sh"
-      cd - > /dev/null
-
-      if clang --version 2>/dev/null | grep -q "AMD"; then
-        cecho ${GOOD} "  Successfully installed the AMD AOCC compiler"
-        clang --version
-        AOCC_PATH="${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}"
-        aocc_found=true
-        AOCL_INSTALLED=YES
-      else
-        cecho {ERROR} "  Automated installation of the AMD AOCC compiler failed. Please install AOCC manually."
-        exit 1
-      fi
-    fi
+  ./scripts/install_aocc.sh ${PREFIX}
+  if [[ $? -ne 0 ]]; then
+    exit 1
   fi
 
   # Handle PATH update suggestion
-  if [[ "$aocc_in_path" == false && "$aocc_found" == true ]]; then
+  echo
+  if [[ "${ADD_TO_PATH}" == "OFF" ]]; then
+    cecho ${INFO} "==================================================="}
+    cecho ${INFO} "IMPORTANT:"
     echo
-    if [[ "${ADD_TO_PATH}" == "OFF" ]]; then
-      cecho ${INFO} "==================================================="}
-      cecho ${INFO} "IMPORTANT:"
-      echo
-      cecho ${INFO} "In order to use AOCC in future sessions, run:"
-      cecho ${INFO} "source ${AOCC_PATH}/setenv_AOCC.sh"
-      cecho ${INFO} "Or to automatically load AOCC, add the following to your ~/.bashrc:"
-      cecho ${INFO} "if [ -f ${AOCC_PATH}/setenv_AOCC.sh ]; then"
-      cecho ${INFO} "  source ${AOCC_PATH}/setenv_AOCC.sh"
-      cecho ${INFO} "fi"
-      echo
-      if [[ "${ADD_TO_PATH}" == "OFF" && "${USER_INTERACTION}" == "ON" ]]; then
-        read -p "Press Enter to continue..."
-      fi
-      cecho ${INFO} "==================================================="}
-      echo
-    else
-      SET_AOCC_PATH=ON
+    cecho ${INFO} "In order to use AOCC in future sessions, run:"
+    cecho ${INFO} "source ${AOCC_PATH}/setenv_AOCC.sh"
+    cecho ${INFO} "Or to automatically load AOCC, add the following to your ~/.bashrc:"
+    cecho ${INFO} "if [ -f ${AOCC_PATH}/setenv_AOCC.sh ]; then"
+    cecho ${INFO} "  source ${AOCC_PATH}/setenv_AOCC.sh"
+    cecho ${INFO} "fi"
+    echo
+    if [[ "${ADD_TO_PATH}" == "OFF" && "${USER_INTERACTION}" == "ON" ]]; then
+      read -p "Press Enter to continue..."
     fi
-  fi
-
-  # Final fallback if all attempts fail
-  if [[ "$aocc_found" == false ]]; then
-    cecho ${ERROR} "  AMD AOCC not found!"
+    cecho ${INFO} "==================================================="}
     echo
-    cecho ${INFO} "  Due to licensing, AMD AOCC cannot be downloaded automatically."
-    cecho ${INFO} "  Please visit: https://www.amd.com/de/developer/aocc.html and download the latest version."
-    cecho ${INFO} "  Alternatively, place aocc-compiler-${AOCC_VERSION}.tar.gz in the dcs2 root directory."
-    cecho ${INFO} "  The tool will attempt to install it automatically from there."
-    exit 1
+  else
+    SET_AOCC_PATH=ON
   fi
 }
 
