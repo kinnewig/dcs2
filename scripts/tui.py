@@ -175,7 +175,59 @@ def tui_install_tools():
 
 
 
+def tui_select_blas_stack():
+    stdscr = curses.initscr()
+    curses.curs_set(0)
+    curses.noecho()
+    curses.cbreak()
+    stdscr.keypad(True)
+
+    options = [
+        {"name": "AMD",           "desc": "Optimized for AMD CPUs using AOCL"},
+        {"name": "BLIS/LIBFLAME", "desc": "Generic BLAS implementation from BLIS"},
+        {"name": "SYSTEM",        "desc": "Use system-provided BLAS"},
+    ]
+
+    current = 0
+    instructions = "Select the BLAS stack to use (↑/↓ to navigate, Enter to confirm):"
+
+    try:
+        while True:
+            stdscr.clear()
+            stdscr.addstr(0, 0, instructions, curses.A_BOLD)
+
+            for idx, opt in enumerate(options):
+                line = f"{opt['name']}"
+                if idx == current:
+                    stdscr.addstr(idx + 2, 2, line, curses.A_REVERSE)
+                    stdscr.addstr(idx + 3, 4, f"→ {opt['desc']}", curses.A_DIM)
+                else:
+                    stdscr.addstr(idx + 2, 2, line)
+
+            stdscr.refresh()
+            key = stdscr.getch()
+
+            if key == curses.KEY_UP and current > 0:
+                current -= 1
+            elif key == curses.KEY_DOWN and current < len(options) - 1:
+                current += 1
+            elif key == ord("\n"):
+                break
+
+    finally:
+        curses.nocbreak()
+        stdscr.keypad(False)
+        curses.echo()
+        curses.endwin()
+
+    return options[current]["name"]
+
+
+
 if __name__ == "__main__":
+    # TODO: Write a selector that checks out the corresponding dcs2 
+    dealii_version=9.7.0
+
     # === Package selection ===
     instructions = "Please enter the path where to install deal.II (Enter to confirm, ESC to cancel):"
     prefix = curses.wrapper(lambda stdscr: tui_read_path("~/dcs2", instructions))
@@ -187,6 +239,9 @@ if __name__ == "__main__":
     bin_dir = curses.wrapper(lambda stdscr: tui_read_path("~/dcs2/bin", instructions))
 
     install_tools = curses.wrapper(lambda stdscr: tui_install_tools())
+
+    # Select the BLAS Stack:
+    blas_stack = curses.wrapper(lambda stdscr: tui_select_blas_stack())
 
     # Read the TPLs from the CMakeLists.txt
     tpls = tpls_read_from_cmake("CMakeLists.txt")
@@ -242,3 +297,17 @@ if __name__ == "__main__":
         if result.returncode != 0:
             print("STDERR:", result.stderr)
             exit 1
+
+    # TODO:
+    # - add_to_path is still missing
+    # - add_aocc    is still missing
+    if add_to_path = True
+        script_path = ".scripts/add_to_path.sh"
+        args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{dealii_version}", f"{add_aocc}"]
+
+        result = subprocess.run([script_path] + args, capture_output=True, text=True)
+        if result.returncode != 0:
+            print("STDERR:", result.stderr)
+            exit 1
+
+    #cmake -S . -B ${build} -D CMAKE_INSTALL_PREFIX=${prefix} -D THREADS=${threads} -D BLAS_STACK=${blas_stack}

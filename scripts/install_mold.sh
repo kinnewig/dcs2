@@ -75,5 +75,7 @@ if [ "$#" -eq 4 ]; then
   elif [ "${METHOD}" = "DOWNLOAD" ]; then
     download_and_extract_mold
   fi
+else
+  exit 1
 fi
 

@@ -84,5 +84,7 @@ if [ "$#" -eq 1 ]; then
   fi
 
   download_and_install_aocc
+else
+  exit 1
 fi
 

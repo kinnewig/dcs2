@@ -162,50 +162,6 @@ check_and_install_aocc() {
 }
 
 
-
-# ++============================================================++
-# ||                    Add to path                             ||
-# ++============================================================++
-add_to_path() {
-    # Remove previous DCS2 block if it exists
-    if grep -q "#BEGIN: ADDED BY DCS2" ~/.bashrc; then
-        sed -i '/#BEGIN: ADDED BY DCS2/,/#END: ADDED BY DCS2/d' ~/.bashrc
-    fi
-
-    # Append the updated PATH block
-    {
-        echo
-        echo "#BEGIN: ADDED BY DCS2"
-        echo "# Everything in this block will be overwritten the next time you run dcs2"
-        echo
-        echo "# --- dcs2: bin, lib, and lib64  ---"
-        echo "if [ -d \"${BIN_DIR}\" ]; then"
-        echo "  export PATH=\"${BIN_DIR}:\$PATH\""
-        echo "fi"
-        echo
-        echo "if [ -d \"${LIB_DIR}\" ]; then"
-        echo "  export LD_LIBRARY_PATH=\"${LIB_DIR}:\$LD_LIBRARY_PATH\""
-        echo "fi"
-        echo
-        echo "if [ -d \"${LIB64_DIR}\" ]; then"
-        echo "  export LD_LIBRARY_PATH=\"${LIB64_DIR}:\$LD_LIBRARY_PATH\""
-        echo "fi"
-        echo
-
-        if [[ "${SET_AOCC_PATH}" == "ON" ]]; then
-            echo "# --- dcs2: AOCC Compiler ---"
-            echo "if [ -f \"${AOCC_PATH}/setenv_AOCC.sh\" ]; then"
-            echo "  source \"${AOCC_PATH}/setenv_AOCC.sh\""
-            echo "fi"
-            echo
-        fi
-
-        echo "#END: ADDED BY DCS2"
-    } >> ~/.bashrc
-}
-
-
-
 # ++============================================================++
 # ||                    Check compiler                          ||
 # ++============================================================++
@@ -561,8 +517,12 @@ print_summary() {
   echo "==================================================="
   echo "Summary:"
   echo "==================================================="
+  DEALII_VERSION=$(grep -Po 'set\s*\(\s*DEALII_VERSION\s*"\K[^"]+' CMakeLists.txt)
+  cecho ${INFO} "Installing deal.II version: $DEALII_VERSION"
+  echo
+
   if [ "${ADD_TO_PATH}" = "ON" ]; then
-    add_to_path
+    ./scripts/add_to_path.sh ${PREFIX} ${BUILD_DIR} ${BIN_DIR} ${DEALII_VERSION} ${SET_AOCC_PATH}
   else
     if [ "${CMAKE_INSTALLED}" = "NO" ] && [ "${NINJA_INSTALLED}" = "NO" ] && [ "${MOLD_INSTALLED}" = "NO" ]; then
       echo "No additional packages where installed."
@@ -612,6 +572,7 @@ print_summary() {
     echo "${PREFIX}/dealii/$(ls ${PREFIX}/dealii| tail -n 1)"
   fi
 }
+
 
 # ++============================================================++
 # ||                       Parse arguments                      ||
@@ -802,22 +763,6 @@ parse_arguments() {
     CMAKE_FLAGS="${CMAKE_FLAGS} -D LIB_DIR=${LIB_DIR}"
 
 
-    # -- LIBRARY64 DIRECTORY --
-    # If user provided binary directory is not set, use default binary directory
-    cecho ${INFO} "Library 64 folder:"
-    if [ -z "${LIB64_DIR}" ]; then
-        LIB64_DIR="${LIB_DIR}/../lib64"
-        echo "  The Library 64 folder will be created next to the Library folder"
-    fi
-
-    # Check if the provided library directory is writable
-    mkdir -p "${LIB64_DIR}" || { cecho ${ERROR} "  Failed to create: ${LIB64_DIR}"; exit 1; }
-    echo
-
-    # Add the LIB_DIR to as flag to CMake
-    CMAKE_FLAGS="${CMAKE_FLAGS} -D LIB64_DIR=${LIB64_DIR}"
-
-
     # -- BUILD DIRECTORY --
     # If user provided build_dir is not set, use default build_dir
     cecho ${INFO} "Build folder:"
@@ -847,10 +792,10 @@ parse_arguments() {
     cecho ${INFO} "by automaically modifing the ~/.bashrc"
 
     if [ -z "${ADD_TO_PATH}" ]; then
-        ADD_TO_PATH=OFF
-        echo "  The default is not to modify the bashrc."
-        echo "  However, if you want to automatically add the installed components"
-        echo "  to the bashrc enable this feature via -A ON or --add_to_path ON."
+        ADD_TO_PATH=ON
+        echo "  The default is to add the path to the ~/.bashrc."
+        echo "  However, if you do not want to automatically add the installed components"
+        echo "  to the ~/.bashrc disable this feature via -A OFF or --add_to_path OFF."
     fi
 
     # Check if the variable is valid
@@ -1068,11 +1013,25 @@ echo "==================================================="
 echo
 
 # Check that ${BIN_DIR} is already in the path.
-if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
-  cecho ${INFO} "  ${BIN_DIR} is already in the path."
-else
-  # Add Ninja to the PATH
+if [[ ":$PATH:" != *":${BIN_DIR}:"* ]]; then
   export PATH=${BIN_DIR}:${PATH}
+fi
+
+# The build folder should not exist at this point:
+if [[ -d "${BUILD_DIR}" ]]; then
+  echo
+  cecho ${WARN} "The build folder ${BUILD_DIR} already exists."
+  echo "This can mean, that you simply aborted the last run and want to continue"
+  echo "where you stopped. In this case you can ignore this message. Similar, if you want" 
+  echo "to install an updated version of deal.II you can ignore this message aswell."
+  echo "However, if you last build failed it could be a good idea to delete the build"
+  echo "folder."
+  echo "Note: Deleting the build folder only effects the packages that are not build yet."
+  echo "DCS2 will attempt to find already installed packages in ${PREFIX}."
+  echo
+  if [[ "${USER_INTERACTION}" == "ON" ]]; then
+    read -p "Press Enter to continue... otherwise press STR+C"
+  fi
 fi
 
 # Check wether CMake is available.
@@ -1089,18 +1048,14 @@ if [ "${BLAS_STACK}" = "AMD" ]; then
   CMAKE_FLAGS="${CMAKE_FLAGS} -D AMD=ON"
 fi
 
-if [ "${USE_NINJA}" = "ON" ]; then
-  if ! check_and_install_ninja "$@"; then
+if [ "${USE_MOLD}" = "ON" ] || [ "${USE_MOLD}" = "download" ]; then
+  if ! check_and_install_mold "$@"; then
     exit 1
   fi
 fi
 
-if [ "${USE_MOLD}" = "ON" ]; then
-  if ! check_and_install_mold "$@"; then
-    exit 1
-  fi
-elif [ "${USE_MOLD}" = "download" ]; then
-  if ! check_and_install_mold "$@"; then
+if [ "${USE_NINJA}" = "ON" ] || [ "${USE_NINJA}" = "download" ]; then
+  if ! check_and_install_ninja "$@"; then
     exit 1
   fi
 fi
@@ -1112,21 +1067,6 @@ fi
 
 echo
 
-if [[ -d "${BUILD_DIR}" ]]; then
-  echo
-  cecho ${WARN} "The build folder ${BUILD_DIR} already exists."
-  echo "This can mean, that you simply aborted the last run and want to continue"
-  echo "where you stopped. In this case you can ignore this message. Similar, if you want" 
-  echo "to install an updated version of deal.II you can ignore this message aswell."
-  echo "However, if you last build failed it could be a good idea to delete the build"
-  echo "folder."
-  echo "Note: Deleting the build folder only effects the packages that are not build yet."
-  echo "DCS2 will attempt to find already installed packages in ${PREFIX}."
-  echo
-  if [[ "${USER_INTERACTION}" == "ON" ]]; then
-    read -p "Press Enter to continue... otherwise press STR+C"
-  fi
-fi
 
 echo "==================================================="
 echo "Summary of packages, that will be build:"

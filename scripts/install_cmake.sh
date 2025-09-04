@@ -72,5 +72,7 @@ if [ "$#" -eq 3 ]; then
   fi
 
   download_and_install_cmake
+else
+  exit 1
 fi
 
