@@ -73,9 +73,6 @@ download_and_install_cmake() {
 
     cd ${root_dir}
 
-    # Add CMake to the PATH
-    export PATH=${BIN_DIR}:${PATH}
-
     CMAKE_INSTALLED=YES
 }
 
@@ -113,14 +110,6 @@ check_and_install_ninja() {
         cmake --build ${BUILD_DIR}/ninja -- -j ${THREADS}
         cmake --install ${BUILD_DIR}/ninja
 
-        # Check that ${BIN_DIR} is already in the path.
-        if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
-            cecho ${INFO} "  ${BIN_DIR} is already in the path."
-        else
-            # Add Ninja to the PATH
-            export PATH=${BIN_DIR}:${PATH}
-        fi
-
         if ! command -v ninja &>/dev/null; then
             cecho ${ERROR} "  ERROR: Failed to install Ninja automatically."
             exit 1
@@ -148,14 +137,6 @@ check_and_install_mold() {
         cmake -S mold -B ${BUILD_DIR}/mold -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
         cmake --build ${BUILD_DIR}/mold -- -j ${THREADS}
         cmake --install ${BUILD_DIR}/mold
-
-        # Check that ${BIN_DIR} is already in the path.
-        if [[ ":$PATH:" == *":${BIN_DIR}:"* ]]; then
-            cecho ${INFO} "  ${BIN_DIR} is already in the path."
-        else
-            # Add mold to the PATH
-            export PATH=${BIN_DIR}:${PATH}
-        fi
 
         if ! command -v mold &>/dev/null; then
             cecho ${ERROR} "  ERROR: Failed to install mold automatically."
@@ -1219,43 +1200,12 @@ echo "Automated install of pre-CMake dependencies:"
 echo "==================================================="
 echo
 
-# Check wether CMake is available.
-# If it not available install it.
-if ! check_and_install_cmake "$@"; then
-  exit 1
+# Check that ${BIN_DIR} is already in the path.
+if [[ ":$PATH:" != *":${BIN_DIR}:"* ]]; then
+  export PATH=${BIN_DIR}:${PATH}
 fi
 
-if [ "${BLAS_STACK}" = "AMD" ]; then
-  if ! check_and_install_aocc "&@"; then
-    exit 1 
-  fi
-  # Add AMD=ON to the CMake flags aswell:
-  CMAKE_FLAGS="${CMAKE_FLAGS} -D AMD=ON"
-fi
-
-if [ "${USE_NINJA}" = "ON" ]; then
-  if ! check_and_install_ninja "$@"; then
-    exit 1
-  fi
-fi
-
-if [ "${USE_MOLD}" = "ON" ]; then
-  if ! check_and_install_mold "$@"; then
-    exit 1
-  fi
-elif [ "${USE_MOLD}" = "download" ]; then
-  if ! download_and_extract_mold "$@"; then
-    exit 1
-  fi
-fi
-
-# Check the compiler
-if ! check_compiler "$@"; then
-  exit 1
-fi
-
-echo
-
+# The build folder should not exist at this point:
 if [[ -d "${BUILD_DIR}" ]]; then
   echo
   cecho ${WARN} "The build folder ${BUILD_DIR} already exists."
@@ -1271,6 +1221,43 @@ if [[ -d "${BUILD_DIR}" ]]; then
     read -p "Press Enter to continue... otherwise press STR+C"
   fi
 fi
+
+# Check wether CMake is available.
+# If it not available install it.
+if ! check_and_install_cmake "$@"; then
+  exit 1
+fi
+
+if [ "${BLAS_STACK}" = "AMD" ]; then
+  if ! check_and_install_aocc "&@"; then
+    exit 1 
+  fi
+  # Add AMD=ON to the CMake flags aswell:
+  CMAKE_FLAGS="${CMAKE_FLAGS} -D AMD=ON"
+fi
+
+if [ "${USE_MOLD}" = "ON" ]; then
+  if ! check_and_install_mold "$@"; then
+    exit 1
+  fi
+elif [ "${USE_MOLD}" = "download" ]; then
+  if ! download_and_extract_mold "$@"; then
+    exit 1
+  fi
+fi
+
+if [ "${USE_NINJA}" = "ON" ]; then
+  if ! check_and_install_ninja "$@"; then
+    exit 1
+  fi
+fi
+
+# Check the compiler
+if ! check_compiler "$@"; then
+  exit 1
+fi
+
+echo
 
 echo "==================================================="
 echo "Summary of packages, that will be build:"
