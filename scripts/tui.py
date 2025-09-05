@@ -1,7 +1,10 @@
 import curses
 import os
 import re
+
 import subprocess
+import pty
+
 from packaging import version as v
 
 def tpls_read_from_cmake(file_path):
@@ -113,7 +116,7 @@ def tui_read_path(default_path, instructions):
     while True:
         stdscr.clear()
         stdscr.addstr(0, 0, instructions, curses.A_BOLD)
-        stdscr.addstr(input_y, 0, prefix, curses.A_REVERSE)
+        stdscr.addstr(input_y, 0, prefix)
         stdscr.refresh()
 
         key = stdscr.getch()
@@ -183,10 +186,14 @@ def tui_select_blas_stack():
     stdscr.keypad(True)
 
     options = [
-        {"name": "AMD",           "desc": "Optimized for AMD CPUs using AOCL"},
-        {"name": "BLIS/LIBFLAME", "desc": "Generic BLAS implementation from BLIS"},
-        {"name": "SYSTEM",        "desc": "Use system-provided BLAS"},
+        {"name": "AMD",           "description": "Optimized for AMD CPUs using AOCL"},
+        {"name": "BLIS/LIBFLAME", "description": "Generic BLAS implementation from BLIS"},
+        {"name": "SYSTEM",        "description": "Use system-provided BLAS"},
     ]
+
+    # Precompute the max width of the name field for alignment
+    name_width     = max(len(opt["name"]) for opt in options)
+    desc_start_col = name_width + 1  # +1 for spacing
 
     current = 0
     instructions = "Select the BLAS stack to use (↑/↓ to navigate, Enter to confirm):"
@@ -198,9 +205,9 @@ def tui_select_blas_stack():
 
             for idx, opt in enumerate(options):
                 line = f"{opt['name']}"
+                line = line.ljust(desc_start_col) + f"- {opt['description']}"
                 if idx == current:
                     stdscr.addstr(idx + 2, 2, line, curses.A_REVERSE)
-                    stdscr.addstr(idx + 3, 4, f"→ {opt['desc']}", curses.A_DIM)
                 else:
                     stdscr.addstr(idx + 2, 2, line)
 
@@ -224,19 +231,44 @@ def tui_select_blas_stack():
 
 
 
+def run_with_pty(command, args):
+    # Create a pseudo-terminal
+    master_fd, slave_fd = pty.openpty()
+
+    process = subprocess.Popen(
+        [command] + args,
+        stdout=slave_fd,
+        stderr=slave_fd,
+        close_fds=True
+    )
+    os.close(slave_fd)
+
+    # Read and print output live
+    try:
+        while True:
+            output = os.read(master_fd, 1024)
+            if not output:
+                break
+            print(output.decode(), end="")
+    finally:
+        os.close(master_fd)
+        process.wait()
+
+
+
 if __name__ == "__main__":
     # TODO: Write a selector that checks out the corresponding dcs2 
-    dealii_version=9.7.0
+    dealii_version="9.7.0"
 
     # === Package selection ===
     instructions = "Please enter the path where to install deal.II (Enter to confirm, ESC to cancel):"
     prefix = curses.wrapper(lambda stdscr: tui_read_path("~/dcs2", instructions))
 
     instructions = "Please enter the path where to store the temporarie build files (Enter to confirm, ESC to cancel):"
-    build = curses.wrapper(lambda stdscr: tui_read_path("~/dcs2/tmp", instructions))
+    build = curses.wrapper(lambda stdscr: tui_read_path(f"{prefix}/tmp", instructions))
 
     instructions = "Please enter the path where to store binary files (Enter to confirm, ESC to cancel):"
-    bin_dir = curses.wrapper(lambda stdscr: tui_read_path("~/dcs2/bin", instructions))
+    bin_dir = curses.wrapper(lambda stdscr: tui_read_path(f"{prefix}/bin", instructions))
 
     install_tools = curses.wrapper(lambda stdscr: tui_install_tools())
 
@@ -262,52 +294,48 @@ if __name__ == "__main__":
     current_prefix = os.environ.get("PREFIX", "")
     os.environ["PREFIX"] = f"{bin_dir}:{current_prefix}"
 
-    for tool, enabled in install_tools.items():
-        dcs2_args.append(f"--{tool} {enabled}")
-
     cmake_available = program_available("cmake", os.environ)
     ninja_available = program_available("ninja", os.environ)
     mold_available  = program_available("mold", os.environ)
     
-    if cmake_available = False
-        script_path = ".scripts/install_cmake.sh"
+    if cmake_available == False:
+        script_path = "./scripts/install_cmake.sh"
         args = [f"{prefix}", f"{build}", f"{bin_dir}"]
 
         result = subprocess.run([script_path] + args, capture_output=True, text=True)
         if result.returncode != 0:
-            print("STDERR:", result.stderr)
-            exit 1
+            raise Exception(result.stderr)
 
     use_ninja = install_tools.get("ninja", "OFF")
-    if ninja_available = False && use_ninja != "OFF"
-        script_path = ".scripts/install_ninja.sh"
+    if ninja_available == False and use_ninja != "OFF":
+        script_path = "./scripts/install_ninja.sh"
         args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{use_ninja}"]
 
-        result = subprocess.run([script_path] + args, capture_output=True, text=True)
-        if result.returncode != 0:
-            print("STDERR:", result.stderr)
-            exit 1
+        #result = subprocess.run([script_path] + args, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, text=True, bufsize=1)
+        #print(result.stdout)
+        #if result.returncode != 0:
+        #    raise Exception(result.stderr)
+        run_with_pty(script_path, args)
+
 
     use_mold = install_tools.get("mold", "OFF")
-    if mold_available = False && use_mold != "OFF"
-        script_path = ".scripts/install_mold.sh"
+    if mold_available == False and use_mold != "OFF":
+        script_path = "./scripts/install_mold.sh"
         args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{use_mold}"]
 
         result = subprocess.run([script_path] + args, capture_output=True, text=True)
         if result.returncode != 0:
-            print("STDERR:", result.stderr)
-            exit 1
+            raise Exception(result.stderr)
 
     # TODO:
     # - add_to_path is still missing
     # - add_aocc    is still missing
-    if add_to_path = True
-        script_path = ".scripts/add_to_path.sh"
-        args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{dealii_version}", f"{add_aocc}"]
+    #if add_to_path == True:
+    #    script_path = "scripts/add_to_path.sh"
+    #    args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{dealii_version}", f"{add_aocc}"]
 
-        result = subprocess.run([script_path] + args, capture_output=True, text=True)
-        if result.returncode != 0:
-            print("STDERR:", result.stderr)
-            exit 1
+    #    result = subprocess.run([script_path] + args, capture_output=True, text=True)
+    #    if result.returncode != 0:
+    #        raise Exception(result.stderr)
 
     #cmake -S . -B ${build} -D CMAKE_INSTALL_PREFIX=${prefix} -D THREADS=${threads} -D BLAS_STACK=${blas_stack}

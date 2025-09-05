@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Colours for progress and error reporting
 ERROR="\033[1;31m"
 GOOD="\033[1;32m"
