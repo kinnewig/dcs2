@@ -1150,10 +1150,10 @@ parse_arguments() {
     echo
 
     # Set mold as linker
-    if [[ "${USE_MOLD}" = "ON" ]]; then
-      export LD=mold
-      export LDFLAGS="-fuse-ld=mold"
-    fi
+    #if [[ "${USE_MOLD}" = "ON" ]]; then
+    #  export LD=mold
+    #  export LDFLAGS="-fuse-ld=mold"
+    #fi
 
     # -- SET_AOCC_PATH --
     if [ -z "${SET_AOCC_PATH}" ]; then
