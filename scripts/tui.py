@@ -136,67 +136,57 @@ def tui_read_path(default_path, instructions):
 
 
 
-def tui_install_tools():
+def tui_select_with_options(instructions, options, modes):
     stdscr = curses.initscr()
     curses.curs_set(0)
-    modes = ["download", "ON", "OFF"]  # Order matters for toggling
-    tools = [
-        {"name": "mold", "mode": "download"},
-        {"name": "ninja", "mode": "download"}
-    ]
     current = 0
 
-    instructions = "Choose which build tools to use: (space to cycle: Download →  ON (build from source) →  OFF, Enter to confirm):"
+    instruction_lines = instructions.split("\n")
 
     while True:
         stdscr.clear()
-        stdscr.addstr(0, 0, instructions, curses.A_BOLD)
+        for i, line in enumerate(instruction_lines):
+            stdscr.addstr(i, 0, line, curses.A_BOLD)
 
-        for idx, tool in enumerate(tools):
+        for idx, tool in enumerate(options):
             line = f"[{tool['mode']:^8}] {tool['name']} (recommended)"
+            line_y = len(instruction_lines) + idx + 1 
             if idx == current:
-                stdscr.addstr(idx + 2, 0, line, curses.A_REVERSE)
+                stdscr.addstr(line_y, 0, line, curses.A_REVERSE)
             else:
-                stdscr.addstr(idx + 2, 0, line)
+                stdscr.addstr(line_y, 0, line)
 
         stdscr.refresh()
         key = stdscr.getch()
 
         if key == curses.KEY_UP and current > 0:
             current -= 1
-        elif key == curses.KEY_DOWN and current < len(tools) - 1:
+        elif key == curses.KEY_DOWN and current < len(options) - 1:
             current += 1
         elif key == ord(" "):
             # Cycle through modes
-            current_mode = tools[current]["mode"]
+            current_mode = options[current]["mode"]
             next_index = (modes.index(current_mode) + 1) % len(modes)
-            tools[current]["mode"] = modes[next_index]
+            options[current]["mode"] = modes[next_index]
         elif key == ord("\n"):
             break
 
-    return {tool["name"]: tool["mode"] for tool in tools}
+    return {tool["name"]: tool["mode"] for tool in options}
 
 
 
-def tui_select_blas_stack():
+def tui_select_from_list(instructions, options):
     stdscr = curses.initscr()
     curses.curs_set(0)
     curses.noecho()
     curses.cbreak()
     stdscr.keypad(True)
 
-    options = [
-        {"name": "AMD",           "description": "Optimized for AMD CPUs using AOCL"},
-        {"name": "BLIS/LIBFLAME", "description": "Generic BLAS implementation from BLIS"},
-        {"name": "SYSTEM",        "description": "Use system-provided BLAS"},
-    ]
-
     # Precompute the max width of the name field for alignment
     name_width     = max(len(opt["name"]) for opt in options)
     desc_start_col = name_width + 1  # +1 for spacing
 
     current = 0
-    instructions = "Select the BLAS stack to use (↑/↓ to navigate, Enter to confirm):"
 
     try:
         while True:
@@ -257,38 +247,88 @@ def run_with_pty(command, args):
 
 
 if __name__ == "__main__":
-    # TODO: Write a selector that checks out the corresponding dcs2 
+    # === Installation Mode ===
+    instructions = "Select the installation mode (↑/↓ to navigate, Enter to confirm):"
+    options = [
+        {"name": "DEFAULT",   "description": "You only need to provide the version of deal.II and the install path, DCS2 does the rest."},
+        {"name": "CUSTOM",    "description": "Customize everything (which packages to install, etc..)"},
+    ]
+    installation_mode = curses.wrapper(lambda stdscr: tui_select_from_list(instructions, options))
+
+    # === deal.II Version ===
+    # TODO: Write a selector that checks out the corresponding dcs2 branch
     dealii_version="9.7.0"
+
+    # Add to path:
+    instructions = "To ensure deal.II and its tools are easily accessible after installation, DCS2 can automatically add the necessary environment variables (including DEAL_II_DIR) to your ~/.bashrc.\nIt is strongly recommended to add these values to your shell configuration—either manually or by letting DCS2 handle it for you.\n\nWould you like DCS2 to update your ~/.bashrc automatically? (Use space to toggle: yes → no, press Enter to confirm)"
+    options = [
+        {"name": "Add to path", "mode": "yes"},
+    ]
+    modes = ["yes", "no"]  # Order matters for toggling
+    add_to_path = curses.wrapper(lambda stdscr: tui_select_with_options(instructions, options, modes))
+
 
     # === Package selection ===
     instructions = "Please enter the path where to install deal.II (Enter to confirm, ESC to cancel):"
     prefix = curses.wrapper(lambda stdscr: tui_read_path("~/dcs2", instructions))
 
-    instructions = "Please enter the path where to store the temporarie build files (Enter to confirm, ESC to cancel):"
-    build = curses.wrapper(lambda stdscr: tui_read_path(f"{prefix}/tmp", instructions))
+    if installation_mode == "DEFAULT":
+        build = f"{prefix}/tmp"
+        bin_dir = f"{prefix}/bin"
 
-    instructions = "Please enter the path where to store binary files (Enter to confirm, ESC to cancel):"
-    bin_dir = curses.wrapper(lambda stdscr: tui_read_path(f"{prefix}/bin", instructions))
+        install_tools = [{"ninja", "download"}, {"mold", "download"}]
 
-    install_tools = curses.wrapper(lambda stdscr: tui_install_tools())
+        blas_stack = "BLIS"
+        add_aocc = False
 
-    # Select the BLAS Stack:
-    blas_stack = curses.wrapper(lambda stdscr: tui_select_blas_stack())
 
-    # Read the TPLs from the CMakeLists.txt
-    tpls = tpls_read_from_cmake("CMakeLists.txt")
+    else: 
+        instructions = "Please enter the path where to store the temporarie build files (Enter to confirm, ESC to cancel):"
+        build = curses.wrapper(lambda stdscr: tui_read_path(f"{prefix}/tmp", instructions))
 
-    # These TPLs are handeled by the BLAS stack option
-    excluded_tpls = {"TPL_ENABLE_BLIS", "TPL_ENABLE_LIBFLAME", "TPL_ENABLE_SCALAPACK"}
-    filtered_tpls = [tpl for tpl in tpls if tpl["name"] not in excluded_tpls]
+        instructions = "Please enter the path where to store binary files (Enter to confirm, ESC to cancel):"
+        bin_dir = curses.wrapper(lambda stdscr: tui_read_path(f"{prefix}/bin", instructions))
 
-    # Let the user select
-    selected_tpls = curses.wrapper(lambda stdscr: tpls_tui_select(filtered_tpls))
+
+        # Choose to compile or download ninja and mold
+        instructions = "Choose which build tools to use: (space to cycle: download →  compile (build from source) →  OFF, Enter to confirm):"
+        options = [
+            {"name": "mold", "mode": "download"},
+            {"name": "ninja", "mode": "download"}
+        ]
+        modes = ["download", "compile", "OFF"]  # Order matters for toggling
+        install_tools = curses.wrapper(lambda stdscr: tui_select_with_options(instructions, options, modes))
+
+        # Select the BLAS Stack:
+        instructions = "Select the BLAS stack to use (↑/↓ to navigate, Enter to confirm):"
+        options = [
+            {"name": "BLIS",      "description": "Generic BLAS implementation from BLIS"},
+            {"name": "SYSTEM",    "description": "Use system-provided BLAS"},
+            {"name": "AMD",       "description": "Optimized for AMD CPUs using AOCL"},
+            {"name": "INTEL",     "description": "Optimized for Intel CPUs using oneMKL"},
+        ]
+        blas_stack = curses.wrapper(lambda stdscr: tui_select_from_list(instructions, options))
+
+        if blas_stack == "AMD":
+            add_aocc = True
+        else:
+            add_aocc = False
+
+        # Read the TPLs from the CMakeLists.txt
+        tpls = tpls_read_from_cmake("CMakeLists.txt")
+
+        # These TPLs are handeled by the BLAS stack option
+        excluded_tpls = {"TPL_ENABLE_BLIS", "TPL_ENABLE_LIBFLAME", "TPL_ENABLE_SCALAPACK"}
+        filtered_tpls = [tpl for tpl in tpls if tpl["name"] not in excluded_tpls]
+
+        # Let the user select
+        selected_tpls = curses.wrapper(lambda stdscr: tpls_tui_select(filtered_tpls))
+
+        # Write the changes to the CMakeLists.txt
+        tpls_update_cmake(selected_tpls, "CMakeLists.txt")
 
 
     # === Start the installation ===
-    # Write the changes to the CMakeLists.txt
-    tpls_update_cmake(selected_tpls, "CMakeLists.txt")
 
     # Set the prefix, in case CMake, Ninja or mold where already installed.
     current_prefix = os.environ.get("PREFIX", "")
@@ -301,41 +341,35 @@ if __name__ == "__main__":
     if cmake_available == False:
         script_path = "./scripts/install_cmake.sh"
         args = [f"{prefix}", f"{build}", f"{bin_dir}"]
+        run_with_pty(script_path, args)
 
-        result = subprocess.run([script_path] + args, capture_output=True, text=True)
-        if result.returncode != 0:
-            raise Exception(result.stderr)
-
-    use_ninja = install_tools.get("ninja", "OFF")
-    if ninja_available == False and use_ninja != "OFF":
+    if ninja_available == False and install_tools.get("ninja", "download") != "OFF":
         script_path = "./scripts/install_ninja.sh"
         args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{use_ninja}"]
+        run_with_pty(script_path, args)
 
-        #result = subprocess.run([script_path] + args, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, text=True, bufsize=1)
-        #print(result.stdout)
-        #if result.returncode != 0:
-        #    raise Exception(result.stderr)
+    if mold_available == False and install_tools.get("mold", "download") != "OFF":
+        script_path = "./scripts/install_mold.sh"
+        args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{use_mold}"]
+        run_with_pty(script_path, args)
+
+    if add_aocc:
+        script_path = "scripts/install_aocc.sh"
+        args = [f"{prefix}"]
+        run_with_pty(script_path, args)
+
+    if add_to_path.get("Add to path", "yes") == "yes":
+        script_path = "scripts/add_to_path.sh"
+        add_aocc_parsed = "ON" if add_aocc else "OFF"
+        args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{dealii_version}", f"{add_aocc_parsed}"]
         run_with_pty(script_path, args)
 
 
-    use_mold = install_tools.get("mold", "OFF")
-    if mold_available == False and use_mold != "OFF":
-        script_path = "./scripts/install_mold.sh"
-        args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{use_mold}"]
+    run_with_pty("cmake", ["-S", ".", 
+                           "-B", f"{build}",
+                           f"-D CMAKE_INSTALL_PREFIX={prefix}", 
+                           f"-D BLAS_STACK={blas_stack}"
+                           ]
+                 )
 
-        result = subprocess.run([script_path] + args, capture_output=True, text=True)
-        if result.returncode != 0:
-            raise Exception(result.stderr)
-
-    # TODO:
-    # - add_to_path is still missing
-    # - add_aocc    is still missing
-    #if add_to_path == True:
-    #    script_path = "scripts/add_to_path.sh"
-    #    args = [f"{prefix}", f"{build}", f"{bin_dir}", f"{dealii_version}", f"{add_aocc}"]
-
-    #    result = subprocess.run([script_path] + args, capture_output=True, text=True)
-    #    if result.returncode != 0:
-    #        raise Exception(result.stderr)
-
-    #cmake -S . -B ${build} -D CMAKE_INSTALL_PREFIX=${prefix} -D THREADS=${threads} -D BLAS_STACK=${blas_stack}
+    run_with_pty("cmake", ["--build", f"{build}"])

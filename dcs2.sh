@@ -9,7 +9,7 @@ DEFAULT_PATH="${HOME}/dcs"
 # List of available BLAS stacks:
 BLAS_OPTIONS=(AMD default system)
 BOOL_OPTIONS=(ON OFF)
-BOOL_WITH_DOWNLOAD_OPTIONS=(ON OFF download)
+BOOL_WITH_DOWNLOAD_OPTIONS=(compile OFF download)
 
 # Installed packages:
 CMAKE_INSTALLED=NO 
@@ -863,27 +863,32 @@ parse_arguments() {
     cecho ${INFO} "Build tool:"
 
     if [ -z "${USE_NINJA}" ]; then
-      USE_NINJA=ON
+      USE_NINJA=compile
       echo "  Ninja is used by default (and replaces GNU make)."
       echo "  If you don't want to use ninja, it can be disabled via -N OFF or --ninja OFF."
     fi
 
     # Check if the variable is valid
-    if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${USE_NINJA} " ]]; then
-      cecho ${WARN} "  Unkown --ninja option: ${ADD_TO_PATH} (available option: ON|OFF)"
-      cecho ${WARN} "  Default to --ninja ON"
-      USE_NINJA=ON
+    if [[ ! " ${BOOL_WITH_DOWNLOAD_OPTIONS[@]} " =~ " ${USE_NINJA} " ]]; then
+      cecho ${WARN} "  Unkown --ninja option: ${ADD_TO_PATH} (available option: download|compile|OFF)"
+      cecho ${WARN} "  Default to --ninja compile"
+      USE_NINJA=compile
     fi
 
     # Print the corresponding information about Ninja
-    if [ "${USE_NINJA}" = "ON" ]; then
+    if [[ "${USE_NINJA}" = "compile" || "${USE_NINJA}" = "download" ]]; then
       if command -v ninja &>/dev/null; then
         cecho ${GOOD} "  Found Ninja"
         echo "  Found:   $(which ninja)"
         echo "  Version: $(ninja --version)"
       else
-        cecho ${WARN} "  Ninja not found. But this is not a problem!"
-        cecho ${INFO} "  DCS2 will attempt to install Ninja."
+        cecho ${WARN} "  ninja not found. But this is not a problem!"
+        if [ "${USE_NINJA}" = "compile" ]; then
+          cecho ${INFO} "  DCS2 will attempt to install ninja."
+        fi
+        if [ "${USE_NINJA}" = "download" ]; then
+          cecho ${INFO} "  DCS2 will attempt to download ninja."
+        fi
         echo "  If you want Ninja to be available after the install of deal.II and all of its"
         echo "  dependencies, add ${BIN_DIR} to your enviroment."
         echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
@@ -898,28 +903,28 @@ parse_arguments() {
     # -- MOLD --
     cecho ${INFO} "Linker:"
     if [ -z "${USE_MOLD}" ]; then
-        USE_MOLD=ON
+        USE_MOLD=compile
         echo "  mold is used by default (and replaces ld)."
         echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
     fi
 
     # check if the user specified a valid mold option
     if [[ ! " ${BOOL_WITH_DOWNLOAD_OPTIONS[@]} " =~ " ${USE_MOLD} " ]]; then
-      cecho ${WARN} "  Unkown mold option: ${USE_MOLD}"
-      cecho ${WARN} "  Default to use mold!"
+      cecho ${WARN} "  Unkown mold option: ${USE_MOLD} (available option: download|compile|OFF)"
+      cecho ${WARN} "  Default to --mold compile"
       echo "  mold is used by default (and replaces ld)."
       echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
-      USE_MOLD=ON
+      USE_MOLD=compile
     fi
 
-    if [[ "${USE_MOLD}" = "ON" || "${USE_MOLD}" = "download" ]]; then
+    if [[ "${USE_MOLD}" = "compile" || "${USE_MOLD}" = "download" ]]; then
       if command -v mold &>/dev/null; then
         cecho ${GOOD} "  Found mold!"
         echo "  Found:   $(which mold)"
         echo "  Version: $(mold --version)"
       else
         cecho ${WARN} "  Mold not found. But this is not a problem!"
-        if [ "${USE_MOLD}" = "ON" ]; then
+        if [ "${USE_MOLD}" = "compile" ]; then
           cecho ${INFO} "  DCS2 will attempt to install Mold."
         fi
         if [ "${USE_MOLD}" = "download" ]; then
@@ -936,7 +941,7 @@ parse_arguments() {
     echo
 
     # Set mold as linker
-    if [[ "${USE_MOLD}" = "ON" ]]; then
+    if [ "${USE_MOLD}" = "compile" ] || [ "${USE_MOLD}" = "download" ]; then
       export LD=mold
       export LDFLAGS="-fuse-ld=mold"
     fi
@@ -1048,13 +1053,13 @@ if [ "${BLAS_STACK}" = "AMD" ]; then
   CMAKE_FLAGS="${CMAKE_FLAGS} -D AMD=ON"
 fi
 
-if [ "${USE_MOLD}" = "ON" ] || [ "${USE_MOLD}" = "download" ]; then
+if [ "${USE_MOLD}" = "compile" ] || [ "${USE_MOLD}" = "download" ]; then
   if ! check_and_install_mold "$@"; then
     exit 1
   fi
 fi
 
-if [ "${USE_NINJA}" = "ON" ] || [ "${USE_NINJA}" = "download" ]; then
+if [ "${USE_NINJA}" = "compile" ] || [ "${USE_NINJA}" = "download" ]; then
   if ! check_and_install_ninja "$@"; then
     exit 1
   fi
