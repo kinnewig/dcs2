@@ -114,7 +114,7 @@ option(TPL_ENABLE_TBB       "Enable or disable the use of oneTBB as a third-part
 set(TBB_VERSION "2022.2.0" CACHE STRING "Specify the version of TBB to be used")
 
 option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party library"         OFF)
-set(GMSH_VERSION "4.14.0" CACHE STRING "Specify the version of GMSH to be used")
+set(GMSH_VERSION "4.14.1" CACHE STRING "Specify the version of GMSH to be used")
 
 option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"          OFF)
 set(VTK_VERSION "9.5.1" CACHE STRING "Specify the version of VTK to be used")
