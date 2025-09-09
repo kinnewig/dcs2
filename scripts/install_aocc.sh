@@ -46,25 +46,36 @@ download_and_install_aocc() {
     for archive in aocc-compiler-*.tar; do
       [[ -e "$archive" ]] || continue  # Skip if there is no file: aocc-compiler-*.tar
       cecho ${INFO} "  Found AMD AOCC archive: $archive, attempting automatic installation..."
-      
+
       AOCC_VERSION=$(echo "$archive" | sed -E 's/aocc-compiler-([0-9]+\.[0-9]+\.[0-9]+)\.tar/\1/')
 
       mkdir -p "${PREFIX}/aocc/"
-      tar -xf "aocc-compiler-${AOCC_VERSION}.tar" -C "${PREFIX}/aocc/"
+      tar -xf "$archive" -C "${PREFIX}/aocc/"
 
-      cd "${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}" || exit 1
-      ./install.sh
-      source "${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}/setenv_AOCC.sh"
-      cd - > /dev/null
+      ${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}/install.sh
+
+      # unfortunally we do not want the first two lines:
+      sed -i '0,/^export LD_LIBRARY_PATH/ s/^export LD_LIBRARY_PATH/#&/' "${PREFIX}/aocc/setenv_AOCC.sh"
+      sed -i '0,/^export LIBRARY_PATH/ s/^export LIBRARY_PATH/#&/' "${PREFIX}/aocc/setenv_AOCC.sh"
+
+      # Add to the end 
+      echo "export CC=clang" >> ${PREFIX}/aocc/setenv_AOCC.sh
+      echo "export CXX=clang++" >> ${PREFIX}/aocc/setenv_AOCC.sh
+      echo "export FC=flang" >> ${PREFIX}/aocc/setenv_AOCC.sh
+
+      source "${PREFIX}/aocc/setenv_AOCC.sh"
 
       if clang --version 2>/dev/null | grep -q "AMD"; then
         cecho ${GOOD} "  Successfully installed the AMD AOCC compiler"
+        clang --version
+        AOCC_PATH="${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}"
         aocc_found=true
+        AOCL_INSTALLED=YES
         break
       else
-        cecho {WARN} "  Automated installation of the AMD AOCC compiler failed."
+        cecho ${WARN} "  Automated installation of the AMD AOCC compiler failed."
       fi
-    fi
+    done
   fi
 
   # Final fallback if all attempts fail
@@ -73,7 +84,7 @@ download_and_install_aocc() {
     echo
     cecho ${INFO} "  Due to licensing, AMD AOCC cannot be downloaded automatically."
     cecho ${INFO} "  Please visit: https://www.amd.com/de/developer/aocc.html and download the latest version."
-    cecho ${INFO} "  Alternatively, place aocc-compiler-${AOCC_VERSION}.tar.gz in the dcs2 root directory."
+    cecho ${INFO} "  Alternatively, place aocc-compiler-${AOCC_VERSION}.tar in the dcs2 root directory."
     cecho ${INFO} "  The tool will attempt to install it automatically from there."
     exit 1
   fi

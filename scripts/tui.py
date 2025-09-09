@@ -94,13 +94,21 @@ def tpls_update_cmake(tpls, file_path="CMakeLists.txt"):
 def program_available(program, env, min_version="0.0.0"):
     try:
         output = subprocess.check_output([f"{program}", "--version"], stderr=subprocess.STDOUT, env=env)
-        line = output.decode().splitlines()[0]
+        return True 
+    except FileNotFoundError:
+        return False
 
-        if v.parse(line.split()[-1]) >= v.parse(min_version):
-            return True 
+
+
+def check_clang_for_amd(env):
+    try:
+        result = subprocess.run(["clang", "--version"], capture_output=True, text=True)
+        output = result.stdout
+        if keyword in output:
+            return True
         else:
             return False
-    except Exception:
+    except FileNotFoundError:
         return False
 
 
@@ -149,7 +157,7 @@ def tui_select_with_options(instructions, options, modes):
             stdscr.addstr(i, 0, line, curses.A_BOLD)
 
         for idx, tool in enumerate(options):
-            line = f"[{tool['mode']:^8}] {tool['name']} (recommended)"
+            line = f"[{tool['mode']:^8}] {tool['name']}"
             line_y = len(instruction_lines) + idx + 1 
             if idx == current:
                 stdscr.addstr(line_y, 0, line, curses.A_REVERSE)
@@ -250,17 +258,29 @@ if __name__ == "__main__":
     # === Installation Mode ===
     instructions = "Select the installation mode (↑/↓ to navigate, Enter to confirm):"
     options = [
-        {"name": "DEFAULT",   "description": "You only need to provide the version of deal.II and the install path, DCS2 does the rest."},
-        {"name": "CUSTOM",    "description": "Customize everything (which packages to install, etc..)"},
+        {"name": "DEFAULT", "description": "You only need to provide the version of deal.II and the install path, DCS2 does the rest."},
+        {"name": "CUSTOM",  "description": "Customize everything (which packages to install, etc..)"},
     ]
     installation_mode = curses.wrapper(lambda stdscr: tui_select_from_list(instructions, options))
+
 
     # === deal.II Version ===
     # TODO: Write a selector that checks out the corresponding dcs2 branch
     dealii_version="9.7.0"
 
+    
+    # === Install path ===
     # Add to path:
-    instructions = "To ensure deal.II and its tools are easily accessible after installation, DCS2 can automatically add the necessary environment variables (including DEAL_II_DIR) to your ~/.bashrc.\nIt is strongly recommended to add these values to your shell configuration—either manually or by letting DCS2 handle it for you.\n\nWould you like DCS2 to update your ~/.bashrc automatically? (Use space to toggle: yes → no, press Enter to confirm)"
+    instructions = """\
+            To ensure deal.II and its tools are easily accessible after installation, DCS2 can automatically 
+            add the necessary environment variables (including DEAL_II_DIR) to your ~/.bashrc.
+    
+            It is strongly recommended to add these values to your shell configuration—either manually or by 
+            letting DCS2 handle it for you.
+
+            Would you like DCS2 to update your ~/.bashrc automatically? 
+            (Use space to toggle: yes → no, press Enter to confirm)
+            """
     options = [
         {"name": "Add to path", "mode": "yes"},
     ]
@@ -281,7 +301,6 @@ if __name__ == "__main__":
         blas_stack = "BLIS"
         add_aocc = False
 
-
     else: 
         instructions = "Please enter the path where to store the temporarie build files (Enter to confirm, ESC to cancel):"
         build = curses.wrapper(lambda stdscr: tui_read_path(f"{prefix}/tmp", instructions))
@@ -289,15 +308,29 @@ if __name__ == "__main__":
         instructions = "Please enter the path where to store binary files (Enter to confirm, ESC to cancel):"
         bin_dir = curses.wrapper(lambda stdscr: tui_read_path(f"{prefix}/bin", instructions))
 
+    # Set the prefix, in case CMake, Ninja or mold where already installed.
+    current_prefix = os.environ.get("PREFIX", "")
+    os.environ["PREFIX"] = f"{bin_dir}:{current_prefix}"
 
+    # Check what is available
+    cmake_available = program_available("cmake", os.environ)
+    ninja_available = program_available("ninja", os.environ)
+    mold_available  = program_available("mold", os.environ)
+    aocc_available  = check_clang_for_amd(os.environ)
+
+    
+    # === Custom Options ===
+    if installation_mode == "CUSTOM":
         # Choose to compile or download ninja and mold
-        instructions = "Choose which build tools to use: (space to cycle: download →  compile (build from source) →  OFF, Enter to confirm):"
-        options = [
-            {"name": "mold", "mode": "download"},
-            {"name": "ninja", "mode": "download"}
-        ]
-        modes = ["download", "compile", "OFF"]  # Order matters for toggling
-        install_tools = curses.wrapper(lambda stdscr: tui_select_with_options(instructions, options, modes))
+        options = []
+        if not mold_available:
+            options.append({"name": "mold", "mode": "download"})
+        if not ninja_available:
+            options.append({"name": "ninja", "mode": "download"})
+        if options:
+            instructions = "Choose which build tools to use: (space to cycle: download →  compile (build from source) →  OFF, Enter to confirm):"
+            modes = ["download", "compile", "OFF"]  # Order matters for toggling
+            install_tools = curses.wrapper(lambda stdscr: tui_select_with_options(instructions, options, modes))
 
         # Select the BLAS Stack:
         instructions = "Select the BLAS stack to use (↑/↓ to navigate, Enter to confirm):"
@@ -309,8 +342,29 @@ if __name__ == "__main__":
         ]
         blas_stack = curses.wrapper(lambda stdscr: tui_select_from_list(instructions, options))
 
-        if blas_stack == "AMD":
-            add_aocc = True
+        # Install AMD AOCC:
+        if blas_stack == "AMD" and not aocc_available:
+            instructions = """\
+                    For the AMD BLAS stack the AMD clang compilier is recommended.
+
+                    Due to licensing, AMD AOCC cannot be downloaded automatically.
+                    Please visit: https://www.amd.com/de/developer/aocc.html and download the latest version.
+                    However, once you downloaded AOCC, you can place aocc-compiler-*.tar in the DCS2 root directory,
+                    and DCS2 will attempt to install AMD AOCC for you.
+
+                    Would you like DCS2 to install AMD AOCC? 
+                    (Use space to toggle: yes → no, press Enter to confirm)
+                    """
+            options = [
+                {"name": "Install AMD Compiler", "mode": "yes"},
+            ]
+            modes = ["yes", "no"]  # Order matters for toggling
+            install_aocc = curses.wrapper(lambda stdscr: tui_select_with_options(instructions, options, modes))
+
+            if install_aocc.get("Install AMD Compiler", "yes") == "yes":
+                add_aocc = True
+            else:
+                add_aocc = False
         else:
             add_aocc = False
 
@@ -329,15 +383,6 @@ if __name__ == "__main__":
 
 
     # === Start the installation ===
-
-    # Set the prefix, in case CMake, Ninja or mold where already installed.
-    current_prefix = os.environ.get("PREFIX", "")
-    os.environ["PREFIX"] = f"{bin_dir}:{current_prefix}"
-
-    cmake_available = program_available("cmake", os.environ)
-    ninja_available = program_available("ninja", os.environ)
-    mold_available  = program_available("mold", os.environ)
-    
     if cmake_available == False:
         script_path = "./scripts/install_cmake.sh"
         args = [f"{prefix}", f"{build}", f"{bin_dir}"]
