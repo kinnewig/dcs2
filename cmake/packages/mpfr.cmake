@@ -34,6 +34,7 @@ list(APPEND petsc_autotool_args "--with-mpfr-dir=${MPFR_DIR}")
 
 # add MPFR to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D MPFR_INCLUDE_DIR:PATH=${MPFR_INCLUDE_DIR}")
-list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARY:PATH=${MPFR_LIBRARY}/libmpfr${CMAKE_SHARED_LIBRARY_SUFFIX}")
-list(APPEND suitesparse_cmake_args "-D MPFR_STATIC:PATH=${MPFR_LIBRARY}/libmpfr.a")
+list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARY:PATH=${MPFR_LIBRARY}")
+#list(APPEND suitesparse_cmake_args "-D MPFR_LIBRARY:PATH=${MPFR_LIBRARY}/libmpfr${CMAKE_SHARED_LIBRARY_SUFFIX}")
+#list(APPEND suitesparse_cmake_args "-D MPFR_STATIC:PATH=${MPFR_LIBRARY}/libmpfr.a")
 

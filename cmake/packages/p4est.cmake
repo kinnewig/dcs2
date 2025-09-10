@@ -14,6 +14,7 @@ else()
     ${libsc_cmake_args}
   )
  
+  set(libsc_force_mpi_compilier "ON")
   build_cmake_subproject("libsc")
 
   list(APPEND p4est_dependencies "libsc")
@@ -27,7 +28,8 @@ else()
     ${p4est_cmake_args}
    )
  
-   build_cmake_subproject("p4est")
+  set(p4est_force_mpi_compilier "ON")
+  build_cmake_subproject("p4est")
 
   # Dependencies:
   list(APPEND dealii_dependencies "p4est")
