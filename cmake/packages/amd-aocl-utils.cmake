@@ -8,11 +8,17 @@ if(NOT AOCL-UTILS_FOUND)
   build_cmake_subproject(amd-aocl-utils)
 
   # Dependencies:
-  list(APPEND libflame_dependencies "amd-aocl-utils")
+  list(APPEND amd-libflame_dependencies "amd-aocl-utils")
+  list(APPEND amd-mumps_dependencies "amd-aocl-utils")
 
   set(AOCL-UTILS_DIR ${AMD-AOCL-UTILS_DIR})
 endif()
 
 list(APPEND AOCL_ROOT "${AMD-AOCL-UTILS_DIR}")
+
+# libflame
 list(APPEND amd-libflame_cmake_args "-D LIBAOCLUTILS_INCLUDE_PATH=${AMD-AOCL-UTILS_DIR}/include")
 list(APPEND amd-libflame_cmake_args "-D LIBAOCLUTILS_LIBRARY_PATH=${AMD-AOCL-UTILS_DIR}/lib")
+
+# mumps
+list(APPEND amd-mumps_cmake_args "-D CMAKE_AOCL_ROOT=${AOCL_ROOT}")

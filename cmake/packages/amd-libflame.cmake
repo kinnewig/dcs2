@@ -5,6 +5,9 @@ if(NOT LIBFLAME_FOUND)
   message(STATUS "Building AMD LIBFLAME")
 
   set(amd-libflame_cmake_args
+    -D CMAKE_C_COMPILER:PATH=clang
+    -D CMAKE_CXX_COMPILER:PATH=clang++
+    -D CMAKE_Fortran_COMPILER:PATH=flang
     -D ENABLE_AMD_AOCC_FLAGS:BOOL=ON
     -D ENABLE_AMD_OPT:BOOL=ON
     -D ENABLE_BUILTIN_LAPACK2FLAME:BOOL=ON 
@@ -14,7 +17,7 @@ if(NOT LIBFLAME_FOUND)
   )
 
   if(${DEALII_WITH_64BIT})
-    list(APPEND ${amd-libflame_cmake_args} "-D ENABLE_ILP64=ON")
+    list(APPEND amd-libflame_cmake_args "-D ENABLE_ILP64=ON")
   endif()
   
   build_cmake_subproject(amd-libflame)
@@ -36,7 +39,7 @@ if(NOT LIBFLAME_FOUND)
   list(APPEND petsc_dependencies     "amd-libflame")
   list(APPEND trilinos_dependencies  "amd-libflame")
   list(APPEND scalapack_dependencies "amd-libflame")
-  list(APPEND mumps_dependencies     "amd-libflame")
+  list(APPEND amd-mumps_dependencies "amd-libflame")
 endif()
 
 add_library(LIBFLAME::LIBFLAME INTERFACE IMPORTED GLOBAL)
@@ -60,12 +63,12 @@ list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${LIBFLAME_DIR}/lib
 
 # Add libflame to ScaLAPACK
 list(APPEND scalapack_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
-list(APPEND amd-scalapack_cmake_args "-D LAPACK_LIBRARIES:STRING='${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX};${AMD-AOCL-UTILS_DIR}/lib/libaoclutils${CMAKE_SHARED_LIBRARY_SUFFIX}'")
+list(APPEND amd-scalapack_cmake_args "-D LAPACK_LIBRARIES:STRING=${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add libflame to MUMPS
-list(APPEND mumps_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
-list(APPEND mumps_cmake_args "-D LAPACK_s_FOUND:BOOL=TRUE")
-list(APPEND mumps_cmake_args "-D LAPACK_d_FOUND:BOOL=TRUE")
+list(APPEND amd-mumps_cmake_args "-D LAPACK_ROOT=${LIBFLAME_DIR}")
+list(APPEND amd-mumps_cmake_args "-D LAPACK_s_FOUND:BOOL=TRUE")
+list(APPEND amd-mumps_cmake_args "-D LAPACK_d_FOUND:BOOL=TRUE")
 
 # Add libflame to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES:PATH=${LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
