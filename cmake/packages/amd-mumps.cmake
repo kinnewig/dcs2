@@ -14,7 +14,7 @@ if(NOT AMD-MUMPS_FOUND)
     -D MUMPS_BUILD_TESTING:BOOL=OFF 
     -D MUMPS_parallel:BOOL=ON 
     -D MPI_Fortran_WORKS:BOOL=TRUE
-    -D CMAKE_AOCL_ROOT=${AOCL_ROOT}
+    -D CMAKE_AOCL_ROOT="not-empty"
     ${amd-mumps_cmake_args}
   )
 
@@ -22,9 +22,10 @@ if(NOT AMD-MUMPS_FOUND)
     list(APPEND amd-mumps_cmake_args "-D intsize64:BOOL=ON")
   endif()
 
+  set(amd-mumps_force_mpi_compilier "ON")
   build_cmake_subproject("amd-mumps")
 
-  # # Fix for the CMakeLists that does not find MPI_Fortran
+  # Fix for AMD-MUMPS, this is very buggy...
    ExternalProject_Add_Step(
       amd-mumps amd-mumps_patch
       COMMAND sed -i "s/APPEND LAPACK_FIND_COMPONENTS Netlib/APPEND LAPACK_FIND_COMPONENTS AOCL/g" cmake/FindLAPACK.cmake
@@ -51,6 +52,7 @@ list(APPEND trilinos_cmake_args "-D TPL_ENABLE_MUMPS=ON")
 list(APPEND trilinos_cmake_args "-D MUMPS_LIBRARY_DIRS:PATH=${AMD-MUMPS_DIR}/lib")
 list(APPEND trilinos_cmake_args "-D MUMPS_INCLUDE_DIRS:PATH=${AMD-MUMPS_DIR}/include")
 list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_MUMPS:BOOL=ON")
+list(APPEND trilinos_cmake_args "-D Amesos2_ENABLE_MUMPS:BOOL=ON")
 
 # Force deal.II to use MUMPS
 list(APPEND dealii_cmake_args "-D DEAL_II_TRILINOS_WITH_MUMPS:BOOL=ON")

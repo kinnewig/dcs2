@@ -166,7 +166,14 @@ if(MOLD)
   set(CMAKE_LINKER ${MOLD_FOUND})
 endif()
 
-# First identify MPI, as MPI is required.
+
+
+# Set the compilier
+set(C_COMPILIER $ENV{CC})
+set(CXX_COMPILIER $ENV{CXX})
+set(Fortran_COMPILIER $ENV{FC})
+
+# Set the MPI compilier
 find_package(MPI REQUIRED)
 
 # Sometimes the MPI fortran compilier is not detected by the find_package MPI module

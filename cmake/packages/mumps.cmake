@@ -13,12 +13,6 @@ if(NOT MUMPS_FOUND)
     ${mumps_cmake_args}
   )
 
-  if (AMD)
-    list(APPEND mumps_cmake_args -D CMAKE_CFLAGS="-openmp ")
-    list(APPEND mumps_cmake_args -D CMAKE_Fortran_FLAGS="-fopenmp")
-    list(APPEND mumps_cmake_args -D MPI_Fortran_WORKS:BOOL=TRUE)
-  endif()
-
   build_cmake_subproject("mumps")
 
   # Dependencies:

@@ -6,6 +6,7 @@ if(NOT HDF5_FOUND)
   
   list(APPEND hdf5_cmake_args "-D HDF5_ENABLE_PARALLEL:BOOL=ON")
 
+  set(hdf5_force_mpi_compilier "ON")
   build_cmake_subproject("hdf5")
 
   # Dependencies:
