@@ -13,7 +13,7 @@ def parse_dependencies(files):
 
         with open(filepath, "r") as f:
             content = f.read()
-            matches = re.findall(r'list\(APPEND (\w+)_dependencies\s+"([^"]+)"\)', content)
+            matches = re.findall(r'list\(APPEND ([\w\-]+)_dependencies\s+"([^"]+)"\)', content)
             for target, dep in matches:
                 dep_graph[target].add(dep)
 
