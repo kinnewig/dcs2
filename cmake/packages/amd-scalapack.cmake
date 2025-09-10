@@ -8,6 +8,15 @@ if(NOT SCALAPACK_FOUND)
     list(APPEND amd-scalapack_cmake_args "-D ENABLE_ILP64:BOOL=ON")
   endif()
 
+
+  set(amd-scalapack_cmake_args
+    -D CMAKE_C_COMPILER:PATH=clang
+    -D CMAKE_CXX_COMPILER:PATH=clang++
+    -D CMAKE_Fortran_COMPILER:PATH=flang
+    -D SCALAPACK_BUILD_TESTS:BOOL=OFF
+    ${amd-scalapack_cmake_args}
+  )
+
   build_cmake_subproject(amd-scalapack)
 
   # patch ParMETIS
@@ -25,10 +34,10 @@ if(NOT SCALAPACK_FOUND)
   set(SCALAPACK_DIR ${AMD-SCALAPACK_DIR})
 
   #  Dependecies
-  list(APPEND dealii_dependencies   "amd-scalapack")
-  list(APPEND petsc_dependencies    "amd-scalapack")
-  list(APPEND trilinos_dependencies "amd-scalapack")
-  list(APPEND mumps_dependencies    "amd-scalapack")
+  list(APPEND dealii_dependencies    "amd-scalapack")
+  list(APPEND petsc_dependencies     "amd-scalapack")
+  list(APPEND trilinos_dependencies  "amd-scalapack")
+  list(APPEND amd-mumps_dependencies "amd-scalapack")
 endif()
   
 # Add scalapack to deal.II
@@ -46,4 +55,4 @@ list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_DIRS:PATH=${SCALAPACK_DIR}
 list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_SCALAPACK:BOOL=ON")
 
 # Add scalapack to mumps
-list(APPEND mumps_cmake_args -D SCALAPACK_ROOT=${SCALAPACK_DIR})
+list(APPEND amd-mumps_cmake_args -D SCALAPACK_ROOT=${SCALAPACK_DIR})

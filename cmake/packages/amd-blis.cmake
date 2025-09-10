@@ -20,7 +20,7 @@ if (NOT BLIS_FOUND)
   )
 
   if(${DEALII_WITH_64BIT})
-    list(APPEND ${amd-blis_cmake_args} "-D BLAS_INT_SIZE=64")
+    list(APPEND amd-blis_cmake_args "-D BLAS_INT_SIZE=64")
   endif()
 
   build_cmake_subproject(amd-blis)
@@ -65,7 +65,7 @@ list(APPEND trilinos_cmake_args "-D BLAS_LIBRARY_DIRS:PATH=${BLIS_DIR}/lib")
 list(APPEND amd-scalapack_cmake_args "-D BLAS_LIBRARIES:STRING='${BLIS_DIR}/lib/libblis-mt${CMAKE_SHARED_LIBRARY_SUFFIX}'")
 
 # Add blis to MUMPS
-list(APPEND mumps_cmake_args "-D BLAS_LIBRARY:PATH=${BLIS_DIR}/lib/libblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
+list(APPEND amd-mumps_cmake_args "-D BLAS_LIBRARY:PATH=${BLIS_DIR}/lib/libblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add blis to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D BLAS_LIBRARIES:PATH=${BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")

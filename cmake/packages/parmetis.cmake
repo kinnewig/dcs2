@@ -75,6 +75,7 @@ if(NOT PARMETIS_FOUND)
   list(APPEND trilinos_dependencies "parmetis")
   list(APPEND petsc_dependencies "parmetis")
   list(APPEND superlu_dist_dependencies "parmetis")
+  list(APPEND amd-mumps_dependencies "parmetis")
 endif()
 
 # Add parmetis to deal.II
@@ -98,3 +99,13 @@ list(APPEND petsc_autotool_args "--with-parmetis-dir=${PARMETIS_DIR}")
 # add parmetis to superlu_dist 
 list(APPEND superlu_dist_cmake_args "-D TPL_PARMETIS_INCLUDE_DIRS:PATH=${PARMETIS_DIR}/include")
 list(APPEND superlu_dist_cmake_args "-D TPL_PARMETIS_LIBRARIES:PATH=${PARMETIS_DIR}/lib/libparmetis.so")
+
+# add parmetis to amd-mumps
+list(APPEND amd-mumps_cmake_args "-D CMAKE_METIS_ROOT=${PARMETIS_DIR}")
+list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_METIS_LIBRARY_PATH=${PARMETIS_DIR}/lib")
+list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_METIS_INCLUDE_PATH=${PARMETIS_DIR}/include")
+
+#list(APPEND amd-mumps_cmake_args "-D parmetis:BOOL=ON")
+list(APPEND amd-mumps_cmake_args "-D CMAKE_PARMETIS_ROOT=${PARMETIS_DIR}")
+list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_PARMETIS_LIBRARY_PATH=${PARMETIS_DIR}/lib")
+list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_PARMETIS_INCLUDE_PATH=${PARMETIS_DIR}/include")
