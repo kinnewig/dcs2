@@ -218,6 +218,7 @@ check_and_install_aocc() {
 
   # Check if AOCC is installed at the default path
   if [[ "$aocc_found" == false ]]; then
+    # Test the system path:
     if ls /opt/AMD/aocc-compiler-* &>/dev/null; then
       echo "  AMD AOCC found in /opt/AMD/, trying to activate it..."
       source /opt/AMD/aocc-compiler-*/setenv_AOCC.sh
@@ -230,20 +231,45 @@ check_and_install_aocc() {
         aocc_found=true
       fi
     fi
+
+    # Test if AOCC is in the PREFIX already installed
+    if ls ${PREFIX}/aocc/setenv_AOCC.sh &>/dev/null; then
+      echo "  AMD AOCC found in ${PREFIX}, trying to activate it..."
+      source ${PREFIX}/aocc/setenv_AOCC.sh
+
+      if clang --version 2>/dev/null | grep -q "AMD"; then
+        cecho ${GOOD} "  Found AMD AOCC Compiler"
+        clang --version
+        AOCC_VERSION=$(clang --version | grep -oP 'AOCC_\K[\d.]+')
+        AOCC_PATH="${PREFIX}/aocc"
+        aocc_found=true
+      fi
+    fi
   fi
 
   # Attempt to install AOCC from local archive
   if [[ "$aocc_found" == false ]]; then
-    if [[ -f "aocc-compiler-${AOCC_VERSION}.tar" ]]; then
+    for archive in aocc-compiler-*.tar; do
+      [[ -e "$archive" ]] || continue  # Skip if there is no file: aocc-compiler-*.tar
       cecho ${INFO} "  Found AMD AOCC archive, attempting automatic installation..."
 
-      mkdir -p "${PREFIX}/aocc/"
-      tar -xf "aocc-compiler-${AOCC_VERSION}.tar" -C "${PREFIX}/aocc/"
+      AOCC_VERSION=$(echo "$archive" | sed -E 's/aocc-compiler-([0-9]+\.[0-9]+\.[0-9]+)\.tar/\1/')
 
-      cd "${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}" || exit 1
-      ./install.sh
-      source "${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}/setenv_AOCC.sh"
-      cd - > /dev/null
+      mkdir -p "${PREFIX}/aocc/"
+      tar -xf "$archive" -C "${PREFIX}/aocc/"
+
+      ${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}/install.sh
+
+      # unfortunally we do not want the first two lines:
+      sed -i '0,/^export LD_LIBRARY_PATH/ s/^export LD_LIBRARY_PATH/#&/' "${PREFIX}/aocc/setenv_AOCC.sh"
+      sed -i '0,/^export LIBRARY_PATH/ s/^export LIBRARY_PATH/#&/' "${PREFIX}/aocc/setenv_AOCC.sh"
+
+      # Add to the end 
+      echo "export CC=clang" >> ${PREFIX}/aocc/setenv_AOCC.sh
+      echo "export CXX=clang++" >> ${PREFIX}/aocc/setenv_AOCC.sh
+      echo "export FC=flang" >> ${PREFIX}/aocc/setenv_AOCC.sh
+
+      source "${PREFIX}/aocc/setenv_AOCC.sh"
 
       if clang --version 2>/dev/null | grep -q "AMD"; then
         cecho ${GOOD} "  Successfully installed the AMD AOCC compiler"
@@ -251,11 +277,11 @@ check_and_install_aocc() {
         AOCC_PATH="${PREFIX}/aocc/aocc-compiler-${AOCC_VERSION}"
         aocc_found=true
         AOCL_INSTALLED=YES
+        break
       else
-        cecho {ERROR} "  Automated installation of the AMD AOCC compiler failed. Please install AOCC manually."
-        exit 1
+        cecho ${WARN} "  Automated installation of the AMD AOCC compiler failed."
       fi
-    fi
+    done
   fi
 
   # Handle PATH update suggestion
