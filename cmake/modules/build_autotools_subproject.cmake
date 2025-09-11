@@ -65,7 +65,7 @@ function(build_autotools_subproject_with_custom_configure_and_update name config
   # Check if lib exists, if it does not, create a symlink
   ExternalProject_Add_Step(
     ${name} ${name}_symlink
-    COMMAND bash -c "[ -d \"${${name_upper}_DIR}/lib\" ] || ( [ -d \"${${name_upper}_DIR}/lib64\" ] && ln -s \"${${name_upper}_DIR}/lib64\" \"${${name_upper}_DIR}/lib\" )"
+    COMMAND bash -c "[ -d \"${${name_upper}_DIR}/lib\" ] || ( [ -d \"${${name_upper}_DIR}/lib64\" ] && ln -sf \"${${name_upper}_DIR}/lib64\" \"${${name_upper}_DIR}/lib\" )"
     WORKING_DIRECTORY ${${name_upper}_DIR}
     DEPENDEES install
   )
@@ -73,7 +73,7 @@ function(build_autotools_subproject_with_custom_configure_and_update name config
   # Check if lib64 exists, if it does not, create a symlink
   ExternalProject_Add_Step(
     ${name} ${name}_symlink64
-    COMMAND bash -c "[ -d \"${${name_upper}_DIR}/lib64\" ] || ( [ -d \"${${name_upper}_DIR}/lib\" ] && ln -s \"${${name_upper}_DIR}/lib\" \"${${name_upper}_DIR}/lib64\" )"
+    COMMAND bash -c "[ -d \"${${name_upper}_DIR}/lib64\" ] || ( [ -d \"${${name_upper}_DIR}/lib\" ] && ln -sf \"${${name_upper}_DIR}/lib\" \"${${name_upper}_DIR}/lib64\" )"
     WORKING_DIRECTORY ${${name_upper}_DIR}
     DEPENDEES install
   )
