@@ -53,7 +53,7 @@ option(TPL_ENABLE_GSL   "Enable or disable the use of GSL as a third-party libra
 set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 
 option(TPL_ENABLE_HDF5        "Enable or disable the use of HDF5 as a third-party library"        ON)
-set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
+set(HDF5_VERSION "5.1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
 
 option(TPL_ENABLE_HYPRE        "Enable or disable the use of hypre as a third-party library"      OFF)
 set(HYPRE_VERSION "2.33.0" CACHE STRING "Specify the version of HYPRE to be used")
@@ -102,7 +102,7 @@ option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-par
 set(PETSC_VERSION "3.23.6" CACHE STRING "Specify the version of PETSC to be used")
 
 option(TPL_ENABLE_SLEPC       "Enable or disable the use of SLEPc as a third-party library"       ON)
-set(SLEPC_VERSION "3.23.2" CACHE STRING "Specify the version of SLEPC to be used")
+set(SLEPC_VERSION "3.23.3" CACHE STRING "Specify the version of SLEPC to be used")
 
 option(TPL_ENABLE_SUPERLU_DIST "Enable or disable the use of superlu_dist as a third-party library" ON)
 set(SUPERLU_DIST_VERSION "9.1.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
@@ -143,7 +143,7 @@ if (AMD)
   set(AMD-LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of AMD-LIBFLAME to be used")
   set(AMD-SCALAPACK_VERSION "5.1" CACHE STRING "Specify the version of AMD-SCALAPACK to be used")
   set(AMD-AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AMD-AOCL-UTILS to be used")
-  set(AMD-MUMPS_VERSION "5.1" CACHE STRING "Specify the version of AMD-MUMPS to be used")
+  set(AMD-MUMPS_VERSION "AOCL-5.1-GA" CACHE STRING "Specify the version of AMD-MUMPS to be used")
 
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-aocl-utils.cmake")
 else()
