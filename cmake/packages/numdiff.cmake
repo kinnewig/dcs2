@@ -23,7 +23,11 @@ else()
     URL ${numdiff_url}/${numdiff_tag}
     BUILD_COMMAND make -j ${THREADS}
     INSTALL_COMMAND make install
-    CONFIGURE_COMMAND ./configure ${numdiff_autotool_args}
+    CONFIGURE_COMMAND 
+     ${CMAKE_COMMAND} -E env
+       CC=gcc
+       CXX=g++
+       ./configure ${numdiff_autotool_args}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/numdiff/${NUMDIFF_VERSION}
     BUILD_IN_SOURCE ON
     DOWNLOAD_EXTRACT_TIMESTAMP true

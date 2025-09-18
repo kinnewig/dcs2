@@ -14,7 +14,7 @@ if(NOT AMD-MUMPS_FOUND)
     -D MUMPS_BUILD_TESTING:BOOL=OFF 
     -D MUMPS_parallel:BOOL=ON 
     -D MPI_Fortran_WORKS:BOOL=TRUE
-    -D CMAKE_AOCL_ROOT=${AOCL_ROOT}
+    -D CMAKE_AOCL_ROOT="not-empty"
     ${amd-mumps_cmake_args}
   )
 
@@ -22,6 +22,7 @@ if(NOT AMD-MUMPS_FOUND)
     list(APPEND amd-mumps_cmake_args "-D intsize64:BOOL=ON")
   endif()
 
+  set(amd-mumps_force_mpi_compilier "ON")
   build_cmake_subproject("amd-mumps")
 
   # Fix for AMD-MUMPS, this is very buggy...
@@ -36,15 +37,6 @@ if(NOT AMD-MUMPS_FOUND)
       DEPENDEES download
       DEPENDERS update
     )
-
-  # Populate the AOCL_ROOT
-  ExternalProject_Add_Step(
-    amd-mumps amd-mumps_add-to-aocl-root
-    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-MUMPS_DIR}/include ${CMAKE_INSTALL_PREFIX}/aocl/include
-    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-MUMPS_DIR}/lib ${CMAKE_INSTALL_PREFIX}/aocl/lib
-    COMMAND ln -sf ${AMD-MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/aocl/amd-mumps
-    DEPENDEES amd-mumps_symlink
-  )
 
   # Dependencies:
   list(APPEND petsc_dependencies "amd-mumps")

@@ -26,13 +26,27 @@ function(build_cmake_subproject name)
   # (the flags are written in the beginning, so they can be overwritten)
   set(${name}_cmake_args
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/${name}/${${name_upper}_VERSION}
-    -D CMAKE_C_COMPILER:PATH=${MPI_C_COMPILER}
-    -D CMAKE_CXX_COMPILER:PATH=${MPI_CXX_COMPILER}
-    -D CMAKE_Fortran_COMPILER:PATH=${MPI_Fortran_COMPILER}
     -D BUILD_SHARED_LIBS:BOOL=ON 
     -D CMAKE_BUILD_TYPE:STRING=Release
     ${${name}_cmake_args}
   )
+
+  # Set the compilier 
+  if(${name}_force_mpi_compilier)
+    set(${name}_cmake_args
+      -D CMAKE_C_COMPILER:PATH=${MPI_C_COMPILER}
+      -D CMAKE_CXX_COMPILER:PATH=${MPI_CXX_COMPILER}
+      -D CMAKE_Fortran_COMPILER:PATH=${MPI_Fortran_COMPILER}
+      ${${name}_cmake_args}
+    )
+  else()
+    set(${name}_cmake_args
+      -D CMAKE_C_COMPILER:PATH=${C_COMPILER}
+      -D CMAKE_CXX_COMPILER:PATH=${CXX_COMPILER}
+      -D CMAKE_Fortran_COMPILER:PATH=${Fortran_COMPILER}
+      ${${name}_cmake_args}
+    )
+  endif()
 
   if (DEFINED ${name_upper}_SOURCE_DIR)
     ExternalProject_Add(${name}

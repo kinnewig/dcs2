@@ -10,9 +10,6 @@ if(NOT AMD-SCALAPACK_FOUND)
 
 
   set(amd-scalapack_cmake_args
-    -D CMAKE_C_COMPILER:PATH=clang
-    -D CMAKE_CXX_COMPILER:PATH=clang++
-    -D CMAKE_Fortran_COMPILER:PATH=flang
     -D SCALAPACK_BUILD_TESTS:BOOL=OFF
     ${amd-scalapack_cmake_args}
   )
@@ -27,15 +24,6 @@ if(NOT AMD-SCALAPACK_FOUND)
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/amd-scalapack-prefix/src/amd-scalapack
     DEPENDEES download
     DEPENDERS update
-  )
-
-  # Populate the AOCL_ROOT
-  ExternalProject_Add_Step(
-    amd-scalapack amd-scalapack_add-to-aocl-root
-    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-SCALAPACK_DIR}/include ${CMAKE_INSTALL_PREFIX}/aocl/include
-    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-SCALAPACK_DIR}/lib ${CMAKE_INSTALL_PREFIX}/aocl/lib
-    COMMAND ln -sf ${AMD-SCALAPACK_DIR} ${CMAKE_INSTALL_PREFIX}/aocl/amd-scalapack
-    DEPENDEES amd-scalapack_symlink
   )
 
   #  Dependecies
@@ -60,5 +48,5 @@ list(APPEND trilinos_cmake_args "-D SCALAPACK_LIBRARY_DIRS:PATH=${AMD-SCALAPACK_
 list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_SCALAPACK:BOOL=ON")
 
 # Add scalapack to mumps
-list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_SCALAPACK_LIBRARY_PATH=${AOCL_ROOT}/amd-scalapack/lib64")
+list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_SCALAPACK_LIBRARY_PATH=${AMD-SCALAPACK_DIR}/lib64")
 list(APPEND amd-mumps_cmake_args "-D SCALAPACK_FIND_COMPONENTS=AOCL")
