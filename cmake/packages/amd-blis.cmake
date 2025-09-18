@@ -34,6 +34,24 @@ if (NOT AMD-BLIS_FOUND)
     DEPENDEES install
   )
 
+  # Otherwise petsc does not find amd-blis
+  ExternalProject_Add_Step(
+    amd-blis blis_symlink_include
+    COMMAND ln -sf include include/blis
+    WORKING_DIRECTORY ${AMD-BLIS_DIR}
+    DEPENDEES install
+  )
+
+# Populate the AOCL_ROOT
+  ExternalProject_Add_Step(
+    amd-blis amd-blis_add-to-aocl-root
+    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-BLIS_DIR}/include ${CMAKE_INSTALL_PREFIX}/aocl/include
+    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-BLIS_DIR}/lib ${CMAKE_INSTALL_PREFIX}/aocl/lib
+    COMMAND ln -sf ${AMD-BLIS_DIR} ${CMAKE_INSTALL_PREFIX}/aocl/amd-blis
+    DEPENDEES amd-blis_symlink
+  )
+
+
   # Dependencies:
   list(APPEND arpack-ng_dependencies "amd-blis")
   list(APPEND dealii_dependencies    "amd-blis")
@@ -64,12 +82,13 @@ list(APPEND amd-scalapack_cmake_args "-D BLAS_LIBRARIES:STRING='${AMD-BLIS_DIR}/
 
 # Add blis to MUMPS
 #list(APPEND amd-mumps_cmake_args "-D BLAS_LIBRARY:PATH=${AMD-BLIS_DIR}/lib/libblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
-list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_BLIS_LIBRARY_PATH:PATH=${AMD-BLIS_DIR}")
-list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_BLIS_INCLUDE_PATH:PATH=${AMD-BLIS_DIR}")
+#list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_BLIS_LIBRARY_PATH:PATH=${AMD-BLIS_DIR}")
+#list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_BLIS_INCLUDE_PATH:PATH=${AMD-BLIS_DIR}")
 
 # Add blis to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D BLAS_LIBRARIES:PATH=${AMD-BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
+# Add blis to libflame
 list(APPEND amd-libflame_cmake_args "-D ENABLE_AOCL_BLAS:BOOL=ON")
-list(APPEND amd-libflame_cmake_args "-D AOCL_BLAS_INCLUDE_DIR:PATH=${AMD-BLIS_DIR}/include")
-list(APPEND amd-libflame_cmake_args "-D AOCL_BLAS_LIB:PATH=${AMD-BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")
+#list(APPEND amd-libflame_cmake_args "-D AOCL_BLAS_INCLUDE_DIR:PATH=${AMD-BLIS_DIR}/include")
+#list(APPEND amd-libflame_cmake_args "-D AOCL_BLAS_LIB:PATH=${AMD-BLIS_DIR}/lib/libblis${CMAKE_SHARED_LIBRARY_SUFFIX}")

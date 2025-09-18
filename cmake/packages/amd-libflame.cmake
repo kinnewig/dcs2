@@ -12,6 +12,7 @@ if(NOT AMD-LIBFLAME_FOUND)
     -D ENABLE_AMD_OPT:BOOL=ON
     -D ENABLE_BUILTIN_LAPACK2FLAME:BOOL=ON 
     -D ENABLE_EXT_LAPACK_INTERFACE:BOOL=ON
+    -D ENABLE_EMBED_AOCLUTILS:BOOL=ON
     ${amd-libflame_cmake_args}
   )
 
@@ -21,6 +22,7 @@ if(NOT AMD-LIBFLAME_FOUND)
   
   build_cmake_subproject(amd-libflame)
 
+  # Symlink to lapack names
   ExternalProject_Add_Step(
     amd-libflame amd-libflame_symlink_to_lapack
     COMMAND ln -sf libflame.a liblapack.a
@@ -29,6 +31,15 @@ if(NOT AMD-LIBFLAME_FOUND)
     COMMAND ln -sf libflame${CMAKE_SHARED_LIBRARY_SUFFIX} flame${CMAKE_SHARED_LIBRARY_SUFFIX}
     WORKING_DIRECTORY ${AMD-LIBFLAME_DIR}/lib
     DEPENDEES install
+  )
+
+  # Populate the AOCL_ROOT
+  ExternalProject_Add_Step(
+    amd-libflame amd-libflame_add-to-aocl-root
+    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-LIBFLAME_DIR}/include ${CMAKE_INSTALL_PREFIX}/aocl/include
+    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-LIBFLAME_DIR}/lib ${CMAKE_INSTALL_PREFIX}/aocl/lib
+    COMMAND ln -sf ${AMD-LIBFLAME_DIR} ${CMAKE_INSTALL_PREFIX}/aocl/amd-libflame
+    DEPENDEES amd-libflame_symlink
   )
 
   list(APPEND arpackng_dependencies  "amd-libflame")
@@ -62,8 +73,8 @@ list(APPEND trilinos_cmake_args "-D LAPACK_LIBRARY_DIRS:PATH=${AMD-LIBFLAME_DIR}
 list(APPEND amd-scalapack_cmake_args "-D LAPACK_LIBRARIES:STRING=${AMD-LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add libflame to MUMPS
-list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_LAPACK_LIBRARY_PATH=${AMD-LIBFLAME_DIR}")
-list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_LAPACK_INCLUDE_PATH=${AMD-LIBFLAME_DIR}")
+#list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_LAPACK_LIBRARY_PATH=${AMD-LIBFLAME_DIR}")
+#list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_LAPACK_INCLUDE_PATH=${AMD-LIBFLAME_DIR}")
 
 # Add libflame to SuiteSparse
 list(APPEND suitesparse_cmake_args "-D LAPACK_LIBRARIES:PATH=${AMD-LIBFLAME_DIR}/lib/libflame${CMAKE_SHARED_LIBRARY_SUFFIX}")

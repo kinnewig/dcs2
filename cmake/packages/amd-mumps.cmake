@@ -24,7 +24,7 @@ if(NOT AMD-MUMPS_FOUND)
 
   build_cmake_subproject("amd-mumps")
 
-  # # Fix for the CMakeLists that does not find MPI_Fortran
+  # Fix for AMD-MUMPS, this is very buggy...
    ExternalProject_Add_Step(
       amd-mumps amd-mumps_patch
       COMMAND sed -i "s/APPEND LAPACK_FIND_COMPONENTS Netlib/APPEND LAPACK_FIND_COMPONENTS AOCL/g" cmake/FindLAPACK.cmake
@@ -36,6 +36,15 @@ if(NOT AMD-MUMPS_FOUND)
       DEPENDEES download
       DEPENDERS update
     )
+
+  # Populate the AOCL_ROOT
+  ExternalProject_Add_Step(
+    amd-mumps amd-mumps_add-to-aocl-root
+    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-MUMPS_DIR}/include ${CMAKE_INSTALL_PREFIX}/aocl/include
+    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/create_symlink.sh ${AMD-MUMPS_DIR}/lib ${CMAKE_INSTALL_PREFIX}/aocl/lib
+    COMMAND ln -sf ${AMD-MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/aocl/amd-mumps
+    DEPENDEES amd-mumps_symlink
+  )
 
   # Dependencies:
   list(APPEND petsc_dependencies "amd-mumps")
