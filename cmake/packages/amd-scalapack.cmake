@@ -8,15 +8,14 @@ if(NOT AMD-SCALAPACK_FOUND)
     list(APPEND amd-scalapack_cmake_args "-D ENABLE_ILP64:BOOL=ON")
   endif()
 
-
   set(amd-scalapack_cmake_args
-    -D CMAKE_C_COMPILER:PATH=clang
-    -D CMAKE_CXX_COMPILER:PATH=clang++
-    -D CMAKE_Fortran_COMPILER:PATH=flang
     -D SCALAPACK_BUILD_TESTS:BOOL=OFF
+    -D CMAKE_C_STANDARD=11
+    -D CMAKE_CXX_STANDARD=11
     ${amd-scalapack_cmake_args}
   )
 
+  set(amd-scalapack)
   build_cmake_subproject(amd-scalapack)
 
   # patch ScaLAPACK

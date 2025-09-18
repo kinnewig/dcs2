@@ -5,13 +5,11 @@ if(NOT AMD-LIBFLAME_FOUND)
   message(STATUS "Building AMD LIBFLAME")
 
   set(amd-libflame_cmake_args
-    -D CMAKE_C_COMPILER:PATH=clang
-    -D CMAKE_CXX_COMPILER:PATH=clang++
-    -D CMAKE_Fortran_COMPILER:PATH=flang
     -D ENABLE_AMD_AOCC_FLAGS:BOOL=ON
     -D ENABLE_AMD_OPT:BOOL=ON
     -D ENABLE_BUILTIN_LAPACK2FLAME:BOOL=ON 
     -D ENABLE_EXT_LAPACK_INTERFACE:BOOL=ON
+    -D ENABLE_EMBED_AOCLUTILS:BOOL=ON
     ${amd-libflame_cmake_args}
   )
 
@@ -21,6 +19,7 @@ if(NOT AMD-LIBFLAME_FOUND)
   
   build_cmake_subproject(amd-libflame)
 
+  # Symlink to lapack names
   ExternalProject_Add_Step(
     amd-libflame amd-libflame_symlink_to_lapack
     COMMAND ln -sf libflame.a liblapack.a

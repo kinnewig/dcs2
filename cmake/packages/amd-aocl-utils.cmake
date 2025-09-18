@@ -4,7 +4,7 @@ include(ExternalProject)
 set(AOCL-UTILS_FOUND FALSE)
 if(NOT AOCL-UTILS_FOUND)
   message(STATUS "Building AOCL-UTILS")
-  
+
   build_cmake_subproject(amd-aocl-utils)
 
   # Dependencies:
@@ -13,7 +13,7 @@ if(NOT AOCL-UTILS_FOUND)
   list(APPEND mumps_dependencies "amd-aocl-utils")
 endif()
 
-list(APPEND AOCL_ROOT "${AMD-AOCL-UTILS_DIR}")
+add_library(AMD-AOCL-UTILS::AMD-AOCL-UTILS INTERFACE IMPORTED GLOBAL)
 
 # amd-libflame
 list(APPEND amd-libflame_cmake_args "-D LIBAOCLUTILS_INCLUDE_PATH=${AMD-AOCL-UTILS_DIR}/include")
