@@ -38,7 +38,7 @@ option(TPL_ENABLE_BOOST       "Enable or disable the use of BOOST as a third-par
 set(BOOST_VERSION "1.89.0" CACHE STRING "Specify the version of BOOST to be used")
 
 option(TPL_ENABLE_CGAL       "Enable or disable the use of CGAL as a third-party library"         OFF)
-set(CGAL_VERSION "6.0.1" CACHE STRING "Specify the version of CGAL to be used")
+set(CGAL_VERSION "6.0.2" CACHE STRING "Specify the version of CGAL to be used")
 
 option(TPL_ENABLE_BLIS        "Enable or disable the use of BLIS as a third-party library"        ON)
 set(BLIS_VERSION "2.0" CACHE STRING "Specify the version of BLIS to be used")
@@ -102,7 +102,7 @@ option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-par
 set(PETSC_VERSION "3.23.6" CACHE STRING "Specify the version of PETSC to be used")
 
 option(TPL_ENABLE_SLEPC       "Enable or disable the use of SLEPc as a third-party library"       ON)
-set(SLEPC_VERSION "3.23.2" CACHE STRING "Specify the version of SLEPC to be used")
+set(SLEPC_VERSION "3.23.3" CACHE STRING "Specify the version of SLEPC to be used")
 
 option(TPL_ENABLE_SUPERLU_DIST "Enable or disable the use of superlu_dist as a third-party library" ON)
 set(SUPERLU_DIST_VERSION "9.1.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
@@ -131,7 +131,7 @@ set(TK_VERSION "1.5.0" CACHE STRING "Specify the version of TK to be used")
 option(TPL_ENABLE_ZLIB-NG   "Enable or disable the use of ZLIB-NG as a third-party library"       OFF)
 set(ZLIB-NG_VERSION "2.2.5" CACHE STRING "Specify the version of ZLIB-NG to be used")
 
-set(DEALII_VERSION "9.7.0" CACHE STRING "Specify the version of DEALII to be used")
+set(DEALII_VERSION "9.7.1" CACHE STRING "Specify the version of DEALII to be used")
 option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
 option(DEALII_WITH_COMPLEX    "Build deal.II with support for 64bit long numbers"                 OFF)
 
