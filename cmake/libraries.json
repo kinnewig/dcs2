@@ -56,7 +56,8 @@
   },
   "cgal": {
     "git": "https://github.com/CGAL/cgal.git",
-    "6.0.1": "v6.0.1"
+    "6.0.1": "v6.0.1",
+    "6.0.2": "v6.0.2"
   },
   "cmake": {
     "git": "https://github.com/Kitware/CMake.git",
@@ -72,7 +73,8 @@
     "9.5.2": "6f07117be556bf929220c50820b4dead54dc31d0",
     "9.6.0": "93113976b8ed7b11be3f0ab2035467af102fe0fa",
     "9.6.2": "v9.6.2",
-    "9.7.0": "v9.7.0"
+    "9.7.0": "v9.7.0",
+    "9.7.1": "v9.7.1"
   },
   "fltk": {
     "git": "https://github.com/fltk/fltk.git",
@@ -182,7 +184,8 @@
   },
   "slepc": {
     "git": "https://github.com/slepc/slepc.git",
-    "3.23.2": "v3.23.2"
+    "3.23.2": "v3.23.2",
+    "3.23.3": "v3.23.3"
   },
   "suitesparse": {
     "git": "https://github.com/DrTimothyAldenDavis/SuiteSparse.git",
