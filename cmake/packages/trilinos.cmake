@@ -64,32 +64,18 @@ else()
     list(APPEND trilinos_cmake_args "-D ML_ENABLE_METIS:BOOL=OFF")
     list(APPEND trilinos_cmake_args "-D ML_ENABLE_ParMETIS:BOOL=OFF")
   else()
-    list(APPEND trilinos_cmake_args "-D TPETRA_INST_INT_INT:BOOL=ON")
+    list(APPEND trilinos_cmake_args "-D Tpetra_INST_INT_INT:BOOL=ON")
   endif()
   
   # Complex number support
-  if ( DEALII_WITH_COMPLEX )
+  if ( ${DEALII_WITH_COMPLEX} )
     list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_DOUBLE:BOOL=ON")
     list(APPEND trilinos_cmake_args "-D Trilinos_ENABLE_COMPLEX_FLOAT:BOOL=ON")
     list(APPEND trilinos_cmake_args "-D Teuchos_ENABLE_COMPLEX:BOOL=ON")
   endif()
  
+  set(trilinos_force_mpi_compilier "ON")
   build_cmake_subproject("trilinos")
-
-  # Fix
-  if(${DEALII_WITH_64BIT} AND TPL_ENABLE_SUPERLU_DIST)
-  ExternalProject_Add_Step(
-    trilinos trilinos_superlu_dist_64bit
-    COMMAND sed -i "s/pdgsequ(A, r, c, rowcnd, colcnd, amax, info, grid)/pdgsequ(A, r, c, rowcnd, colcnd, amax, (int*)info, grid)/g" packages/amesos2/src/Amesos2_Superludist_FunctionMap.hpp
-    COMMAND sed -i "s/dgsequ_dist(A, r, c, rowcnd, colcnd, amax, info)/dgsequ_dist(A, r, c, rowcnd, colcnd, amax, (int*)info)/g" packages/amesos2/src/Amesos2_Superludist_FunctionMap.hpp
-    COMMAND sed -i "s/\\&Aval_\\[0\\], \\&Ai_\\[0\\], \\&Ap_\\[0\\]/\\&Aval_\\[0\\], (long int*)\\&Ai_\\[0\\], (long int*)\\&Ap_\\[0\\]/g" packages/amesos/src/Amesos_Superludist.cpp
-    COMMAND sed -i "s/PrivateSuperluData_->ScalePermstruct_.perm_c = perm_c_/PrivateSuperluData_->ScalePermstruct_.perm_c = (long int*)perm_c_/g" packages/amesos/src/Amesos_Superludist.cpp
-    COMMAND sed -i "s/PrivateSuperluData_->ScalePermstruct_.perm_r = perm_r_/PrivateSuperluData_->ScalePermstruct_.perm_r = (long int*)perm_r_/g" packages/amesos/src/Amesos_Superludist.cpp
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/trilinos-prefix/src/trilinos
-    DEPENDEES configure
-    DEPENDERS build
-  )
-  endif()
 
   # Dependencies:
   list(APPEND dealii_dependencies "trilinos")
