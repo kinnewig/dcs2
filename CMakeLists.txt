@@ -132,8 +132,8 @@ option(TPL_ENABLE_ZLIB-NG   "Enable or disable the use of ZLIB-NG as a third-par
 set(ZLIB-NG_VERSION "2.2.5" CACHE STRING "Specify the version of ZLIB-NG to be used")
 
 set(DEALII_VERSION "9.7.1" CACHE STRING "Specify the version of DEALII to be used")
-option(DEALII_WITH_64BIT      "Build deal.II with support for complex numbers"                    ON)
-option(DEALII_WITH_COMPLEX    "Build deal.II with support for 64bit long numbers"                 OFF)
+option(DEALII_WITH_64BIT      "Build deal.II with support for 64bit long numbers"                 OFF)
+option(DEALII_WITH_COMPLEX    "Build deal.II with support for complex numbers"                    OFF)
 
 
 

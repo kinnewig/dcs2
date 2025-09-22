@@ -20,6 +20,8 @@ if(NOT AMD-MUMPS_FOUND)
 
   if(${DEALII_WITH_64BIT})
     list(APPEND amd-mumps_cmake_args "-D intsize64:BOOL=ON")
+  else()
+    list(APPEND amd-mumps_cmake_args "-D intsize64:BOOL=OFF")
   endif()
 
   set(amd-mumps_force_mpi_compilier "ON")
