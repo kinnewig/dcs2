@@ -4,7 +4,8 @@ include(ExternalProject)
 if(DEFINED BOOST_DIR)
   set(BOOST_ROOT ${BOOST_DIR})
 endif()
-# Try to find boost on the system
+
+# Try to find boost via the CMake build-in function:
 find_package(Boost REQUIRED COMPONENTS filesystem)
 
 if(Boost_FOUND)
