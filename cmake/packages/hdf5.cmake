@@ -1,7 +1,16 @@
 include(ExternalProject)
 
+# Try to find HDF5 via the CMake build-in function:
+list(APPEND HDF5_ROOT "${HDF5_DIR}")
+list(APPEND HDF5_ROOT "${CMAKE_INSTALL_PREFIX}/hdf5/${HDF5_VERSION}")
 find_package(HDF5)
-if(NOT HDF5_FOUND)
+
+if(HDF5_FOUND)
+  # Extract the HDF5 root dir:
+  get_filename_component(HDF5_DIR "${HDF5_INCLUDE_DIR}" DIRECTORY)
+  message(STATUS "Found HDF5: ${HDF5_DIR}")
+else()
+
   message(STATUS "Building HDF5")
   
   list(APPEND hdf5_cmake_args "-D HDF5_ENABLE_PARALLEL:BOOL=ON")
@@ -18,7 +27,7 @@ if(NOT HDF5_FOUND)
 endif()
 
 # add HDF5 to GMSH
-list(APPEND gmsh_cmake_args "-D HDF5_ROOT:PATH=${OCCT_DIR}")
+list(APPEND gmsh_cmake_args "-D HDF5_ROOT:PATH=${HDF5_DIR}")
 
 # add HDF5 to netcdf
 list(APPEND netcdf_cmake_args "-D HDF5_ROOT:PATH=${HDF5_DIR}")
