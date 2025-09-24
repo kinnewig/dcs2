@@ -37,11 +37,13 @@ else()
     -D   ShyLU_DD_ENABLE_TESTS:BOOL=OFF 
     -D Trilinos_ENABLE_Stratimikos:BOOL=ON 
     -D Trilinos_ENABLE_Thyra:BOOL=ON 
+    -D   Thyra_ENABLE_ThyraEpetraAdapters:BOOL=ON
+    -D   Thyra_ENABLE_ThyraEpetraExtAdapters:BOOL=ON
     -D Trilinos_ENABLE_Tpetra:BOOL=ON 
-    -D   Tpetra_ENABLE_DEPRECATED_CODE:BOOL=OFF
+    -D   Tpetra_ENABLE_DEPRECATED_CODE:BOOL=ON
     -D Trilinos_ENABLE_ROL:BOOL=ON 
     -D Trilinos_ENABLE_Xpetra:BOOL=ON 
-    -D   Xpetra_ENABLE_DEPRECATED_CODE:BOOL=OFF 
+    -D   Xpetra_ENABLE_DEPRECATED_CODE:BOOL=ON
     -D Trilinos_ENABLE_Zoltan:BOOL=ON 
     -D Kokkos_ENABLE_SERIAL:BOOL=ON 
     -D Kokkos_ENABLE_OPENMP:BOOL=ON
