@@ -25,19 +25,12 @@ if (NOT AMD-BLIS_FOUND)
 
   build_cmake_subproject(amd-blis)
 
+  # symlink blis to blas:
   ExternalProject_Add_Step(
     amd-blis blis_symlink_to_blas
     COMMAND ln -sf libblis-mt${CMAKE_SHARED_LIBRARY_SUFFIX} libblas${CMAKE_SHARED_LIBRARY_SUFFIX}
     COMMAND ln -sf libblis-mt${CMAKE_SHARED_LIBRARY_SUFFIX} libblis${CMAKE_SHARED_LIBRARY_SUFFIX}
     WORKING_DIRECTORY ${AMD-BLIS_DIR}/lib
-    DEPENDEES install
-  )
-
-  # Otherwise petsc does not find amd-blis
-  ExternalProject_Add_Step(
-    amd-blis blis_symlink_include
-    COMMAND ln -sf include include/blis
-    WORKING_DIRECTORY ${AMD-BLIS_DIR}
     DEPENDEES install
   )
 
@@ -50,7 +43,7 @@ if (NOT AMD-BLIS_FOUND)
   list(APPEND libflame_dependencies  "amd-blis")
 endif()
 
-# Add blis to deal.II
+# Add blis to arpack-ng
 list(APPEND arpack-ng_cmake_args "-D BLAS_LIBRARIES:PATH=${AMD-BLIS_DIR}/lib/libblas${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add blis to deal.II
@@ -59,7 +52,7 @@ list(APPEND dealii_cmake_args "-D BLAS_DIR=${AMD-BLIS_DIR}")
 
 # Add blis to PETSc
 list(APPEND petsc_autotool_args "--with-blis=true")
-list(APPEND petsc_autotool_args "--with-blis-dir=${AMD-BLIS_DIR}")
+list(APPEND petsc_autotool_args "--with-blas-lib=${AMD-BLIS_DIR}/lib/libblis-mt${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add blis to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_BLAS:BOOL=ON")
