@@ -7,7 +7,7 @@ THREADS=$(($(nproc)-2))
 DEFAULT_PATH="${HOME}/dcs"
 
 # List of available BLAS stacks:
-BLAS_OPTIONS=(AMD default system)
+BLAS_OPTIONS=(AMD DEFAULT FLAME MKL SYSTEM)
 BOOL_OPTIONS=(ON OFF)
 BOOL_WITH_DOWNLOAD_OPTIONS=(ON OFF download)
 
@@ -795,7 +795,7 @@ parse_arguments() {
               echo "  -M <ON|OFF>,  --mold=<ON|OFF>                Enable or disable the use of mold"
               echo "  -U                                           Do not interupt"
               echo "  -v,           --version                      Print the version number"
-              echo "                --blas-stack=<blas option>     Select which BLAS to use (default|AMD)"
+              echo "                --blas-stack=<blas option>     Select which BLAS to use (AMD|FLAME|MKL|SYSTEM)"
               echo "                --cmake-flags=<CMake Options>  Specify additional CMake Options, see the README for details" 
               exit 1
             ;;
@@ -1033,22 +1033,26 @@ parse_arguments() {
 
     # -- BLAS stack --
     if [ -z "${BLAS_STACK}" ]; then
-        BLAS_STACK=default
+        BLAS_STACK=DEFAULT
     fi
 
     # check if the user selcted a valid blas option:
     cecho ${INFO} "BLAS stack: "
+    BLAS_STACK=$(echo "${BLAS_STACK^^}") # Capitalize the user input
     if [[ " ${BLAS_OPTIONS[@]} " =~ " ${BLAS_STACK} " ]]; then
       echo "  ${BLAS_STACK}"
     else
       cecho ${WARN} "  Unkown BLAS stack: ${BLAS_STACK}"
       cecho ${WARN} "  Default to use the default BLAS stack."
-      BLAS_STACK=default
+      BLAS_STACK=DEFAULT
     fi
+
+    # Add the BLAS Stack to the CMake Options:
+    CMAKE_FLAGS="${CMAKE_FLAGS} -D BLAS_STACK=${BLAS_STACK}"
 
     # Print the information about the BLAS stack
     echo "  To select a different BLAS stack use: --blas-stack=<OPTION>"
-    echo "  The currently available options are: AMD, default, system"
+    echo "  The currently available options are: AMD, DEFAULT, FLAME, MKL, SYSTEM"
     echo
 
 
@@ -1258,8 +1262,6 @@ if [ "${BLAS_STACK}" = "AMD" ]; then
   if ! check_and_install_aocc "&@"; then
     exit 1 
   fi
-  # Add AMD=ON to the CMake flags aswell:
-  CMAKE_FLAGS="${CMAKE_FLAGS} -D AMD=ON"
 fi
 
 if [ "${USE_MOLD}" = "ON" ]; then

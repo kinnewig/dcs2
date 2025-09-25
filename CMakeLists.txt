@@ -137,21 +137,6 @@ option(DEALII_WITH_COMPLEX    "Build deal.II with support for complex numbers"  
 
 
 
-# AMD - AOCL
-if (AMD)
-  set(AMD-BLIS_VERSION "5.1" CACHE STRING "Specify the version of AMD-BLIS to be used")
-  set(AMD-LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of AMD-LIBFLAME to be used")
-  set(AMD-SCALAPACK_VERSION "5.1" CACHE STRING "Specify the version of AMD-SCALAPACK to be used")
-  set(AMD-AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AMD-AOCL-UTILS to be used")
-  set(AMD-MUMPS_VERSION "5.1" CACHE STRING "Specify the version of AMD-MUMPS to be used")
-
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-aocl-utils.cmake")
-else()
-  option(TPL_ENABLE_AMD-SCALAPACK "Enable or disable the use of TK as a third-party library" OFF)
-endif()
-
-
-
 # Build Tool: Ninja
 # Check if Ninja is installed
 find_program(NINJA ninja)
@@ -182,101 +167,114 @@ if(NOT DEFINED MPI_Fortran_COMPILER)
   set(MPI_Fortran_COMPILER "${MPI_COMPILER_DIR}/$ENV{MPI_FC}")
 endif()
 
-# Dependencies:
-if(TPL_ENABLE_ADOLC)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/adolc.cmake")
-endif()
 
-if(TPL_ENABLE_ARBORX)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/arborx.cmake")
-endif()
 
-if(TPL_ENABLE_ARPACK-NG)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/arpack-ng.cmake")
-endif()
-
-if(TPL_ENABLE_ASSIMP)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/assimp.cmake")
-endif()
-
+# Strong dependencies: (must be available:)
+# BOOST
 list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/boost.cmake")
 
-if(TPL_ENABLE_BLIS)
-  if(AMD)
-    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-blis.cmake")
-  else()
-    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/blis.cmake")
+
+# BLAS Stack:
+# Capitalize the input
+string(TOUPPER "${BLAS_STACK}" BLAS_STACK_UPPER)
+set(BLAS_STACK BLAS_STACK_UPPER)
+
+# Check if the BLAS STACK is valid
+set(VALID_BLAS "AMD" "MKL" "DEFAULT" "FLAME" "SYSTEM")
+list(FIND VALID_BLAS "${BLAS_STACK}" INDEX)
+if(NOT INDEX EQUAL -1)
+  message(STATUS "Build BLAS Stack: ${BLAS_STACK}")
+else()
+  string(JOIN ", " VALID_BLAS_STRING ${VALID_BLAS})
+  message(FATAL_ERROR 
+          "Unkown BLAS Stack: ${BLAS_STACK}.\n" 
+          "Valid Options are: ${VALID_BLAS_STRING}")
+endif()
+
+# Set default
+if (NOT DEFINED BLAS_STACK)
+  set(BLAS_STACK "DEFAULT")
+endif()
+
+# Build the selected BLAS stack
+# AMD - AOCL
+if("${BLAS_STACK}" STREQUAL "AMD")
+  set(AMD-BLIS_VERSION "5.1" CACHE STRING "Specify the version of AMD-BLIS to be used")
+  set(AMD-LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of AMD-LIBFLAME to be used")
+  set(AMD-SCALAPACK_VERSION "5.1" CACHE STRING "Specify the version of AMD-SCALAPACK to be used")
+  set(AMD-AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AMD-AOCL-UTILS to be used")
+  set(AMD-MUMPS_VERSION "5.1" CACHE STRING "Specify the version of AMD-MUMPS to be used")
+
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-aocl-utils.cmake")
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-blis.cmake")
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-libflame.cmake")
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-scalapack.cmake")
+endif()
+
+# Default - FLAME
+if( ("${BLAS_STACK}" STREQUAL "default") OR ("${BLAS_STACK}" STREQUAL "FLAME") )
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/blis.cmake")
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/libflame.cmake")
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/scalapack.cmake")
+
+# Intel - One MKL
+if("${BLAS_STACK}" STREQUAL "MKL")
+  include(${CMAKE_SOURCE_DIR}/cmake/packages/mkl-blas.cmake) # Includes BLAS, LAPACK and ScaLAPACK
+endif()
+
+# System 
+if("${BLAS_STACK}" STREQUAL "SYSTEM")
+  include(${CMAKE_SOURCE_DIR}/cmake/packages/system-blas.cmake) # Includes BLAS, LAPACK
+  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/scalapack.cmake")
+endif()
+
+
+# Optional Dependencies:
+set(package_list
+  "ADOLC"
+  "ARBOX"
+  "ARPACK-NG"
+  "ASSIMP"
+  "CGAL"
+  "FLTK"
+  "GINKGO"
+  "GMP"
+  "GMSH"
+  "GSL"
+  "HDF5"
+  "HYPRE"
+  "MPFR"
+  "MUPARSER"
+  "NETCDF"
+  "NUMDIFF"
+  "P4EST"
+  "PARMETIS"
+  "PETSC"
+  "SUNDIALS"
+  "SUPERLU_DIST"
+  "SYMENGINE"
+  "TBB"
+  "TCL"
+  "TK"
+  "TRILINOS"
+  "VTK"
+  "ZLIB-NG"
+)
+
+foreach(package IN LISTS package_list)
+  string(TOLOWER "${package}" package_lower)
+  if(TPL_ENABLE_${package})
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/${package_lower}.cmake")
   endif()
-endif()
+endforeach()
 
-if(TPL_ENABLE_CGAL)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/cgal.cmake")
-endif()
-
-if(TPL_ENABLE_fltk)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/fltk.cmake")
-  if(NOT TPL_ENABLE_GMSH)
-    message(FATAL_ERROR "fltk is only required by GMSH. Either set TPL_ENABLE_GMSH=TRUE or TPL_ENABLE_FLTK=FALSE")
-  endif()
-endif()
-
-if(TPL_ENABLE_GINKGO)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/ginkgo.cmake")
-endif()
-
-if(TPL_ENABLE_GMP)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/gmp.cmake")
-endif()
-
-if(TPL_ENABLE_GMSH)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/gmsh.cmake")
-endif()
-
-if(TPL_ENABLE_GSL)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/gsl.cmake")
-endif()
-
-if(TPL_ENABLE_HDF5)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/hdf5.cmake")
-endif()
-
-if(TPL_ENABLE_HYPRE)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/hypre.cmake")
-endif()
-
-if(TPL_ENABLE_LIBFLAME)
-  if(AMD)
-    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-libflame.cmake")
-  else()
-    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/libflame.cmake")
-  endif()
-endif()
-
-if(TPL_ENABLE_MPFR)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/mpfr.cmake")
-endif()
-
+# Dependencies, where we need to run some additional checks:
 if(TPL_ENABLE_MUMPS)
-  if(AMD)
+  if("${BLAS_STACK}" STREQUAL "AMD")
     list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-mumps.cmake")
   else()
     list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/mumps.cmake")
   endif()
-endif()
-
-if(TPL_ENABLE_MUPARSER)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/muparser.cmake")
-endif()
-
-if(TPL_ENABLE_NETCDF)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/netcdf.cmake")
-  if(NOT TPL_ENABLE_TRILINOS)
-    message(FATAL_ERROR "netcdf is only usable via Trilinos. Either set TPL_ENABLE_TRILINOS=TRUE or TPL_ENABLE_NETCDF=FALSE")
-  endif()
-endif()
-
-if(TPL_ENABLE_NUMDIFF)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/numdiff.cmake")
 endif()
 
 if(TPL_ENABLE_OCCT)
@@ -296,26 +294,6 @@ if(TPL_ENABLE_OCCT)
     list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tk.cmake")
   endif()
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/occt.cmake")
-endif()
-
-if(TPL_ENABLE_P4EST)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/p4est.cmake")
-endif()
-
-if(TPL_ENABLE_PARMETIS)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/parmetis.cmake")
-endif()
-
-if(TPL_ENABLE_PETSC)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/petsc.cmake")
-endif()
-
-if(TPL_ENABLE_SCALAPACK)
-  if(AMD)
-    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-scalapack.cmake")
-  else()
-    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/scalapack.cmake")
-  endif()
 endif()
 
 if(TPL_ENABLE_SLEPC)
@@ -339,67 +317,20 @@ if(TPL_ENABLE_SUITESPARSE)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/suitesparse.cmake")
 endif()
 
-if(TPL_ENABLE_SUNDIALS)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/sundials.cmake")
-endif()
 
-if(TPL_ENABLE_SUPERLU_DIST)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/superlu_dist.cmake")
-  if(NOT TPL_ENABLE_PARMETIS)
-    message(FATAL_ERROR "SUPERLU_DIST requires ParMETIS. Either set TPL_ENABLE_PARMETIS=TRUE or TPL_ENABLE_SUPERLU_DIST=FALSE")
-  endif()
-  if(NOT TPL_ENABLE_TRILINOS)
-    message(FATAL_ERROR "SUPERLU_DIST is only usable via Trilinos. Either set TPL_ENABLE_TRILINOS=TRUE or TPL_ENABLE_SUPERLU_DIST=FALSE")
-  endif()
-endif()
 
-if(TPL_ENABLE_SYMENGINE)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/symengine.cmake")
-endif()
-
-if(TPL_ENABLE_TBB)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tbb.cmake")
-endif()
-
-if(TPL_ENABLE_TCL)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tcl.cmake")
-  if(NOT TPL_ENABLE_OCCT)
-    message(FATAL_ERROR "tcl is only required by OCCT. Either set TPL_ENABLE_OCCT=TRUE or TPL_ENABLE_TCL=FALSE")
-  endif()
-endif()
-
-if(TPL_ENABLE_TK)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/tk.cmake")
-  if(NOT TPL_ENABLE_OCCT)
-    message(FATAL_ERROR "tk is only required by OCCT. Either set TPL_ENABLE_OCCT=TRUE or TPL_ENABLE_TK=FALSE")
-  endif()
-endif()
-
-if(TPL_ENABLE_TRILINOS)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/trilinos.cmake")
-endif()
-
-if(TPL_ENABLE_VTK)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/vtk.cmake")
-endif()
-
-if(TPL_ENABLE_ZLIB-NG)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/zlib-ng.cmake")
-endif()
-
+# Bring the dependencies into the correct order:
 execute_process(
   COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/resolve_dependencies.py ${TPLS_TO_INCLUDE}
   OUTPUT_VARIABLE sorted_packages_raw
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-
-# Convert back to CMake list
 string(REPLACE ";" ";" sorted_packages "${sorted_packages_raw}")
-
-# Include in sorted order
 foreach(pkg ${sorted_packages})
   include("${CMAKE_SOURCE_DIR}/cmake/packages/${pkg}.cmake")
 endforeach()
+
+
 
 # Finally deal.II itself!
 include(${CMAKE_SOURCE_DIR}/cmake/packages/dealii.cmake)
