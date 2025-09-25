@@ -14,8 +14,6 @@ if(NOT SCALAPACK_FOUND)
     ${scalapack_cmake_args}
   )
 
-  list(APPEND scalapack_cmake_args -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/scalapack/${SCALAPACK_VERSION})
-  
   set(package_name "scalapack")
 
   build_cmake_subproject(scalapack)
@@ -31,8 +29,8 @@ list(APPEND dealii_cmake_args "-D DEAL_II_WITH_SCALAPACK:BOOL=ON")
 list(APPEND dealii_cmake_args "-D SCALAPACK_DIR=${SCALAPACK_DIR}")
 
 # Add scalapack as dependecie to PETSc
-list(APPEND petsc_autotool_args "--with-scalapack=true")
-list(APPEND petsc_autotool_args "--with-scalapack-lib=${SCALAPACK_DIR}/lib64/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
+#list(APPEND petsc_autotool_args "--with-scalapack=true")
+#list(APPEND petsc_autotool_args "--with-scalapack-lib=${SCALAPACK_DIR}/lib64/libscalapack${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Add scalapack to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_SCALAPACK:BOOL=ON")

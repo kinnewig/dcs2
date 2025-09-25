@@ -29,7 +29,7 @@ function(build_autotools_subproject_with_custom_configure_and_update name config
       BUILD_COMMAND make -j ${THREADS}
       INSTALL_COMMAND make install
       UPDATE_COMMAND ${update}
-      CONFIGURE_COMMAND ${configure} CC=${C_COMPILER} CXX=${CXX_COMPILIER} ${${name}_autotool_args}
+      CONFIGURE_COMMAND ${configure} ${${name}_autotool_args}
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${name}/${${name_upper}_VERSION}
       BUILD_IN_SOURCE ON
       BUILD_BYPRODUCTS ${${name_upper}_LIBRARIES}
@@ -44,7 +44,7 @@ function(build_autotools_subproject_with_custom_configure_and_update name config
       BUILD_COMMAND make -j ${THREADS}
       INSTALL_COMMAND make install
       UPDATE_COMMAND ${update}
-      CONFIGURE_COMMAND ${configure} CC=${C_COMPILER} CXX=${CXX_COMPILIER} ${${name}_autotool_args}
+      CONFIGURE_COMMAND ${configure} ${${name}_autotool_args}
       INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${name}/${${name_upper}_VERSION}
       BUILD_IN_SOURCE ON
       BUILD_BYPRODUCTS ${${name_upper}_LIBRARIES}
