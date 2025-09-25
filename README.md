@@ -108,12 +108,45 @@ Usage:
 
 
 ### Blas Options
-One specilty of DCS2 is, that it can build deal.II and the TPL packages with different Blas backends.
+One specialty of DCS2 is its ability to build deal.II and the TPL packages with different BLAS backends.
+You can select the backend using the flag `--blas-stack=<backend>`. 
+The following options are available:
+- `AMD` AMD AOCL, optimized BLAS routines for AMD CPUs.
+- `FLAME` Builds BLIS and FLAME. This is the default option.
+- `MKL` Intel OneMKL, optimized BLAS routines for Intel CPUs.
+- `SYSTEM` Uses BLAS, LAPACK, and ScaLAPACK provided by the system's package manager.
+
+
+#### AMD AOCL 
+AMD AOCL provides hardware acceleration for AMD Zen CPUs. To select this BLAS stack, use:
+```bash
+--blas-stack=AMD
+```
+
+The AOCL stack requires the AOCC compiler. Due to licensing restrictions, AOCC cannot be downloaded automatically.
+Download [aocc-compiler-5.0.0.tar](https://www.amd.com/de/developer/aocc/eula/aocc-5-0-eula.html?filename=aocc-compiler-5.0.0.tar) and place it in the DCS2 root directory. DCS2 will attempt to install it automatically from there.
+
+Alternatively, visit: https://www.amd.com/de/developer/aocc.html download the latest version, and install it manually.
+
+
+#### FLAME
+Builds BLIS and FLAME. This option offers a good balance between ease of use and performance, and is the recommended default.
+```bash
+--blas-stack=FLAME
+```
+
+#### Intel MKL
+Intel OneMKL provides optimized BLAS, LAPACK, and ScaLAPACK routines for Intel architectures. To select this BLAS stack, use:
+```bash
+--blas-stack=MKL
+```
+This requires the Intel oneAPI Base Toolkit to be installed before running DCS2. For installation instructions, please refer to the official documentation of the [Intel oneAPI Base Tookit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html).
+
 
 #### System
 If you want to install DEALII using the system-provided BLAS stack, please use the following flag
 ```bash
---blas-stack=system
+--blas-stack=SYSTEM
 ```
 
 The most straightforward method for installing DEALII is to rely on the BLAS, LAPACK, and ScaLAPACK libraries, which are typically provided by the system repositories. 
@@ -122,16 +155,6 @@ You need to install the developer packages of the following packages `openblas` 
 In the case of Fedora/Rocky/Redhat this boils down to `sudo dnf install openblas-devel lapack-devel scalapack-openmpi-devel`
 
 
-#### AMD AOCL 
-AMD AOCL provides hardware acceleration for AMD Zen CPUs, to select this Blas stack use
-```bash
---blas-stack=AMD
-```
-
-To use the AOCL stack the AOCC compilier is required. Due to licensing, the AOCC compiler cannot be downloaded automatically.
-Download [aocc-compiler-5.0.0.tar](https://www.amd.com/de/developer/aocc/eula/aocc-5-0-eula.html?filename=aocc-compiler-5.0.0.tar) and place it in the DCS2 root directory. DCS2 will attempt to install it automatically from there.
-
-Alternatively, visit: https://www.amd.com/de/developer/aocc.html download the latest version, and install it manually.
 
 ### Installation Tools 
 DCS2 provides a list of installation tools.
