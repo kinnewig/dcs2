@@ -7,7 +7,7 @@ THREADS=$(($(nproc)-2))
 DEFAULT_PATH="${HOME}/dcs"
 
 # List of available BLAS stacks:
-BLAS_OPTIONS=(AMD default system)
+BLAS_OPTIONS=(AMD DEFAULT FLAME MKL SYSTEM)
 BOOL_OPTIONS=(ON OFF)
 BOOL_WITH_DOWNLOAD_OPTIONS=(ON OFF download)
 
@@ -419,6 +419,46 @@ check_compiler() {
       exit 1
     fi
 
+  # If we use the MKL stack, ensure we are using icx
+  elif [ "${BLAS_STACK}" = "MKL" ]; then
+
+    # check if CC is defined
+    if [[ -n "$CC" ]]; then
+      if [[ "$CC" == "icx" ]]; then
+        cecho ${GOOD} "  Found CC compilier ${CC}"
+        found_c_compiler=true
+      else
+        cecho ${WARN} "  CC is set to ${CC} instead of icx."
+      fi
+    else
+      cecho ${WARN} "  CC Variable not set."
+    fi
+
+    # If icx was not found yet, check if it is present in the path
+    if [ "$found_c_compiler" = "false" ]; then
+      if builtin command -v icx > /dev/null; then
+        cecho ${INFO} "  Found default icx."
+        export CC=icx
+        found_c_compiler=true
+      # try to source the intel compilier
+      elif [ -e "/opt/intel/oneapi/setvars.sh" ]; then
+        source /opt/intel/oneapi/setvars.sh
+        # try again to find the intel compilier
+        if builtin command -v icx > /dev/null; then
+          cecho ${INFO} "  Found default icx."
+          export CC=icx
+          found_c_compiler=true
+        fi
+      else
+        cecho ${ERROR} "  Could not find Intel compilier icx!"
+        cecho ${INFO} "  For the Intel OneMKL BLAS stack the Intel icx compilier is required."
+        cecho ${INFO} "  For more details see the README."
+        cecho ${INFO} "  Either ensure that clang is included in your PATH"
+        cecho ${INFO} "  or set the variable: export CC=</path/to>/icx"
+        exit 1
+      fi
+    fi
+
   # Otherwise, just check that we have a C compilier
   else
     if [[ -n "$CC" ]]; then
@@ -496,6 +536,46 @@ check_compiler() {
       cecho ${ERROR} "  clang compilier. But for the AMD BLAS stack the AMD clang compilier"
       cecho ${ERROR} "  is required. For more details see the README."
       exit 1
+    fi
+
+  # If we use the MKL stack, ensure we are using icx
+  elif [ "${BLAS_STACK}" = "MKL" ]; then
+
+    # check if CXX is defined
+    if [[ -n "$CXX" ]]; then
+      if [[ "$CXX" == "icpx" ]]; then
+        cecho ${GOOD} "  Found CXX compilier ${CXX}"
+        found_c_compiler=true
+      else
+        cecho ${WARN} "  CXX is set to ${CXX} instead of icpx."
+      fi
+    else
+      cecho ${WARN} "  CXX Variable not set."
+    fi
+
+    # If icx was not found yet, check if it is present in the path
+    if [ "$found_cxx_compiler" = "false" ]; then
+      if builtin command -v icpx > /dev/null; then
+        cecho ${INFO} "  Found default icx."
+        export CXX=icpx
+        found_cxx_compiler=true
+      # try to source the intel compilier
+      elif [ -e "/opt/intel/oneapi/setvars.sh" ]; then
+        source /opt/intel/oneapi/setvars.sh
+        # try again to find the intel compilier
+        if builtin command -v icpx > /dev/null; then
+          cecho ${INFO} "  Found default icpx."
+          export CXX=icpx
+          found_cxx_compiler=true
+        fi
+      else
+        cecho ${ERROR} "  Could not find Intel compilier icx!"
+        cecho ${INFO} "  For the Intel OneMKL BLAS stack the Intel icx compilier is required."
+        cecho ${INFO} "  For more details see the README."
+        cecho ${INFO} "  Either ensure that clang is included in your PATH"
+        cecho ${INFO} "  or set the variable: export CXX=</path/to>/icx"
+        exit 1
+      fi
     fi
 
   # Otherwise, just check that we have a CXX compilier
@@ -795,7 +875,7 @@ parse_arguments() {
               echo "  -M <ON|OFF>,  --mold=<ON|OFF>                Enable or disable the use of mold"
               echo "  -U                                           Do not interupt"
               echo "  -v,           --version                      Print the version number"
-              echo "                --blas-stack=<blas option>     Select which BLAS to use (default|AMD)"
+              echo "                --blas-stack=<blas option>     Select which BLAS to use (AMD|FLAME|MKL|SYSTEM)"
               echo "                --cmake-flags=<CMake Options>  Specify additional CMake Options, see the README for details" 
               exit 1
             ;;
@@ -1033,22 +1113,26 @@ parse_arguments() {
 
     # -- BLAS stack --
     if [ -z "${BLAS_STACK}" ]; then
-        BLAS_STACK=default
+        BLAS_STACK=DEFAULT
     fi
 
     # check if the user selcted a valid blas option:
     cecho ${INFO} "BLAS stack: "
+    BLAS_STACK=$(echo "${BLAS_STACK^^}") # Capitalize the user input
     if [[ " ${BLAS_OPTIONS[@]} " =~ " ${BLAS_STACK} " ]]; then
       echo "  ${BLAS_STACK}"
     else
       cecho ${WARN} "  Unkown BLAS stack: ${BLAS_STACK}"
       cecho ${WARN} "  Default to use the default BLAS stack."
-      BLAS_STACK=default
+      BLAS_STACK=DEFAULT
     fi
+
+    # Add the BLAS Stack to the CMake Options:
+    CMAKE_FLAGS="${CMAKE_FLAGS} -D BLAS_STACK=${BLAS_STACK}"
 
     # Print the information about the BLAS stack
     echo "  To select a different BLAS stack use: --blas-stack=<OPTION>"
-    echo "  The currently available options are: AMD, default, system"
+    echo "  The currently available options are: AMD, DEFAULT, FLAME, MKL, SYSTEM"
     echo
 
 
@@ -1258,8 +1342,6 @@ if [ "${BLAS_STACK}" = "AMD" ]; then
   if ! check_and_install_aocc "&@"; then
     exit 1 
   fi
-  # Add AMD=ON to the CMake flags aswell:
-  CMAKE_FLAGS="${CMAKE_FLAGS} -D AMD=ON"
 fi
 
 if [ "${USE_MOLD}" = "ON" ]; then
