@@ -57,10 +57,10 @@ option(TPL_ENABLE_GSL   "Enable or disable the use of GSL as a third-party libra
 set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 
 option(TPL_ENABLE_HDF5        "Enable or disable the use of HDF5 as a third-party library"        ON)
-set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
+set(HDF5_VERSION "5.1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
 
 option(TPL_ENABLE_HYPRE        "Enable or disable the use of hypre as a third-party library"      OFF)
-set(HYPRE_VERSION "2.33.0" CACHE STRING "Specify the version of HYPRE to be used")
+set(HYPRE_VERSION "3.0.0" CACHE STRING "Specify the version of HYPRE to be used")
 
 option(TPL_ENABLE_LIBFLAME    "Enable or disable the use of LIBFLAME as a third-party library"    ON)
 set(LIBFLAME_VERSION "5.2.0" CACHE STRING "Specify the version of LIBFLAME to be used")
@@ -121,7 +121,7 @@ option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party
 set(GMSH_VERSION "4.14.1" CACHE STRING "Specify the version of GMSH to be used")
 
 option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"          OFF)
-set(VTK_VERSION "9.5.1" CACHE STRING "Specify the version of VTK to be used")
+set(VTK_VERSION "9.5.2" CACHE STRING "Specify the version of VTK to be used")
 
 option(TPL_ENABLE_OCCT       "Enable or disable the use of OpenCascade as a third-party library"  OFF)
 set(OCCT_VERSION "7.9.1" CACHE STRING "Specify the version of OCCT to be used")
@@ -207,7 +207,7 @@ if("${BLAS_STACK}" STREQUAL "AMD")
   set(AMD-LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of AMD-LIBFLAME to be used")
   set(AMD-SCALAPACK_VERSION "5.1" CACHE STRING "Specify the version of AMD-SCALAPACK to be used")
   set(AMD-AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AMD-AOCL-UTILS to be used")
-  set(AMD-MUMPS_VERSION "5.1" CACHE STRING "Specify the version of AMD-MUMPS to be used")
+  set(AMD-MUMPS_VERSION "AOCL-5.1-GA" CACHE STRING "Specify the version of AMD-MUMPS to be used")
 
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-aocl-utils.cmake")
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-blis.cmake")
