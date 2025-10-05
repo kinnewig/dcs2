@@ -42,7 +42,7 @@ option(TPL_ENABLE_BOOST       "Enable or disable the use of BOOST as a third-par
 set(BOOST_VERSION "1.89.0" CACHE STRING "Specify the version of BOOST to be used")
 
 option(TPL_ENABLE_CGAL       "Enable or disable the use of CGAL as a third-party library"         OFF)
-set(CGAL_VERSION "6.0.2" CACHE STRING "Specify the version of CGAL to be used")
+set(CGAL_VERSION "6.1" CACHE STRING "Specify the version of CGAL to be used")
 
 option(TPL_ENABLE_BLIS        "Enable or disable the use of BLIS as a third-party library"        ON)
 set(BLIS_VERSION "2.0" CACHE STRING "Specify the version of BLIS to be used")
@@ -60,7 +60,7 @@ option(TPL_ENABLE_HDF5        "Enable or disable the use of HDF5 as a third-part
 set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
 
 option(TPL_ENABLE_HYPRE        "Enable or disable the use of hypre as a third-party library"      OFF)
-set(HYPRE_VERSION "2.33.0" CACHE STRING "Specify the version of HYPRE to be used")
+set(HYPRE_VERSION "3.0.0" CACHE STRING "Specify the version of HYPRE to be used")
 
 option(TPL_ENABLE_LIBFLAME    "Enable or disable the use of LIBFLAME as a third-party library"    ON)
 set(LIBFLAME_VERSION "5.2.0" CACHE STRING "Specify the version of LIBFLAME to be used")
@@ -90,7 +90,7 @@ option(TPL_ENABLE_SUITESPARSE "Enable or disable the use of SuiteSparse as a thi
 set(SUITESPARSE_VERSION "7.11.0" CACHE STRING "Specify the version of SUITESPARSE to be used")
 
 option(TPL_ENABLE_SUNDIALS   "Enable or disable the use of SUNDIALS as a third-party library"     OFF)
-set(SUNDIALS_VERSION "7.4.0" CACHE STRING "Specify the version of SUNDIALS to be used")
+set(SUNDIALS_VERSION "7.5.0" CACHE STRING "Specify the version of SUNDIALS to be used")
 
 option(TPL_ENABLE_SYMENGINE   "Enable or disable the use of SYMENGINE as a third-party library"   OFF)
 set(SYMENGINE_VERSION "0.14.0" CACHE STRING "Specify the version of SYMENGINE to be used")
@@ -103,10 +103,10 @@ option(TPL_ENABLE_PARMETIS       "Enable or disable the use of PARMETIS as a thi
 set(PARMETIS_VERSION "4.0.3" CACHE STRING "Specify the version of PARMETIS to be used")
 
 option(TPL_ENABLE_PETSC       "Enable or disable the use of PETSc as a third-party library"       ON)
-set(PETSC_VERSION "3.23.6" CACHE STRING "Specify the version of PETSC to be used")
+set(PETSC_VERSION "3.24.0" CACHE STRING "Specify the version of PETSC to be used")
 
 option(TPL_ENABLE_SLEPC       "Enable or disable the use of SLEPc as a third-party library"       ON)
-set(SLEPC_VERSION "3.23.3" CACHE STRING "Specify the version of SLEPC to be used")
+set(SLEPC_VERSION "3.24.0" CACHE STRING "Specify the version of SLEPC to be used")
 
 option(TPL_ENABLE_SUPERLU_DIST "Enable or disable the use of superlu_dist as a third-party library" ON)
 set(SUPERLU_DIST_VERSION "9.1.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
@@ -121,7 +121,7 @@ option(TPL_ENABLE_GMSH       "Enable or disable the use of GMSH as a third-party
 set(GMSH_VERSION "4.14.1" CACHE STRING "Specify the version of GMSH to be used")
 
 option(TPL_ENABLE_VTK        "Enable or disable the use of VTK as a third-party library"          OFF)
-set(VTK_VERSION "9.5.1" CACHE STRING "Specify the version of VTK to be used")
+set(VTK_VERSION "9.5.2" CACHE STRING "Specify the version of VTK to be used")
 
 option(TPL_ENABLE_OCCT       "Enable or disable the use of OpenCascade as a third-party library"  OFF)
 set(OCCT_VERSION "7.9.1" CACHE STRING "Specify the version of OCCT to be used")
