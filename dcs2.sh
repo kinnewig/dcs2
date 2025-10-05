@@ -41,7 +41,7 @@ cecho() {
 # Download and install CMake
 download_and_install_cmake() {
     # Read the CMake version from VERSIONS.cmake
-    CMAKE_VERSION=4.1.1
+    CMAKE_VERSION=4.1.2
 
     # Save the current directory
     local root_dir=$(pwd)

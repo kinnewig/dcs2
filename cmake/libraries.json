@@ -57,13 +57,15 @@
   "cgal": {
     "git": "https://github.com/CGAL/cgal.git",
     "6.0.1": "v6.0.1",
-    "6.0.2": "v6.0.2"
+    "6.0.2": "v6.0.2",
+    "6.1.0": "v6.1"
   },
   "cmake": {
     "git": "https://github.com/Kitware/CMake.git",
     "4.0.3": "v4.0.3",
     "4.1.0": "v4.1.0",
-    "4.1.1": "v4.1.1"
+    "4.1.1": "v4.1.1",
+    "4.1.2": "v4.1.2"
   },
   "dealii": {
     "git": "https://github.com/dealii/dealii",
@@ -104,7 +106,8 @@
   },
   "hypre": {
     "git": "https://github.com/hypre-space/hypre.git",
-    "2.33.0": "v2.33.0"
+    "2.33.0": "v2.33.0",
+    "3.0.0": "v3.0.0"
   },
   "libflame": {
     "git": "https://github.com/flame/libflame.git",
@@ -173,7 +176,8 @@
     "git": "https://gitlab.com/petsc/petsc.git",
     "3.23.2": "v3.23.2",
     "3.23.5": "v3.23.5",
-    "3.23.6": "v3.23.6"
+    "3.23.6": "v3.23.6",
+    "3.24.0": "v3.24.0"
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
@@ -185,7 +189,8 @@
   "slepc": {
     "git": "https://github.com/slepc/slepc.git",
     "3.23.2": "v3.23.2",
-    "3.23.3": "v3.23.3"
+    "3.23.3": "v3.23.3",
+    "3.24.0": "v3.24.0"
   },
   "suitesparse": {
     "git": "https://github.com/DrTimothyAldenDavis/SuiteSparse.git",
@@ -195,7 +200,8 @@
   },
   "sundials": {
     "git": "https://github.com/LLNL/sundials.git",
-    "7.4.0": "v7.4.0"
+    "7.4.0": "v7.4.0",
+    "7.5.0": "v7.5.0"
   },
   "superlu_dist": {
     "git": "https://github.com/xiaoyeli/superlu_dist.git",
@@ -233,7 +239,8 @@
     "git": "https://github.com/Kitware/VTK.git",
     "9.3.1": "4f02ae83179c6a1542ac3c335c73dea976578c63",
     "9.5.0": "v9.5.0",
-    "9.5.1": "v9.5.1"
+    "9.5.1": "v9.5.1",
+    "9.5.2": "v9.5.2"
   },
   "zlib-ng": {
     "git": "https://github.com/zlib-ng/zlib-ng.git",
