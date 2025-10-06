@@ -9,7 +9,7 @@ DEFAULT_PATH="${HOME}/dcs"
 # List of available BLAS stacks:
 BLAS_OPTIONS=(AMD DEFAULT FLAME MKL SYSTEM)
 BOOL_OPTIONS=(ON OFF)
-BOOL_WITH_DOWNLOAD_OPTIONS=(ON OFF download)
+BOOL_WITH_DOWNLOAD_OPTIONS=(ON OFF DOWNLOAD)
 
 # Installed packages:
 CMAKE_INSTALLED=NO 
@@ -28,10 +28,20 @@ INFO="\033[1;34m"
 BOLD="\033[1m"
 
 cecho() {
-    # Display messages in a specified colour
-    COL=$1; shift
-    echo -e "${COL}$@\033[0m"
+  # Display messages in a specified colour
+  COL=$1; shift
+  echo -e "${COL}$@\033[0m"
 }
+
+OS=$(uname -s)
+SYSTEM=$(uname -m)
+ARCHITECTURE="${SYSTEM}-${OS,,}"
+
+# Versions:
+CMAKE_VERSION=4.1.1
+MOLD_VERSION=2.40.4
+NINJA_VERSION=1.13.1
+AOCC_VERSION=5.0.0
 
 
 
@@ -40,57 +50,59 @@ cecho() {
 # ++============================================================++
 # Download and install CMake
 download_and_install_cmake() {
-    # Read the CMake version from VERSIONS.cmake
-    CMAKE_VERSION=4.1.2
+  # Save the current directory
+  local root_dir=$(pwd)
 
-    # Save the current directory
-    local root_dir=$(pwd)
+  # Download CMake
+  # Assemble the download URL
+  CMAKE_BASE_GIT=$(python3 -c "import json; print(json.load(open('cmake/libraries.json'))['cmake']['git'])")
+  CMAKE_BASE_URL="${CMAKE_BASE_GIT%.git}"
+  CMAKE_DOWNLOAD_URL=${CMAKE_BASE_URL}/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-${ARCHITECTURE}.tar.gz
+  
+  if command -v curl &>/dev/null; then
+    curl -L ${CMAKE_DOWNLOAD_URL}  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
+  elif command -v wget &>/dev/null; then
+    wget ${CMAKE_DOWNLOAD_URL} -O "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
+  else
+    cecho ${ERROR} "Error: Neither 'curl' nor 'wget' is available on this system."
+    cecho ${INFO} "Please install one of these tools to proceed:"
+    cecho ${INFO} "- Debian/Ubuntu: sudo apt install curl  # or wget"
+    cecho ${INFO} "- Red Hat/Fedora: sudo dnf install curl  # or wget"
+    exit 1
+  fi
 
-    # Download CMake
-    if command -v curl &>/dev/null; then
-      curl -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
-    elif command -v wget &>/dev/null; then
-      wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz  -O "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
-    else
-      cecho ${ERROR} "Error: Neither 'curl' nor 'wget' is available on this system."
-      cecho ${INFO} "Please install one of these tools to proceed:"
-      cecho ${INFO} "- Debian/Ubuntu: sudo apt install curl  # or wget"
-      cecho ${INFO} "- Red Hat/Fedora: sudo dnf install curl  # or wget"
-      exit 1
-    fi
+  # Extract CMake
+  tar -xf "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz" -C "${BUILD_DIR}/extracted"
 
-    # Extract CMake
-    tar -xf "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz" -C "${BUILD_DIR}/extracted"
+  # Build CMake
+  cd "${BUILD_DIR}/extracted/cmake-${CMAKE_VERSION}"
+  ./bootstrap --prefix="${PREFIX}/cmake/${CMAKE_VERSION}" 
+  make -C "${BUILD_DIR}/extracted/cmake-${CMAKE_VERSION}" -j ${THREADS}
+  make install
 
-    # Build CMake
-    cd "${BUILD_DIR}/extracted/cmake-${CMAKE_VERSION}"
-    ./bootstrap --prefix="${PREFIX}/cmake/${CMAKE_VERSION}" 
-    make -C "${BUILD_DIR}/extracted/cmake-${CMAKE_VERSION}" -j ${THREADS}
-    make install
+  # Link cmake binary to the bin folder
+  ln -sf "${PREFIX}/cmake/${CMAKE_VERSION}/bin/cmake" "${BIN_DIR}/cmake"
 
-    # Link cmake binary to the bin folder
-    ln -s "${PREFIX}/cmake/${CMAKE_VERSION}/bin/cmake" "${BIN_DIR}/cmake"
-
-    cd ${root_dir}
-
-    CMAKE_INSTALLED=YES
+  CMAKE_INSTALLED=YES
 }
 
+
+
 check_and_install_cmake() {
-    cecho ${INFO} "CMake:"
-    if command -v cmake &>/dev/null; then
-        cecho ${GOOD} "  already installed"
+  cecho ${INFO} "CMake:"
+  if command -v cmake &>/dev/null; then
+    cecho ${GOOD} "  already installed"
+  else
+    cecho ${WARN} "  attempt to install..."
+    download_and_install_cmake
+    if ! command -v cmake &>/dev/null; then
+      echo ${ERROR} "  ERROR: Failed to install CMake automatically."
+      exit 1
     else
-        cecho ${WARN} "  attempt to install..."
-        download_and_install_cmake
-        if ! command -v cmake &>/dev/null; then
-            echo ${ERROR} "  ERROR: Failed to install CMake automatically."
-            exit 1
-        else
-            cecho ${GOOD} "  CMake ${CMAKE_VERSION} has been installed to ${PREFIX}/cmake/${CMAKE_VERSION}"
-        fi
+      cecho ${GOOD} "  CMake ${CMAKE_VERSION} has been installed to ${PREFIX}/cmake/${CMAKE_VERSION}"
     fi
-    echo
+  fi
+  echo
 }
 
 
@@ -100,25 +112,74 @@ check_and_install_cmake() {
 # ++============================================================++
 # Check if Ninja is installed and install if not
 check_and_install_ninja() {
-    cecho ${INFO} "Ninja:"
-    if command -v ninja &>/dev/null; then
-        cecho ${GOOD} "  already installed"
-    else
-        cecho ${WARN} "  attempting to install..."
-        # Call the CMake script to install Ninja
-        cmake -S ninja -B ${BUILD_DIR}/ninja -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
-        cmake --build ${BUILD_DIR}/ninja -- -j ${THREADS}
-        cmake --install ${BUILD_DIR}/ninja
+  cecho ${INFO} "Ninja:"
+  if command -v ninja &>/dev/null; then
+    cecho ${GOOD} "  already installed"
+  else
+    cecho ${WARN} "  attempting to install..."
+    # Call the CMake script to install Ninja
+    cmake -S ninja -B ${BUILD_DIR}/ninja -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
+    cmake --build ${BUILD_DIR}/ninja -- -j ${THREADS}
+    cmake --install ${BUILD_DIR}/ninja
 
-        if ! command -v ninja &>/dev/null; then
-            cecho ${ERROR} "  ERROR: Failed to install Ninja automatically."
-            exit 1
-        else
-            cecho ${GOOD} "  Ninja has been installed successfully."
-            NINJA_INSTALLED=YES
-        fi
+    if ! command -v ninja &>/dev/null; then
+      cecho ${ERROR} "  ERROR: Failed to install Ninja automatically."
+      exit 1
+    else
+      cecho ${GOOD} "  Ninja has been installed successfully."
+      NINJA_INSTALLED=YES
     fi
-    echo
+  fi
+  echo
+}
+
+
+
+download_and_extract_ninja() {
+  cecho ${INFO} "Ninja:"
+  if command -v ninja &>/dev/null; then
+    cecho ${GOOD} "  already installed"
+  else
+    # Assemble the download URL
+    NINJA_BASE_GIT=$(python3 -c "import json; print(json.load(open('cmake/libraries.json'))['ninja']['git'])")
+    NINJA_BASE_URL="${NINJA_BASE_GIT%.git}"
+    NINJA_DOWNLOAD_URL=${NINJA_BASE_URL}/releases/download/v${NINJA_VERSION}/ninja-${OS,,}.zip
+
+    mkdir -p ${BUILD_DIR}/source
+    mkdir -p ${BIN_DIR}
+
+    # Download Ninja
+    if command -v curl &>/dev/null; then
+      curl -L ${NINJA_DOWNLOAD_URL} -o "${BUILD_DIR}/source/ninja-${NINJA_VERSION}.zip"
+    elif command -v wget &>/dev/null; then
+      wget ${NINJA_DOWNLOAD_URL} -O "${BUILD_DIR}/source/ninja-${NINJA_VERSION}.zip"
+    else
+      cecho ${ERROR} "Error: Neither 'curl' nor 'wget' is available on this system."
+      cecho ${INFO} "Please install one of these tools to proceed:"
+      cecho ${INFO} "- Debian/Ubuntu: sudo apt install curl  # or wget"
+      cecho ${INFO} "- Red Hat/Fedora: sudo dnf install curl  # or wget"
+      exit 1
+    fi
+
+    # Extract Ninja
+    mkdir -p ${PREFIX}/ninja/${NINJA_VERSION}
+    unzip "${BUILD_DIR}/source/ninja-${NINJA_VERSION}.zip" -d "${PREFIX}/ninja/{$NINJA_VERSION}"
+
+    # Link the Ninja binary to the bin folder
+    ln -sf "${PREFIX}/ninja/${NINJA_VERSION}/ninja" "${BIN_DIR}/ninja"
+
+    # Add Ninja to the PATH
+    export PATH=${BIN_DIR}:${PATH}
+
+    # Check ninja
+    if ! command -v ninja &>/dev/null; then
+      cecho ${ERROR} "  ERROR: Failed to download ninja automatically."
+      exit 1
+    else
+      cecho ${GOOD} "  ninja has been downloaded successfully."
+    fi
+  fi
+  echo
 }
 
 
@@ -128,72 +189,72 @@ check_and_install_ninja() {
 # ++============================================================++
 # Check if mold is installed and install if not
 check_and_install_mold() {
-    cecho ${INFO} "mold:"
-    if command -v mold &>/dev/null; then
-        cecho ${GOOD} "  already installed"
-    else
-        cecho ${WARN} "  attempting to install..."
-        # Call the CMake script to install Ninja
-        cmake -S mold -B ${BUILD_DIR}/mold -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
-        cmake --build ${BUILD_DIR}/mold -- -j ${THREADS}
-        cmake --install ${BUILD_DIR}/mold
+  cecho ${INFO} "mold:"
+  if command -v mold &>/dev/null; then
+    cecho ${GOOD} "  already installed"
+  else
+    cecho ${WARN} "  attempting to install..."
+    # Call the CMake script to install Ninja
+    cmake -S mold -B ${BUILD_DIR}/mold -D CMAKE_INSTALL_PREFIX=${PREFIX} -D BIN_DIR=${BIN_DIR}
+    cmake --build ${BUILD_DIR}/mold -- -j ${THREADS}
+    cmake --install ${BUILD_DIR}/mold
 
-        if ! command -v mold &>/dev/null; then
-            cecho ${ERROR} "  ERROR: Failed to install mold automatically."
-            exit 1
-        else
-            cecho ${GOOD} "  mold has been installed successfully."
-            MOLD_INSTALLED=YES
-        fi
+    if ! command -v mold &>/dev/null; then
+      cecho ${ERROR} "  ERROR: Failed to install mold automatically."
+      exit 1
+    else
+      cecho ${GOOD} "  mold has been installed successfully."
+      MOLD_INSTALLED=YES
     fi
-    echo
+  fi
+  echo
 }
+
+
 
 # Download and extract mold
 download_and_extract_mold() {
   cecho ${INFO} "mold:"
-    if command -v mold &>/dev/null; then
-        cecho ${GOOD} "  already installed"
+  if command -v mold &>/dev/null; then
+      cecho ${GOOD} "  already installed"
+  else
+    cecho ${WARN} "  attempt to install..."
+
+    # Assemble the download URL
+    MOLD_BASE_GIT=$(python3 -c "import json; print(json.load(open('cmake/libraries.json'))['mold']['git'])")
+    MOLD_BASE_URL="${MOLD_BASE_GIT%.git}"
+    MOLD_DOWNLOAD_URL=${MOLD_BASE_URL}/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz
+
+    # Download Mold
+    if command -v curl &>/dev/null; then
+      curl -L ${MOLD_DOWNLOAD_URL} -o "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
+    elif command -v wget &>/dev/null; then
+      wget ${MOLD_DOWNLOAD_URL} -O "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
     else
-      cecho ${WARN} "  attempt to install..."
-      # Read the mold version
-      MOLD_VERSION=2.40.4
-      ARCHITECTURE=x86_64-linux
-
-      # Download Mold
-      if command -v curl &>/dev/null; then
-        curl -L https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz -o "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
-      elif command -v wget &>/dev/null; then
-        wget https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz -O "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
-      else
-        cecho ${ERROR} "Error: Neither 'curl' nor 'wget' is available on this system."
-        cecho ${INFO} "Please install one of these tools to proceed:"
-        cecho ${INFO} "- Debian/Ubuntu: sudo apt install curl  # or wget"
-        cecho ${INFO} "- Red Hat/Fedora: sudo dnf install curl  # or wget"
-        exit 1
-      fi
-
-      # Extract Mold
-      mkdir -p ${PREFIX}/mold/
-      tar -xf "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz" -C "${PREFIX}/mold/"
-
-      # Link the Mold binary to the bin folder
-      ln -s "${PREFIX}/mold/mold-${MOLD_VERSION}-${ARCHITECTURE}/bin/mold" "${BIN_DIR}/mold"
-
-      cd $(dirname $0)
-
-      # Add Mold to the PATH
-      export PATH=${BIN_DIR}:${PATH}
-
-      # Check mold
-      if ! command -v mold &>/dev/null; then
-          cecho ${ERROR} "  ERROR: Failed to install mold automatically."
-          exit 1
-      else
-          cecho ${GOOD} "  mold has been downloaded successfully."
-      fi
+      cecho ${ERROR} "Error: Neither 'curl' nor 'wget' is available on this system."
+      cecho ${INFO} "Please install one of these tools to proceed:"
+      cecho ${INFO} "- Debian/Ubuntu: sudo apt install curl  # or wget"
+      cecho ${INFO} "- Red Hat/Fedora: sudo dnf install curl  # or wget"
+      exit 1
     fi
-    echo
+
+    # Extract Mold
+    mkdir -p ${PREFIX}/mold/
+    tar -xf "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz" -C "${PREFIX}/mold/"
+
+    # Link the Mold binary to the bin folder
+    ln -sf "${PREFIX}/mold/mold-${MOLD_VERSION}-${ARCHITECTURE}/bin/mold" "${BIN_DIR}/mold"
+
+    if ! command -v mold &>/dev/null; then
+      cecho ${ERROR} "  ERROR: Failed to download mold automatically."
+      exit 1
+    else
+      cecho ${GOOD} "  mold has been installed successfully."
+      MOLD_INSTALLED=YES
+    fi
+
+  fi
+  echo
 }
 
 
@@ -204,9 +265,6 @@ download_and_extract_mold() {
 check_and_install_aocc() {
   local aocc_found=false
   local aocc_in_path=false
-
-  AOCC_VERSION=5.0.0
-  ARCHITECTURE=x86_64-linux
 
   # Check if clang is associated with AOCC
   cecho ${INFO} "AMD AOCC"
@@ -326,41 +384,53 @@ check_and_install_aocc() {
 # ||                    Add to path                             ||
 # ++============================================================++
 add_to_path() {
-    # Remove previous DCS2 block if it exists
-    if grep -q "#BEGIN: ADDED BY DCS2" ~/.bashrc; then
-        sed -i '/#BEGIN: ADDED BY DCS2/,/#END: ADDED BY DCS2/d' ~/.bashrc
+  # Create a backup:
+  BACKUP=~/.bashrc.backup.$(date +%s)
+  cp ~/.bashrc $BACKUP
+
+  # Remove previous DCS2 block if it exists
+  if grep -q "#BEGIN: ADDED BY DCS2" ~/.bashrc; then
+    sed -i '/#BEGIN: ADDED BY DCS2/,/#END: ADDED BY DCS2/d' ~/.bashrc
+  fi
+
+  # Write the DCS2 block
+  {
+    echo
+    echo "#BEGIN: ADDED BY DCS2"
+    echo "# Everything in this block will be overwritten the next time you run dcs2"
+    echo
+    echo "# --- deal.II ---"
+    echo "if [ -d \"${PREFIX}/dealii/${DEALII_VERSION}\" ]; then"
+    echo "  export DEAL_II_DIR=\"${PREFIX}/dealii/${DEALII_VERSION}\""
+    echo "fi"
+    echo
+    echo "# --- dcs2: bin, and lib  ---"
+    echo "if [ -d \"${BIN_DIR}\" ]; then"
+    echo "  export PATH=\"${BIN_DIR}:\$PATH\""
+    echo "fi"
+    echo
+    echo "if [ -d \"${LIB_DIR}\" ]; then"
+    echo "  export LD_LIBRARY_PATH=\"${LIB_DIR}:\$LD_LIBRARY_PATH\""
+    echo "fi"
+    echo
+    if [[ "${SET_AOCC_PATH}" == "ON" ]]; then
+      echo "# --- dcs2: AOCC Compiler ---"
+      echo "if [ -f \"${AOCC_PATH}/setenv_AOCC.sh\" ]; then"
+      echo "  source \"${AOCC_PATH}/setenv_AOCC.sh\""
+      echo "fi"
+      echo
     fi
+    echo "#END: ADDED BY DCS2"
+  } >> ~/.bashrc
 
-    # Append the updated PATH block
-    {
-        echo
-        echo "#BEGIN: ADDED BY DCS2"
-        echo "# Everything in this block will be overwritten the next time you run dcs2"
-        echo
-        echo "# --- dcs2: bin, lib, and lib64  ---"
-        echo "if [ -d \"${BIN_DIR}\" ]; then"
-        echo "  export PATH=\"${BIN_DIR}:\$PATH\""
-        echo "fi"
-        echo
-        echo "if [ -d \"${LIB_DIR}\" ]; then"
-        echo "  export LD_LIBRARY_PATH=\"${LIB_DIR}:\$LD_LIBRARY_PATH\""
-        echo "fi"
-        echo
-        echo "if [ -d \"${LIB64_DIR}\" ]; then"
-        echo "  export LD_LIBRARY_PATH=\"${LIB64_DIR}:\$LD_LIBRARY_PATH\""
-        echo "fi"
-        echo
+  # Preform at least a very basic sanity check:
+  if ! bash -c 'source ~/.bashrc && command -v ls >/dev/null && command -v vi >/dev/null'; then
+    cecho ${ERROR} "Auto update of the ~/.bashrc failed. PATH may be broken. Restoring backup..."
+    cp $BACKUP ~/.bashrc
+    exit 1
+  fi
 
-        if [[ "${SET_AOCC_PATH}" == "ON" ]]; then
-            echo "# --- dcs2: AOCC Compiler ---"
-            echo "if [ -f \"${AOCC_PATH}/setenv_AOCC.sh\" ]; then"
-            echo "  source \"${AOCC_PATH}/setenv_AOCC.sh\""
-            echo "fi"
-            echo
-        fi
-
-        echo "#END: ADDED BY DCS2"
-    } >> ~/.bashrc
+  source ~/.bashrc
 }
 
 
@@ -792,6 +862,7 @@ check_compiler() {
 }
 
 
+
 # ++============================================================++
 # ||                        Print Summary                       ||
 # ++============================================================++
@@ -856,424 +927,428 @@ print_summary() {
 # ||                       Parse arguments                      ||
 # ++============================================================++
 parse_arguments() {
-    # Parse command line arguments
-    while [[ $# -gt 0 ]]; do
-        KEY="$1"
-        case $KEY in
-            # Help
-            -h|--help)
-              echo "deal.II CMake SuberBuild, Version $(cat VERSION)"
-              echo "Usage: $0 [options] [--blas-stack=<BLAS option>] [--cmake-flags=\"<CMake Options>\"]"
-              echo "  -h,           --help                         Print this message"
-              echo "  -p <path>,    --prefix=<path>                Set a different prefix path (default ${DEFAULT_PATH})"
-              echo "  -b <path>,    --build=<path>                 Set a different build path (default ${DEFAULT_PATH}/tmp)$"
-              echo "  -d <path>,    --bin-dir=<path>               Set a different binary path (default ${DEFAULT_PATH}/bin)$"
-              echo "  -l <path>,    --lib-dir=<path>               Set a different library path (default ${DEFAULT_PATH}/lib)$"
-              echo "  -j <threads>, --parallel=<threads>           Set number of threads to use (default ${THREADS})"
-              echo "  -A <ON|OFF>   --add_to_path=<ON|OFF>         Enable or disable adding deal.II permanently to the path"  
-              echo "  -N <ON|OFF>,  --ninja=<ON|OFF>               Enable or disable the use of Ninja"
-              echo "  -M <ON|OFF>,  --mold=<ON|OFF>                Enable or disable the use of mold"
-              echo "  -U                                           Do not interupt"
-              echo "  -v,           --version                      Print the version number"
-              echo "                --blas-stack=<blas option>     Select which BLAS to use (AMD|FLAME|MKL|SYSTEM)"
-              echo "                --cmake-flags=<CMake Options>  Specify additional CMake Options, see the README for details" 
-              exit 1
-            ;;
+  # Parse command line arguments
+  while [[ $# -gt 0 ]]; do
+    KEY="$1"
+    case $KEY in
+      # Help
+      -h|--help)
+        echo "deal.II CMake SuberBuild, Version $(cat VERSION)"
+        echo "Usage: $0 [options] [--blas-stack=<BLAS option>] [--cmake-flags=\"<CMake Options>\"]"
+        echo "  -h,           --help                         Print this message"
+        echo "  -p <path>,    --prefix=<path>                Set a different prefix path (default ${DEFAULT_PATH})"
+        echo "  -b <path>,    --build=<path>                 Set a different build path (default ${DEFAULT_PATH}/tmp)$"
+        echo "  -d <path>,    --bin-dir=<path>               Set a different binary path (default ${DEFAULT_PATH}/bin)$"
+        echo "  -l <path>,    --lib-dir=<path>               Set a different library path (default ${DEFAULT_PATH}/lib)$"
+        echo "  -j <threads>, --parallel=<threads>           Set number of threads to use (default ${THREADS})"
+        echo "  -A <ON|OFF>   --add_to_path=<ON|OFF>         Enable or disable adding deal.II permanently to the path"  
+        echo "  -N <ON|OFF>,  --ninja=<ON|OFF|DOWNLOAD>      Enable or disable the use of Ninja"
+        echo "  -M <ON|OFF>,  --mold=<ON|OFF|DOWNLOAD>       Enable or disable the use of mold"
+        echo "  -U <ON|OFF>,  --user-interaction=<ON|OFF>    Do not interupt"
+        echo "  -v,           --version                      Print the version number"
+        echo "                --blas-stack=<blas option>     Select which BLAS to use (AMD|FLAME|MKL|SYSTEM)"
+        echo "                --cmake-flags=<CMake Options>  Specify additional CMake Options, see the README for details" 
+        exit 1
+      ;;
 
-            # prefix path
-            -p|--path)
-                PREFIX="$2"
-                shift
-                shift
-                ;;
+      # prefix path
+      -p|--path)
+        PREFIX="$2"
+        shift
+        shift
+        ;;
 
-            # build directory
-            -b|--build)
-                BUILD_DIR="$2"
-                shift
-                shift
-                ;;
-            
-            # binary directory
-            -d|--bin-dir)
-                BIN_DIR="$2"
-                shift
-                shift
-                ;;
+      # build directory
+      -b|--build)
+        BUILD_DIR="$2"
+        shift
+        shift
+        ;;
+      
+      # binary directory
+      -d|--bin-dir)
+        BIN_DIR="$2"
+        shift
+        shift
+        ;;
 
-            # binary directory
-            -l|--lib-dir)
-                LIB_DIR="$2"
-                shift
-                shift
-                ;;
+      # binary directory
+      -l|--lib-dir)
+        LIB_DIR="$2"
+        shift
+        shift
+        ;;
 
-            # Additional CMake flags    
-            -c|--cmake-flags)
-                CMAKE_FLAGS="$2"
-                shift
-                shift
-                ;;
+      # Additional CMake flags    
+      -c|--cmake-flags)
+        CMAKE_FLAGS="$2"
+        shift
+        shift
+        ;;
 
-            # Threads
-            -j)
-                THREADS="${2}"
-                shift
-                shift
-                ;;
+      # Threads
+      -j)
+        THREADS="${2}"
+        shift
+        shift
+        ;;
 
-            # Add to PATH
-            -A|--add_to_path)
-                ADD_TO_PATH="$2"
-                shift
-                shift
-                ;;
+      # Add to PATH
+      -A|--add_to_path)
+        ADD_TO_PATH=$(echo "${2^^}")
+        shift
+        shift
+        ;;
 
-            # BLAS stack
-            --blas-stack)
-                BLAS_STACK="$2"
-                shift
-                shift
-                ;;
+      # BLAS stack
+      --blas-stack)
+        BLAS_STACK=$(echo "${2^^}")
+        shift
+        shift
+        ;;
 
-            # Ninja
-            -N|--ninja)
-                USE_NINJA="$2"
-                shift
-                shift
-                ;;
+      # Ninja
+      -N|--ninja)
+        USE_NINJA=$(echo "${2^^}")
+        shift
+        shift
+        ;;
 
-           # Mold
-            -M|--mold)
-                USE_MOLD="$2"
-                shift
-                shift
-                ;;
+      # Mold
+      -M|--mold)
+        USE_MOLD=$(echo "${2^^}")
+        shift
+        shift
+        ;;
 
-            -U)
-                USER_INTERACTION=OFF
-                shift
-                shift
-                ;;
+      -U|--user-interaction)
+        USER_INTERACTION=$(echo "${2^^}")
+        shift
+        shift
+        ;;
 
-            # Version
-            -v|--version)
-                echo "$(cat VERSION)"
-                shift
-                shift
-                exit 1
-                ;;
+      # Version
+      -v|--version)
+        echo "$(cat VERSION)"
+        shift
+        shift
+        exit 1
+        ;;
 
-            # unknown flag
-            *)
-                cecho ${ERROR} "ERROR: Invalid command line option <$KEY>. See -h for more information."
-                exit 1
-                ;;
-        esac
-    done
+      # unknown flag
+      *)
+        cecho ${ERROR} "ERROR: Invalid command line option <$KEY>. See -h for more information."
+        exit 1
+        ;;
+    esac
+  done
 
-    # -- PREFIX PATH --
-    # If user provided path is not set, use default path
-    cecho ${INFO} "Installation folder:"
-    if [ -z "${PREFIX}" ]; then
-        PREFIX="${DEFAULT_PATH}"
-        echo "  No path was provided. Use the default installation folder:"
-        echo "  ${PREFIX}"
-        echo "  If you want to install deal.II to an other path, provide the path you want to use"
-        echo "  via the -p <DIR> or --path <DIR> option."
-    else 
-        # Check the input argument of the install path and (if used) replace the tilde
-        # character '~' by the users home directory ${HOME}. 
-        PREFIX=${PREFIX/#~\//$HOME\/}
-        echo "  ${PREFIX}"
-    fi
 
-    # Check if the provided path is writable
-    mkdir -p "${PREFIX}" || { cecho ${ERROR} "  Failed to create: ${PREFIX}"; exit 1; }
+  # -- PREFIX PATH --
+  # If user provided path is not set, use default path
+  cecho ${INFO} "Installation folder:"
+  if [ -z "${PREFIX}" ]; then
+    PREFIX="${DEFAULT_PATH}"
+    echo "  No path was provided. Use the default installation folder:"
+    echo "  ${PREFIX}"
+    echo "  If you want to install deal.II to an other path, provide the path you want to use"
+    echo "  via the -p <DIR> or --path <DIR> option."
+  else 
+    # Check the input argument of the install path and (if used) replace the tilde
+    # character '~' by the users home directory ${HOME}. 
+    PREFIX=${PREFIX/#~\//$HOME\/}
+    echo "  ${PREFIX}"
+  fi
+
+  # Check if the provided path is writable
+  mkdir -p "${PREFIX}" || { cecho ${ERROR} "  Failed to create: ${PREFIX}"; exit 1; }
+  echo
+
+
+  # -- BINARY DIRECTORY --
+  # If user provided binary directory is not set, use default binary directory
+  cecho ${INFO} "Binary folder:"
+  if [ -z "${BIN_DIR}" ]; then
+    BIN_DIR="${PREFIX}/bin"
+    echo "  No binary directory was provided. Use the default binary folder:"
+    echo "  ${BIN_DIR}"
+    echo "  If you want to specify an other path, provide a binary directory" 
+    echo "  using the -d <DIR> or --bin-dir <DIR> option."
+  else 
+    # Check the input argument of the install path and (if used) replace the tilde
+    # character '~' by the users home directory ${HOME}. 
+    BIN_DIR=${BIN_DIR/#~\//$HOME\/}
+    echo "  ${BIN_DIR}"
+  fi
+
+  # Check if the provided binary directory is writable
+  mkdir -p "${BIN_DIR}" || { cecho ${ERROR} "  Failed to create: ${BIN_DIR}"; exit 1; }
+  echo
+
+  # Add the BIN_DIR to as flag to CMake
+  CMAKE_FLAGS="${CMAKE_FLAGS} -D BIN_DIR=${BIN_DIR}"
+
+  # -- LIBRARY DIRECTORY --
+  # If user provided binary directory is not set, use default binary directory
+  cecho ${INFO} "Library folder:"
+  if [ -z "${LIB_DIR}" ]; then
+    LIB_DIR="${PREFIX}/lib"
+    echo "  No library directory was provided. Use the default binary folder:"
+    echo "  ${LIB_DIR}"
+    echo "  If you want to specify an other path, provide a library directory" 
+    echo "  using the -l <DIR> or --lib-dir <DIR> option."
+  else 
+    # Check the input argument of the install path and (if used) replace the tilde
+    # character '~' by the users home directory ${HOME}. 
+    LIB_DIR=${LIB_DIR/#~\//$HOME\/}
+    echo "  ${LIB_DIR}"
+  fi
+
+  # Check if the provided library directory is writable
+  mkdir -p "${LIB_DIR}" || { cecho ${ERROR} "  Failed to create: ${LIB_DIR}"; exit 1; }
+  echo
+
+  # Add the LIB_DIR to as flag to CMake
+  CMAKE_FLAGS="${CMAKE_FLAGS} -D LIB_DIR=${LIB_DIR}"
+
+
+  # -- LIBRARY64 DIRECTORY --
+  # If user provided binary directory is not set, use default binary directory
+  cecho ${INFO} "Library 64 folder:"
+  if [ -z "${LIB64_DIR}" ]; then
+    LIB64_DIR="${LIB_DIR}/../lib64"
+    echo "  The Library 64 folder will be created next to the Library folder"
+  fi
+
+  # Check if the provided library directory is writable
+  mkdir -p "${LIB64_DIR}" || { cecho ${ERROR} "  Failed to create: ${LIB64_DIR}"; exit 1; }
+  echo
+
+  # Add the LIB_DIR to as flag to CMake
+  CMAKE_FLAGS="${CMAKE_FLAGS} -D LIB64_DIR=${LIB64_DIR}"
+
+
+  # -- BUILD DIRECTORY --
+  # If user provided build_dir is not set, use default build_dir
+  cecho ${INFO} "Build folder:"
+  if [ -z "${BUILD_DIR}" ]; then
+    BUILD_DIR="${PREFIX}/tmp"
+    echo "  No build directory was provided. Use the default build folder:"
+    echo "  ${BUILD_DIR}"
+    echo "  If you want to specify an other path, provide a build directory"
+    echo "  using the -b <DIR> or --build <DIR> option."
+  else 
+    # Check the input argument of the install path and (if used) replace the tilde
+    # character '~' by the users home directory ${HOME}. 
+    BUILD_DIR=${BUILD_DIR/#~\//$HOME\/}
+    echo "  ${BUILD_DIR}"
+  fi
+  echo
+
+  # Check if the provided build directory is writable
+  mkdir -p "${BUILD_DIR}"           || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}"; exit 1; }
+  mkdir -p "${BUILD_DIR}/source"    || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/source"; exit 1; }
+  mkdir -p "${BUILD_DIR}/extracted" || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/extracted"; exit 1; }
+  mkdir -p "${BUILD_DIR}/build"     || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/build"; exit 1; }
+
+
+  # -- ADD TO PATH --
+  cecho ${INFO} "DCS2 offers to add the installed components to the default path"
+  cecho ${INFO} "by automaically modifing the ~/.bashrc"
+
+  if [ -z "${ADD_TO_PATH}" ]; then
+    ADD_TO_PATH=OFF
+    echo "  The default is not to modify the bashrc."
+    echo "  However, if you want to automatically add the installed components"
+    echo "  to the bashrc enable this feature via -A ON or --add_to_path ON."
+  fi
+
+  # Check if the variable is valid
+  if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${ADD_TO_PATH} " ]]; then
+    cecho ${WARN} "  Unkown --add_to_path option: ${ADD_TO_PATH} (available option: ON|OFF)"
+    cecho ${WARN} "  Default to --add_to_path OFF"
+    echo "  However, if you want to automatically add the installed components"
+    echo "  to the bashrc enable this feature via -A ON or --add_to_path ON."
+    ADD_TO_PATH=OFF
+  fi
+
+  # Print the corresponding information
+  if [ "${ADD_TO_PATH}" = "ON" ]; then
+    echo "  The installed components will be added to the path, by modifing"
+    echo "  the ~/.bashrc"
+  else
+    echo "  No modifications to the bashrc will be done!"
+  fi
+  echo
+
+
+  # -- BLAS stack --
+  if [ -z "${BLAS_STACK}" ]; then
+    BLAS_STACK=DEFAULT
+  fi
+
+  # check if the user selcted a valid blas option:
+  cecho ${INFO} "BLAS stack: "
+  if [[ " ${BLAS_OPTIONS[@]} " =~ " ${BLAS_STACK} " ]]; then
+    echo "  ${BLAS_STACK}"
+  else
+    cecho ${WARN} "  Unkown BLAS stack: ${BLAS_STACK}"
+    cecho ${WARN} "  Default to use the default BLAS stack."
+    BLAS_STACK=DEFAULT
+  fi
+
+  # Add the BLAS Stack to the CMake Options:
+  CMAKE_FLAGS="${CMAKE_FLAGS} -D BLAS_STACK=${BLAS_STACK}"
+
+  # Print the information about the BLAS stack
+  echo "  To select a different BLAS stack use: --blas-stack=<OPTION>"
+  echo "  The currently available options are: AMD, DEFAULT, FLAME, MKL, SYSTEM"
+  echo
+
+
+  # -- CMAKE --
+  cecho ${INFO} "CMake:"
+  if command -v cmake &>/dev/null; then
+    cecho ${GOOD} "  Found CMake"
+    echo "  Found:   $(which cmake)"
+    echo "  Version: $(cmake --version)"
+  else
+    cecho ${WARN} "  CMake not found. But this is (maybe) not a problem!"
+    cecho ${INFO} "  DCS2 will attempt to install CMake."
     echo
-
-
-    # -- BINARY DIRECTORY --
-    # If user provided binary directory is not set, use default binary directory
-    cecho ${INFO} "Binary folder:"
-    if [ -z "${BIN_DIR}" ]; then
-        BIN_DIR="${PREFIX}/bin"
-        echo "  No binary directory was provided. Use the default binary folder:"
-        echo "  ${BIN_DIR}"
-        echo "  If you want to specify an other path, provide a binary directory" 
-        echo "  using the -d <DIR> or --bin-dir <DIR> option."
-    else 
-        # Check the input argument of the install path and (if used) replace the tilde
-        # character '~' by the users home directory ${HOME}. 
-        BIN_DIR=${BIN_DIR/#~\//$HOME\/}
-        echo "  ${BIN_DIR}"
-    fi
-
-    # Check if the provided binary directory is writable
-    mkdir -p "${BIN_DIR}" || { cecho ${ERROR} "  Failed to create: ${BIN_DIR}"; exit 1; }
+    echo "  CMake is a hard requirement for DCS2, if the automated installation"
+    echo "  of CMake fails, please try to install manually (e.g. via the package"
+    echo "  manager of your system)."
     echo
-
-    # Add the BIN_DIR to as flag to CMake
-    CMAKE_FLAGS="${CMAKE_FLAGS} -D BIN_DIR=${BIN_DIR}"
-
-
-    # -- LIBRARY DIRECTORY --
-    # If user provided binary directory is not set, use default binary directory
-    cecho ${INFO} "Library folder:"
-    if [ -z "${LIB_DIR}" ]; then
-        LIB_DIR="${PREFIX}/lib"
-        echo "  No library directory was provided. Use the default binary folder:"
-        echo "  ${LIB_DIR}"
-        echo "  If you want to specify an other path, provide a library directory" 
-        echo "  using the -l <DIR> or --lib-dir <DIR> option."
-    else 
-        # Check the input argument of the install path and (if used) replace the tilde
-        # character '~' by the users home directory ${HOME}. 
-        LIB_DIR=${LIB_DIR/#~\//$HOME\/}
-        echo "  ${LIB_DIR}"
-    fi
-
-    # Check if the provided library directory is writable
-    mkdir -p "${LIB_DIR}" || { cecho ${ERROR} "  Failed to create: ${LIB_DIR}"; exit 1; }
-    echo
-
-    # Add the LIB_DIR to as flag to CMake
-    CMAKE_FLAGS="${CMAKE_FLAGS} -D LIB_DIR=${LIB_DIR}"
+    echo "  If you want CMake to be available after the install of deal.II and all of its"
+    echo "  dependencies, add ${BIN_DIR} to your enviroment."
+    echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
+    echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
+  fi
 
 
-    # -- LIBRARY64 DIRECTORY --
-    # If user provided binary directory is not set, use default binary directory
-    cecho ${INFO} "Library 64 folder:"
-    if [ -z "${LIB64_DIR}" ]; then
-        LIB64_DIR="${LIB_DIR}/../lib64"
-        echo "  The Library 64 folder will be created next to the Library folder"
-    fi
+  # -- NINJA --
+  cecho ${INFO} "Build tool:"
 
-    # Check if the provided library directory is writable
-    mkdir -p "${LIB64_DIR}" || { cecho ${ERROR} "  Failed to create: ${LIB64_DIR}"; exit 1; }
-    echo
+  if [ -z "${USE_NINJA}" ]; then
+    USE_NINJA=DOWNLOAD
+    echo "  Ninja is used by default (and replaces GNU make)."
+    echo "  If you don't want to use ninja, it can be disabled via -N OFF or --ninja OFF."
+  fi
 
-    # Add the LIB_DIR to as flag to CMake
-    CMAKE_FLAGS="${CMAKE_FLAGS} -D LIB64_DIR=${LIB64_DIR}"
+  # Check if the variable is valid
+  if [[ ! " ${BOOL_WITH_DOWNLOAD_OPTIONS[@]} " =~ " ${USE_NINJA} " ]]; then
+    cecho ${WARN} "  Unkown --ninja option: ${ADD_TO_PATH} (available option: ON|OFF|DOWNLOAD)"
+    cecho ${WARN} "  Default to --ninja DOWNLOAD"
+    USE_NINJA=DOWNLOAD
+  fi
 
-
-    # -- BUILD DIRECTORY --
-    # If user provided build_dir is not set, use default build_dir
-    cecho ${INFO} "Build folder:"
-    if [ -z "${BUILD_DIR}" ]; then
-        BUILD_DIR="${PREFIX}/tmp"
-        echo "  No build directory was provided. Use the default build folder:"
-        echo "  ${BUILD_DIR}"
-        echo "  If you want to specify an other path, provide a build directory"
-        echo "  using the -b <DIR> or --build <DIR> option."
-    else 
-        # Check the input argument of the install path and (if used) replace the tilde
-        # character '~' by the users home directory ${HOME}. 
-        BUILD_DIR=${BUILD_DIR/#~\//$HOME\/}
-        echo "  ${BUILD_DIR}"
-    fi
-    echo
-
-    # Check if the provided build directory is writable
-    mkdir -p "${BUILD_DIR}"           || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}"; exit 1; }
-    mkdir -p "${BUILD_DIR}/source"    || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/source"; exit 1; }
-    mkdir -p "${BUILD_DIR}/extracted" || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/extracted"; exit 1; }
-    mkdir -p "${BUILD_DIR}/build"     || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/build"; exit 1; }
-
-
-    # -- ADD TO PATH --
-    cecho ${INFO} "DCS2 offers to add the installed components to the default path"
-    cecho ${INFO} "by automaically modifing the ~/.bashrc"
-
-    if [ -z "${ADD_TO_PATH}" ]; then
-        ADD_TO_PATH=OFF
-        echo "  The default is not to modify the bashrc."
-        echo "  However, if you want to automatically add the installed components"
-        echo "  to the bashrc enable this feature via -A ON or --add_to_path ON."
-    fi
-
-    # Check if the variable is valid
-    if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${ADD_TO_PATH} " ]]; then
-      cecho ${WARN} "  Unkown --add_to_path option: ${ADD_TO_PATH} (available option: ON|OFF)"
-      cecho ${WARN} "  Default to --add_to_path OFF"
-      echo "  However, if you want to automatically add the installed components"
-      echo "  to the bashrc enable this feature via -A ON or --add_to_path ON."
-      ADD_TO_PATH=OFF
-    fi
-
-    # Print the corresponding information
-    if [ "${ADD_TO_PATH}" = "ON" ]; then
-      echo "  The installed components will be added to the path, by modifing"
-      echo "  the ~/.bashrc"
+  # Print the corresponding information about Ninja
+  if [[ "${USE_NINJA}" = "ON" || "${USE_NINJA}" = "DOWNLOAD" ]]; then
+    if command -v ninja &>/dev/null; then
+      cecho ${GOOD} "  Found Ninja"
+      echo "  Found:   $(which ninja)"
+      echo "  Version: $(ninja --version)"
     else
-      echo "  No modifications to the bashrc will be done!"
-    fi
-    echo
-
-
-    # -- BLAS stack --
-    if [ -z "${BLAS_STACK}" ]; then
-        BLAS_STACK=DEFAULT
-    fi
-
-    # check if the user selcted a valid blas option:
-    cecho ${INFO} "BLAS stack: "
-    BLAS_STACK=$(echo "${BLAS_STACK^^}") # Capitalize the user input
-    if [[ " ${BLAS_OPTIONS[@]} " =~ " ${BLAS_STACK} " ]]; then
-      echo "  ${BLAS_STACK}"
-    else
-      cecho ${WARN} "  Unkown BLAS stack: ${BLAS_STACK}"
-      cecho ${WARN} "  Default to use the default BLAS stack."
-      BLAS_STACK=DEFAULT
-    fi
-
-    # Add the BLAS Stack to the CMake Options:
-    CMAKE_FLAGS="${CMAKE_FLAGS} -D BLAS_STACK=${BLAS_STACK}"
-
-    # Print the information about the BLAS stack
-    echo "  To select a different BLAS stack use: --blas-stack=<OPTION>"
-    echo "  The currently available options are: AMD, DEFAULT, FLAME, MKL, SYSTEM"
-    echo
-
-
-    # -- CMAKE --
-    cecho ${INFO} "CMake:"
-    if command -v cmake &>/dev/null; then
-      cecho ${GOOD} "  Found CMake"
-      echo "  Found:   $(which cmake)"
-      echo "  Version: $(cmake --version)"
-    else
-      cecho ${WARN} "  CMake not found. But this is (maybe) not a problem!"
-      cecho ${INFO} "  DCS2 will attempt to install CMake."
-      echo
-      echo "  CMake is a hard requirement for DCS2, if the automated installation"
-      echo "  of CMake fails, please try to install manually (e.g. via the package"
-      echo "  manager of your system)."
-      echo
-      echo "  If you want CMake to be available after the install of deal.II and all of its"
+      cecho ${WARN} "  Ninja not found. But this is not a problem!"
+      if [ "${USE_NINJA}" = "ON" ]; then
+        cecho ${INFO} "  DCS2 will attempt to install Ninja."
+      fi
+      if [ "${USE_NINJA}" = "DOWNLOAD" ]; then
+        cecho ${INFO} "  DCS2 will attempt to download Ninja."
+      fi
+      echo "  If you want Ninja to be available after the install of deal.II and all of its"
       echo "  dependencies, add ${BIN_DIR} to your enviroment."
       echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
       echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
     fi
+  else
+    echo "  Using GNU make as build tool."
+  fi
+  echo
 
 
-    # -- NINJA --
-    cecho ${INFO} "Build tool:"
+  # -- MOLD --
+  cecho ${INFO} "Linker:"
+  if [ -z "${USE_MOLD}" ]; then
+    echo "  mold is used by default (and replaces ld)."
+    echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
+    USE_MOLD=DOWNLOAD
+  fi
 
-    if [ -z "${USE_NINJA}" ]; then
-      USE_NINJA=ON
-      echo "  Ninja is used by default (and replaces GNU make)."
-      echo "  If you don't want to use ninja, it can be disabled via -N OFF or --ninja OFF."
-    fi
+  # check if the user specified a valid mold option
+  if [[ ! " ${BOOL_WITH_DOWNLOAD_OPTIONS[@]} " =~ " ${USE_MOLD} " ]]; then
+    cecho ${WARN} "  Unkown mold option: ${USE_MOLD} (available option: ON|OFF|DOWNLOAD)"
+    cecho ${WARN} "  Default to download mold!"
+    echo "  mold is used by default (and replaces ld)."
+    echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
+    USE_MOLD=DOWNLOAD
+  fi
 
-    # Check if the variable is valid
-    if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${USE_NINJA} " ]]; then
-      cecho ${WARN} "  Unkown --ninja option: ${ADD_TO_PATH} (available option: ON|OFF)"
-      cecho ${WARN} "  Default to --ninja ON"
-      USE_NINJA=ON
-    fi
-
-    # Print the corresponding information about Ninja
-    if [ "${USE_NINJA}" = "ON" ]; then
-      if command -v ninja &>/dev/null; then
-        cecho ${GOOD} "  Found Ninja"
-        echo "  Found:   $(which ninja)"
-        echo "  Version: $(ninja --version)"
-      else
-        cecho ${WARN} "  Ninja not found. But this is not a problem!"
-        cecho ${INFO} "  DCS2 will attempt to install Ninja."
-        echo "  If you want Ninja to be available after the install of deal.II and all of its"
-        echo "  dependencies, add ${BIN_DIR} to your enviroment."
-        echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
-        echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
+  if [[ "${USE_MOLD}" = "ON" || "${USE_MOLD}" = "DOWNLOAD" ]]; then
+    if command -v mold &>/dev/null; then
+      cecho ${GOOD} "  Found mold!"
+      echo "  Found:   $(which mold)"
+      echo "  Version: $(mold --version)"
+    else
+      cecho ${WARN} "  Mold not found. But this is not a problem!"
+      if [ "${USE_MOLD}" = "ON" ]; then
+        cecho ${INFO} "  DCS2 will attempt to install Mold."
       fi
-    else
-      echo "  Using GNU make as build tool."
-    fi
-    echo
-
-
-    # -- MOLD --
-    cecho ${INFO} "Linker:"
-    if [ -z "${USE_MOLD}" ]; then
-        USE_MOLD=ON
-        echo "  mold is used by default (and replaces ld)."
-        echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
-    fi
-
-    # check if the user specified a valid mold option
-    if [[ ! " ${BOOL_WITH_DOWNLOAD_OPTIONS[@]} " =~ " ${USE_MOLD} " ]]; then
-      cecho ${WARN} "  Unkown mold option: ${USE_MOLD}"
-      cecho ${WARN} "  Default to use mold!"
-      echo "  mold is used by default (and replaces ld)."
-      echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
-      USE_MOLD=ON
-    fi
-
-    if [[ "${USE_MOLD}" = "ON" || "${USE_MOLD}" = "download" ]]; then
-      if command -v mold &>/dev/null; then
-        cecho ${GOOD} "  Found mold!"
-        echo "  Found:   $(which mold)"
-        echo "  Version: $(mold --version)"
-      else
-        cecho ${WARN} "  Mold not found. But this is not a problem!"
-        if [ "${USE_MOLD}" = "ON" ]; then
-          cecho ${INFO} "  DCS2 will attempt to install Mold."
-        fi
-        if [ "${USE_MOLD}" = "download" ]; then
-          cecho ${INFO} "  DCS2 will attempt to download Mold."
-        fi
-        echo "  If you want mold to be available after the install of deal.II and all of its"
-        echo "  dependencies, add ${BIN_DIR} to your enviroment."
-        echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
-        echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
+      if [ "${USE_MOLD}" = "DOWNLOAD" ]; then
+        cecho ${INFO} "  DCS2 will attempt to download Mold."
       fi
-    else
-      echo "  Use ld as linker."
+      echo "  If you want mold to be available after the install of deal.II and all of its"
+      echo "  dependencies, add ${BIN_DIR} to your enviroment."
+      echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
+      echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
     fi
-    echo
+  else
+    echo "  Use ld as linker."
+  fi
+  echo
 
-    # Set mold as linker
-    #if [[ "${USE_MOLD}" = "ON" ]]; then
-    #  export LD=mold
-    #  export LDFLAGS="-fuse-ld=mold"
-    #fi
+  # Set mold as linker
+  #if [[ "${USE_MOLD}" = "ON" ]]; then
+  #  export LD=mold
+  #  export LDFLAGS="-fuse-ld=mold"
+  #fi
 
-    # -- SET_AOCC_PATH --
-    if [ -z "${SET_AOCC_PATH}" ]; then
-        SET_AOCC_PATH=OFF
-    fi
-
-
-    # -- USER INTERACTION --
-    cecho ${INFO} "Userinteraction mode:"
-    if [ -z "${USER_INTERACTION}" ]; then
-        USER_INTERACTION=ON 
-    fi
-
-    # Check if the variable is valid
-    if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${USER_INTERACTION} " ]]; then
-      cecho ${WARN} "  Unkown -U option: ${ADD_TO_PATH} (available option: ON|OFF)"
-      cecho ${WARN} "  Default to -U ON"
-    fi
-
-    if [ "${USER_INTERACTION}" = "ON" ]; then
-      echo "  Manual, requires the user to verify the installation."
-      echo "  To supress the user interaction use: -U OFF"
-    else
-      echo "  Automatic."
-    fi
-    echo
+  # -- SET_AOCC_PATH --
+  if [ -z "${SET_AOCC_PATH}" ]; then
+      SET_AOCC_PATH=OFF
+  fi
 
 
-    # -- ASK THE USER TO CONTINUE --
-    echo "==================================================="
-    echo "IMPORTANT: Please check the configuration above."
-    if [[ "${USER_INTERACTION}" == "ON" ]]; then
-      read -p "Press Enter to continue... otherwise press STR+C"
-    fi
-    echo "==================================================="
-    echo
+  # -- USER INTERACTION --
+  cecho ${INFO} "Userinteraction mode:"
+  if [ -z "${USER_INTERACTION}" ]; then
+      USER_INTERACTION=ON 
+  fi
+
+  # Check if the variable is valid
+  if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${USER_INTERACTION} " ]]; then
+    cecho ${WARN} "  Unkown -U option: ${ADD_TO_PATH} (available option: ON|OFF)"
+    cecho ${WARN} "  Default to -U ON"
+  fi
+
+  if [ "${USER_INTERACTION}" = "ON" ]; then
+    echo "  Manual, requires the user to verify the installation."
+    echo "  To supress the user interaction use: -U OFF"
+  else
+    echo "  Automatic."
+  fi
+  echo
+
+
+  # -- ASK THE USER TO CONTINUE --
+  echo "==================================================="
+  echo "IMPORTANT: Please check the configuration above."
+  if [[ "${USER_INTERACTION}" == "ON" ]]; then
+    read -p "Press Enter to continue... otherwise press STR+C"
+  fi
+  echo "==================================================="
+  echo
 }
 
 
@@ -1348,7 +1423,7 @@ if [ "${USE_MOLD}" = "ON" ]; then
   if ! check_and_install_mold "$@"; then
     exit 1
   fi
-elif [ "${USE_MOLD}" = "download" ]; then
+elif [ "${USE_MOLD}" = "DOWNLOAD" ]; then
   if ! download_and_extract_mold "$@"; then
     exit 1
   fi
@@ -1358,7 +1433,12 @@ if [ "${USE_NINJA}" = "ON" ]; then
   if ! check_and_install_ninja "$@"; then
     exit 1
   fi
+elif [ "${USE_NINJA}" = "DOWNLOAD" ]; then
+  if ! download_and_extract_ninja "$@"; then
+    exit 1
+  fi
 fi
+
 
 # Check the compiler
 if ! check_compiler "$@"; then
@@ -1373,10 +1453,10 @@ echo "==================================================="
 
 cmake -S . -B ${BUILD_DIR} -D CMAKE_INSTALL_PREFIX=${PREFIX} -D THREADS=${THREADS} ${CMAKE_FLAGS}
 if [[ $? -eq 0 ]]; then
-    cecho ${GOOD} "Preperation succeeded"
+  cecho ${GOOD} "Preperation succeeded"
 else
-    cecho ${ERROR} "Preperation failed"
-    exit 1
+  cecho ${ERROR} "Preperation failed"
+  exit 1
 fi
 
 echo 
@@ -1390,13 +1470,13 @@ echo
 
 cmake --build ${BUILD_DIR} #-- -j ${THREADS}
 if [[ $? -eq 0 ]]; then
-    echo 
-    cecho ${GOOD} "Installation succeeded"
-    echo 
+  echo 
+  cecho ${GOOD} "Installation succeeded"
+  echo 
 else
-    echo 
-    cecho ${ERROR} "Installation failed"
-    exit 1
+  echo 
+  cecho ${ERROR} "Installation failed"
+  exit 1
 fi
 
 if ! print_summary "$@"; then
