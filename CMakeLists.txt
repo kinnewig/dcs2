@@ -254,7 +254,6 @@ set(package_list
   "NUMDIFF"
   "P4EST"
   "PARMETIS"
-  "PETSC"
   "SUNDIALS"
   "SUPERLU_DIST"
   "SYMENGINE"
@@ -301,10 +300,25 @@ if(TPL_ENABLE_OCCT)
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/occt.cmake")
 endif()
 
-if(TPL_ENABLE_SLEPC)
-  list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/slepc.cmake")
-  if(NOT TPL_ENABLE_PETSC)
-    message(FATAL_ERROR "SLEPc requires PETSc. Either set TPL_ENABLE_PETSC=TRUE or TPL_ENABLE_SLEPC=FALSE")
+if("${BLAS_STACK}" STREQUAL "AMD")
+  message(WARNING 
+    "PETSc support has been deactivated.
+     PETSc is not compatible with the AMD-BLAS stack. 
+     To enable PETSc functionality, please configure 
+     your environment with a different BLAS stack
+     (e.g., \"--blas_stack system\" or \"--blas_stack mkl\").
+    ")
+else()
+  if(TPL_ENABLE_PETSC)
+    list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/petsc.cmake")
+  endif()
+
+  if(TPL_ENABLE_SLEPC)
+    if(TPL_ENABLE_PETSC)
+      list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/slepc.cmake")
+    else()
+      message(WARNING "SLEPc requires PETSc. Disabling SLEPc")
+    endif()
   endif()
 endif()
 
