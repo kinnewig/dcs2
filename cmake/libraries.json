@@ -24,7 +24,8 @@
   "amd-mumps": {
     "git": "https://github.com/amd/mumps-build.git",
     "5.0": "5.0",
-    "5.1": "AOCL-5.1-GA"
+    "5.1": "AOCL-5.1-GA",
+    "AOCL-5.1-GA": "AOCL-5.1-GA"
   },
   "amd-scalapack": {
     "git": "https://github.com/amd/aocl-scalapack.git",
@@ -58,7 +59,8 @@
     "git": "https://github.com/CGAL/cgal.git",
     "6.0.1": "v6.0.1",
     "6.0.2": "v6.0.2",
-    "6.1.0": "v6.1"
+    "6.1.0": "v6.1",
+    "v6.1": "v6.1"
   },
   "cmake": {
     "git": "https://github.com/Kitware/CMake.git",
@@ -102,7 +104,8 @@
   },
   "hdf5": {
     "git": "https://github.com/HDFGroup/hdf5.git",
-    "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea"
+    "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea",
+    "5.1.14.6": "hdf5_1.14.6"
   },
   "hypre": {
     "git": "https://github.com/hypre-space/hypre.git",
