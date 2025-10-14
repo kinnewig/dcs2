@@ -446,6 +446,20 @@ check_compiler() {
   echo "==================================================="
   echo 
 
+  # Liker
+  if [ "${BLAS_STACK}" = "AMD" ]; then
+    cecho ${INFO} "Linker: "
+
+    # try to set the AMD linker (LLD)
+    if builtin command -v lld > /dev/null; then
+        cecho ${INFO} "  Found the AMD linker."
+        CMAKE_FLAGS="${CMAKE_FLAGS} -D BIN_DIR=${BIN_DIR}"
+      else
+        cecho ${WARN} "  Could not find the AMD linker"
+    fi
+  fi
+
+
   # NON MPI Compiler
   cecho ${INFO} "C Compiler: "
   local found_c_compiler=false
@@ -1270,41 +1284,49 @@ parse_arguments() {
 
   # -- MOLD --
   cecho ${INFO} "Linker:"
-  if [ -z "${USE_MOLD}" ]; then
-    echo "  mold is used by default (and replaces ld)."
-    echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
-    USE_MOLD=DOWNLOAD
-  fi
 
-  # check if the user specified a valid mold option
-  if [[ ! " ${BOOL_WITH_DOWNLOAD_OPTIONS[@]} " =~ " ${USE_MOLD} " ]]; then
-    cecho ${WARN} "  Unkown mold option: ${USE_MOLD} (available option: ON|OFF|DOWNLOAD)"
-    cecho ${WARN} "  Default to download mold!"
-    echo "  mold is used by default (and replaces ld)."
-    echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
-    USE_MOLD=DOWNLOAD
-  fi
-
-  if [[ "${USE_MOLD}" = "ON" || "${USE_MOLD}" = "DOWNLOAD" ]]; then
-    if command -v mold &>/dev/null; then
-      cecho ${GOOD} "  Found mold!"
-      echo "  Found:   $(which mold)"
-      echo "  Version: $(mold --version)"
-    else
-      cecho ${WARN} "  Mold not found. But this is not a problem!"
-      if [ "${USE_MOLD}" = "ON" ]; then
-        cecho ${INFO} "  DCS2 will attempt to install Mold."
-      fi
-      if [ "${USE_MOLD}" = "DOWNLOAD" ]; then
-        cecho ${INFO} "  DCS2 will attempt to download Mold."
-      fi
-      echo "  If you want mold to be available after the install of deal.II and all of its"
-      echo "  dependencies, add ${BIN_DIR} to your enviroment."
-      echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
-      echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
-    fi
+  if [ "${BLAS_STACK}" = "AMD" ]; then
+    if [[ "${USE_MOLD}" = "ON" || "${USE_MOLD}" = "DOWNLOAD" ]]; then
+      cecho ${WARN} "  Disabling mold!"
+    fi 
+    echo "  Using lld."
   else
-    echo "  Use ld as linker."
+    if [ -z "${USE_MOLD}" ]; then
+      echo "  mold is used by default (and replaces ld)."
+      echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
+      USE_MOLD=DOWNLOAD
+    fi
+
+    # check if the user specified a valid mold option
+    if [[ ! " ${BOOL_WITH_DOWNLOAD_OPTIONS[@]} " =~ " ${USE_MOLD} " ]]; then
+      cecho ${WARN} "  Unkown mold option: ${USE_MOLD} (available option: ON|OFF|DOWNLOAD)"
+      cecho ${WARN} "  Default to download mold!"
+      echo "  mold is used by default (and replaces ld)."
+      echo "  If you don't want to use mold, it can be disabled via -M OFF or --mold OFF."
+      USE_MOLD=DOWNLOAD
+    fi
+
+    if [[ "${USE_MOLD}" = "ON" || "${USE_MOLD}" = "DOWNLOAD" ]]; then
+      if command -v mold &>/dev/null; then
+        cecho ${GOOD} "  Found mold!"
+        echo "  Found:   $(which mold)"
+        echo "  Version: $(mold --version)"
+      else
+        cecho ${WARN} "  Mold not found. But this is not a problem!"
+        if [ "${USE_MOLD}" = "ON" ]; then
+          cecho ${INFO} "  DCS2 will attempt to install Mold."
+        fi
+        if [ "${USE_MOLD}" = "DOWNLOAD" ]; then
+          cecho ${INFO} "  DCS2 will attempt to download Mold."
+        fi
+        echo "  If you want mold to be available after the install of deal.II and all of its"
+        echo "  dependencies, add ${BIN_DIR} to your enviroment."
+        echo "  Alternatively DCS2 can automatically add the corresponding directory to your"
+        echo "  enviroment variables; therefore, add the flag: --add_to_path ON"
+      fi
+    else
+      echo "  Use ld as linker."
+    fi
   fi
   echo
 
