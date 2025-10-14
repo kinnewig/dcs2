@@ -33,4 +33,6 @@ list(APPEND trilinos_cmake_args "-D Amesos_ENABLE_MUMPS:BOOL=ON")
 list(APPEND trilinos_cmake_args "-D Amesos2_ENABLE_MUMPS:BOOL=ON")
 
 # Force deal.II to use MUMPS
+list(APPEND dealii_cmake_args "-D DEAL_II_WITH_MUMPS:BOOL=ON")
+list(APPEND dealii_cmake_args "-D MUMPS_DIR:PATH=${MUMPS_DIR}")
 list(APPEND dealii_cmake_args "-D DEAL_II_TRILINOS_WITH_MUMPS:BOOL=ON")
