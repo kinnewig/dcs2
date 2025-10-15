@@ -13,13 +13,13 @@ pkg_check_modules(PC_AMD-MUMPS QUIET AMD-MUMPS)
 set(AMD-MUMPS_DIR "" CACHE PATH "The directory of the AMD-MUMPS installation")
 
 find_path(AMD-MUMPS_INCLUDE_DIR NAMES dmumps_c.h
-          HINTS ${AMD-MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/mumps/${AMD-MUMPS_VERSION}
+          HINTS ${AMD-MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/amd-mumps/${AMD-MUMPS_VERSION}
           PATHS ${PC_AMD-MUMPS_INCLUDEDIR} ${PC_AMD-MUMPS_INCLUDE_DIRS}
           PATH_SUFFIXES include include/mumps
         )
 
-find_library(AMD-MUMPS_LIBRARY NAMES dmumps
-             HINTS ${AMD-MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/mumps/${AMD-MUMPS_VERSION}
+find_library(AMD-MUMPS_LIBRARY NAMES mumps_common
+             HINTS ${AMD-MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/amd-mumps/${AMD-MUMPS_VERSION}
              PATHS ${PC_AMD-MUMPS_LIBDIR} ${PC_AMD-MUMPS_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )
