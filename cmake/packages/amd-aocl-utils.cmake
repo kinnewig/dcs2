@@ -1,8 +1,8 @@
 include(ExternalProject)
 
-#find_package(AOCL-UTILS)
-set(AOCL-UTILS_FOUND FALSE)
-if(NOT AOCL-UTILS_FOUND)
+find_package(AMD-AOCL-UTILS)
+
+if(NOT AMD-AOCL-UTILS_FOUND)
   message(STATUS "Building AOCL-UTILS")
 
   build_cmake_subproject(amd-aocl-utils)
