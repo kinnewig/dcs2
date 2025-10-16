@@ -16,8 +16,6 @@ cecho() {
 # source folder
 PREFIX=$HOME/dcs2
 
-set -e
-
 # Greetings
 echo
 echo "==================================================="
@@ -63,8 +61,9 @@ else
   exit 1
 fi
 
+# Let's clean up /tmp 
+rm -rf /tmp/dcs2
+
 # Run DCS2
 cd ${PREFIX}/dcs2
-pwd
-ls
 scripts/tui.sh

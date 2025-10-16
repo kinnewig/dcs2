@@ -18,8 +18,25 @@ DCS2 simplifies the process of building and installing the **deal.II** library a
 
 ![Ubuntu 25.04](https://github.com/kinnewig/dcs2/actions/workflows/ubuntu-25.04.yml/badge.svg)
 
-## Quick start
+## One-Step Automated Install
+Those who want to get started quickly and conveniently may use dcs2 via the following command:
+```bash
+mkdir -p /tmp/dcs2 && wget -O /tmp/dcs2/dcs2.sh https://raw.githubusercontent.com/kinnewig/dcs2/refs/heads/main/scripts/dcs2-one-line-install.sh && bash /tmp/dcs2/dcs2.sh
+```
 
+## Alternative Install Methods
+Directly downloading and running code from the internet comes with some danger, as it prevents you from checking what's going on. Here is a good read on that topic [piping to bash](https://pi-hole.net/blog/2016/07/25/curling-and-piping-to-bash/#page-content).
+Therefore, here are some alternative installation methods which allow code review before installation:
+
+### Method 1: Manually download the installer and run
+Instead of doing it all in one step, download the script first, check what it is doing, and then run it.
+```bash
+wget -O dcs2.sh https://raw.githubusercontent.com/kinnewig/dcs2/refs/heads/main/scripts/dcs2-one-line-install.sh 
+# Check what dcs2.sh is doing.
+bash dcs2.sh
+```
+
+### Method 2: Clone the repository (recommended)
 To use DCS2, follow these steps:
 1. Install the Requirements (see next section).
 
@@ -28,10 +45,15 @@ To use DCS2, follow these steps:
    git clone https://github.com/kinnewig/dcs2.git
    ```
 
-3. Start the install script
+3. (Optional) Package selection
+   ```bash
+   python scripts/select_packages.py
+   ```
+
+4. Start the install script
    ```bash
    cd dcs2
-   ./dcs2 -p <path/to/install> -j <Number of threads>
+   ./dcs2 -p <path/to/install> -j <Number of threads> 
    ```
 or if you want to install for exampe your own fork of deal.II
    ```bash
