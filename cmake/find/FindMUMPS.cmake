@@ -13,11 +13,13 @@ pkg_check_modules(PC_MUMPS QUIET MUMPS)
 set(MUMPS_DIR "" CACHE PATH "The directory of the MUMPS installation")
 
 find_path(MUMPS_INCLUDE_DIR NAMES dmumps_c.h
-          HINTS ${MUMPS_DIR}/include ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}/include
-          PATHS ${PC_MUMPS_INCLUDEDIR} ${PC_MUMPS_INCLUDE_DIRS})
+          HINTS ${SEARCH_DEFAULTS} ${MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
+          PATHS ${PC_MUMPS_INCLUDEDIR} ${PC_MUMPS_INCLUDE_DIRS}
+          PATH_SUFFIXES include/mumps include
+        )
 
 find_library(MUMPS_LIBRARY NAMES dmumps
-             HINTS ${MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
+             HINTS ${SEARCH_DEFAULTS} ${MUMPS_DIR} ${CMAKE_INSTALL_PREFIX}/mumps/${MUMPS_VERSION}
              PATHS ${PC_MUMPS_LIBDIR} ${PC_MUMPS_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

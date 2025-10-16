@@ -13,13 +13,13 @@ pkg_check_modules(PC_FLTK QUIET FLTK)
 set(FLTK_DIR "" CACHE PATH "The directory of the FLTK installation")
 
 find_path(FLTK_INCLUDE_DIR NAMES Fl.H
-          HINTS ${FLTK_DIR}/include ${CMAKE_INSTALL_PREFIX}/fltk/${FLTK_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${FLTK_DIR} ${CMAKE_INSTALL_PREFIX}/fltk/${FLTK_VERSION}
           PATHS ${PC_FLTK_INCLUDEDIR} ${PC_FLTK_INCLUDE_DIRS}
-          PATH_SUFFIXES FL fltk
+          PATH_SUFFIXES include/FL include/fltk include
         )
 
-find_library(FLTK_LIBRARY NAMES libfltk.so
-             HINTS ${FLTK_DIR} ${CMAKE_INSTALL_PREFIX}/fltk/${FLTK_VERSION}
+find_library(FLTK_LIBRARY NAMES fltk
+             HINTS ${SEARCH_DEFAULTS} ${FLTK_DIR} ${CMAKE_INSTALL_PREFIX}/fltk/${FLTK_VERSION}
              PATHS ${PC_FLTK_LIBDIR} ${PC_FLTK_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

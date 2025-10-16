@@ -14,13 +14,13 @@ set(PETSC_DIR "" CACHE PATH "The directory of the Trilinos installation")
 
 # TODO: Look for a specific version file:
 find_path(PETSC_INCLUDE_DIR NAMES petsc.h
-  HINTS ${PETSC_DIR}/include ${CMAKE_INSTALL_PREFIX}/petsc/${PETSC_VERSION}/include
+  HINTS ${SEARCH_DEFAULTS} ${PETSC_DIR} ${CMAKE_INSTALL_PREFIX}/petsc/${PETSC_VERSION}
   PATHS ${PC_PETSC_INCLUDEDIR} ${PC_PETSC_INCLUDE_DIRS}
-  PATH_SUFFIXES finclude petsc petsc/finclude
+  PATH_SUFFIXES include/finclude include/petsc include/petsc/finclude include
 )
 
-find_library(PETSC_LIBRARY NAMES libpetsc.so
-  HINTS ${PETSC_DIR} ${CMAKE_INSTALL_PREFIX}/petsc/${PETSC_VERSION}
+find_library(PETSC_LIBRARY NAMES petsc
+  HINTS ${SEARCH_DEFAULTS} ${PETSC_DIR} ${CMAKE_INSTALL_PREFIX}/petsc/${PETSC_VERSION}
   PATHS ${PC_PETSC_LIBDIR} ${PC_PETSC_LIBRARY_DIRS}
   PATH_SUFFIXES lib lib64
 )

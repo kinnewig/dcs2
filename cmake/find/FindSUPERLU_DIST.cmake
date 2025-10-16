@@ -13,13 +13,13 @@ pkg_check_modules(PC_SUPERLU_DIST QUIET SUPERLU_DIST)
 set(SUPERLU_DIST_DIR "" CACHE PATH "The directory of the SUPERLU_DIST installation")
 
 find_path(SUPERLU_DIST_INCLUDE_DIR NAMES superlu_defs.h
-          HINTS ${SUPERLU_DIST_DIR}/include ${CMAKE_INSTALL_PREFIX}/superlu_dist/${SUPERLU_DIST_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${SUPERLU_DIST_DIR} ${CMAKE_INSTALL_PREFIX}/superlu_dist/${SUPERLU_DIST_VERSION}
           PATHS ${PC_SUPERLU_DIST_INCLUDEDIR} ${PC_SUPERLU_DIST_INCLUDE_DIRS}
-          PATH_SUFFIXES superlu_dist
+          PATH_SUFFIXES include/superlu_dist include
          )
 
-find_library(SUPERLU_DIST_LIBRARY NAMES libsuperlu_dist.so
-             HINTS ${SUPERLU_DIST_DIR} ${CMAKE_INSTALL_PREFIX}/superlu_dist/${SUPERLU_DIST_VERSION}
+find_library(SUPERLU_DIST_LIBRARY NAMES superlu_dist
+             HINTS ${SEARCH_DEFAULTS} ${SUPERLU_DIST_DIR} ${CMAKE_INSTALL_PREFIX}/superlu_dist/${SUPERLU_DIST_VERSION}
              PATHS ${PC_SUPERLU_DIST_LIBDIR} ${PC_SUPERLU_DIST_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

@@ -10,8 +10,8 @@ pkg_check_modules(PC_MKL-ScaLAPACK QUIET MKL-ScaLAPACK)
 
 set(MKL-ScaLAPACK_DIR "" CACHE PATH "The directory of the LIBFLAME installation")
 
-find_library(MKL-ScaLAPACK_LIBRARY NAMES libmkl_scalapack_${MKL_LP_TYPE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-             HINTS ${MKL_DIR} ${MKL_ROOT}
+find_library(MKL-ScaLAPACK_LIBRARY NAMES mkl_scalapack_${MKL_LP_TYPE}
+             HINTS ${SEARCH_DEFAULTS} ${MKL_DIR} ${MKL_ROOT}
              PATH_SUFFIXES mkl/latest/lib lib
            )
 

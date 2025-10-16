@@ -13,11 +13,13 @@ pkg_check_modules(PC_P4EST QUIET P4EST)
 set(P4EST_DIR "" CACHE PATH "The directory of the P4EST installation")
 
 find_path(P4EST_INCLUDE_DIR NAMES p4est.h
-          HINTS ${P4EST_DIR}/include ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION}/include
-          PATHS ${PC_P4EST_INCLUDEDIR} ${PC_P4EST_INCLUDE_DIRS})
+          HINTS ${SEARCH_DEFAULTS} ${P4EST_DIR} ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION}
+          PATHS ${PC_P4EST_INCLUDEDIR} ${PC_P4EST_INCLUDE_DIRS}
+          PATH_SUFFIXES include/p4est include
+        )
 
 find_library(P4EST_LIBRARY NAMES p4est
-             HINTS ${P4EST_DIR} ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION}
+             HINTS ${SEARCH_DEFAULTS} ${P4EST_DIR} ${CMAKE_INSTALL_PREFIX}/p4est/${P4EST_VERSION}
              PATHS ${PC_P4EST_LIBDIR} ${PC_P4EST_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

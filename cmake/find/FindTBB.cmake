@@ -13,11 +13,13 @@ pkg_check_modules(PC_TBB QUIET TBB)
 set(TBB_DIR "" CACHE PATH "The directory of the TBB installation")
 
 find_path(TBB_INCLUDE_DIR NAMES tbb.h
-          HINTS ${TBB_DIR}/include/tbb ${CMAKE_INSTALL_PREFIX}/tbb/${TBB_VERSION}/include/tbb
-          PATHS ${PC_TBB_INCLUDEDIR} ${PC_TBB_INCLUDE_DIRS})
+          HINTS ${SEARCH_DEFAULTS} ${TBB_DIR} ${CMAKE_INSTALL_PREFIX}/tbb/${TBB_VERSION}
+          PATHS ${PC_TBB_INCLUDEDIR} ${PC_TBB_INCLUDE_DIRS}
+          PATH_SUFFIXES include/tbb include
+        )
 
-find_library(TBB_LIBRARY NAMES libtbb${CMAKE_SHARED_LIBRARY_SUFFIX}
-             HINTS ${TBB_DIR} ${CMAKE_INSTALL_PREFIX}/tbb/${TBB_VERSION}
+find_library(TBB_LIBRARY NAMES tbb
+             HINTS ${SEARCH_DEFAULTS} ${TBB_DIR} ${CMAKE_INSTALL_PREFIX}/tbb/${TBB_VERSION}
              PATHS ${PC_TBB_LIBDIR} ${PC_TBB_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

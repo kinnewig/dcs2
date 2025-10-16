@@ -13,13 +13,13 @@ pkg_check_modules(PC_ZLIB-NG QUIET ZLIB-NG)
 set(ZLIB-NG_DIR "" CACHE PATH "The directory of the ZLIB-NG installation")
 
 find_path(ZLIB-NG_INCLUDE_DIR NAMES zlib.h
-          HINTS ${ZLIB-NG_DIR}/include ${CMAKE_INSTALL_PREFIX}/zlib-ng/${ZLIB-NG_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${ZLIB-NG_DIR} ${CMAKE_INSTALL_PREFIX}/zlib-ng/${ZLIB-NG_VERSION}
           PATHS ${PC_ZLIB-NG_INCLUDEDIR} ${PC_ZLIB-NG_INCLUDE_DIRS}
-          PATH_SUFFIXES zlib
+          PATH_SUFFIXES include/zlib include
         )
 
-find_library(ZLIB-NG_LIBRARY NAMES libz.so
-             HINTS ${ZLIB-NG_DIR} ${CMAKE_INSTALL_PREFIX}/zlib-ng/${ZLIB-NG_VERSION}
+find_library(ZLIB-NG_LIBRARY NAMES z
+             HINTS ${SEARCH_DEFAULTS} ${ZLIB-NG_DIR} ${CMAKE_INSTALL_PREFIX}/zlib-ng/${ZLIB-NG_VERSION}
              PATHS ${PC_ZLIB-NG_LIBDIR} ${PC_ZLIB-NG_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

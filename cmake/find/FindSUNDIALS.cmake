@@ -13,13 +13,13 @@ pkg_check_modules(PC_SUNDIALS QUIET SUNDIALS)
 set(SUNDIALS_DIR "" CACHE PATH "The directory of the SUNDIALS installation")
 
 find_path(SUNDIALS_INCLUDE_DIR NAMES sundials_version.h
-          HINTS ${SUNDIALS_DIR}/include ${CMAKE_INSTALL_PREFIX}/sundials/${SUNDIALS_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${SUNDIALS_DIR} ${CMAKE_INSTALL_PREFIX}/sundials/${SUNDIALS_VERSION}
           PATHS ${PC_SUNDIALS_INCLUDEDIR} ${PC_SUNDIALS_INCLUDE_DIRS}
-          PATH_SUFFIXES sundials
+          PATH_SUFFIXES include/sundials include
         )
 
-find_library(SUNDIALS_LIBRARY NAMES libsundials_core.so
-             HINTS ${SUNDIALS_DIR} ${CMAKE_INSTALL_PREFIX}/sundials/${SUNDIALS_VERSION}
+find_library(SUNDIALS_LIBRARY NAMES sundials_core
+             HINTS ${SEARCH_DEFAULTS} ${SUNDIALS_DIR} ${CMAKE_INSTALL_PREFIX}/sundials/${SUNDIALS_VERSION}
              PATHS ${PC_SUNDIALS_LIBDIR} ${PC_SUNDIALS_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

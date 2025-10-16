@@ -13,13 +13,13 @@ pkg_check_modules(PC_ASSIMP QUIET ASSIMP)
 set(ASSIMP_DIR "" CACHE PATH "The directory of the ASSIMP installation")
 
 find_path(ASSIMP_INCLUDE_DIR NAMES version.h
-          HINTS ${ASSIMP_DIR}/include ${CMAKE_INSTALL_PREFIX}/assimp/${ASSIMP_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${ASSIMP_DIR} ${CMAKE_INSTALL_PREFIX}/assimp/${ASSIMP_VERSION}
           PATHS ${PC_ASSIMP_INCLUDEDIR} ${PC_ASSIMP_INCLUDE_DIRS}
-          PATH_SUFFIXES assimp
+          PATH_SUFFIXES include/assimp include
          )
 
-find_library(ASSIMP_LIBRARY NAMES libassimp.so
-             HINTS ${ASSIMP_DIR} ${CMAKE_INSTALL_PREFIX}/assimp/${ASSIMP_VERSION}
+find_library(ASSIMP_LIBRARY NAMES assimp
+             HINTS ${SEARCH_DEFAULTS} ${ASSIMP_DIR} ${CMAKE_INSTALL_PREFIX}/assimp/${ASSIMP_VERSION}
              PATHS ${PC_ASSIMP_LIBDIR} ${PC_ASSIMP_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

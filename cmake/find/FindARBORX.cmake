@@ -12,9 +12,9 @@ pkg_check_modules(PC_ARBORX QUIET ARBORX)
 set(ARBORX_DIR "" CACHE PATH "The directory of the ARBORX installation")
 
 find_path(ARBORX_INCLUDE_DIR NAMES ArborX_Version.hpp
-          HINTS ${ARBORX_DIR}/include ${CMAKE_INSTALL_PREFIX}/arborx/${ARBORX_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${ARBORX_DIR} ${CMAKE_INSTALL_PREFIX}/arborx/${ARBORX_VERSION}
           PATHS ${PC_ARBORX_INCLUDEDIR} ${PC_ARBORX_INCLUDE_DIRS}
-          PATH_SUFFIXES ArborX
+          PATH_SUFFIXES include/ArborX /include
         )
 
 include(FindPackageHandleStandardArgs)

@@ -13,11 +13,13 @@ pkg_check_modules(PC_OCCT QUIET OCCT)
 set(OCCT_DIR "" CACHE PATH "The directory of the OCCT installation")
 
 find_path(OCCT_INCLUDE_DIR NAMES Vrml.hxx
-          HINTS ${OCCT_DIR}/include/opencascade ${CMAKE_INSTALL_PREFIX}/occt/${OCCT_VERSION}/include/opencascade
-          PATHS ${PC_OCCT_INCLUDEDIR} ${PC_OCCT_INCLUDE_DIRS})
+          HINTS ${SEARCH_DEFAULTS} ${OCCT_DIR} ${CMAKE_INSTALL_PREFIX}/occt/${OCCT_VERSION}
+          PATHS ${PC_OCCT_INCLUDEDIR} ${PC_OCCT_INCLUDE_DIRS}
+          PATH_SUFFIXES include/opencascade include
+        )
 
-find_library(OCCT_LIBRARY NAMES libTKernel${CMAKE_SHARED_LIBRARY_SUFFIX}
-             HINTS ${OCCT_DIR} ${CMAKE_INSTALL_PREFIX}/occt/${OCCT_VERSION}
+find_library(OCCT_LIBRARY NAMES TKernel
+             HINTS ${SEARCH_DEFAULTS} ${OCCT_DIR} ${CMAKE_INSTALL_PREFIX}/occt/${OCCT_VERSION}
              PATHS ${PC_OCCT_LIBDIR} ${PC_OCCT_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

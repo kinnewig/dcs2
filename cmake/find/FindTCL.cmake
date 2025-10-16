@@ -15,11 +15,13 @@ set(TCL_DIR "" CACHE PATH "The directory of the TCL installation")
 string(REGEX REPLACE "\\.[0-9]+$" "" TCL_VERSION_SHORT "${TCL_VERSION}")
 
 find_path(TCL_INCLUDE_DIR NAMES tcl.h
-          HINTS ${TCL_DIR}/include ${CMAKE_INSTALL_PREFIX}/tcl/${TCL_VERSION}/include
-          PATHS ${PC_TCL_INCLUDEDIR} ${PC_TCL_INCLUDE_DIRS})
+          HINTS ${SEARCH_DEFAULTS} ${TCL_DIR} ${CMAKE_INSTALL_PREFIX}/tcl/${TCL_VERSION}
+          PATHS ${PC_TCL_INCLUDEDIR} ${PC_TCL_INCLUDE_DIRS}
+          PATH_SUFFIXES include/tcl include
+        )
 
 find_library(TCL_LIBRARY NAMES tcl${TCL_VERSION_SHORT} tcl
-             HINTS ${TCL_DIR} ${CMAKE_INSTALL_PREFIX}/tcl/${TCL_VERSION}
+             HINTS ${SEARCH_DEFAULTS} ${TCL_DIR} ${CMAKE_INSTALL_PREFIX}/tcl/${TCL_VERSION}
              PATHS ${PC_TCL_LIBDIR} ${PC_TCL_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

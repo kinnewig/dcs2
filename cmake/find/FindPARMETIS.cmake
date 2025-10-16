@@ -14,13 +14,13 @@ set(PARMETIS_DIR "" CACHE PATH "The directory of the Trilinos installation")
 
 # TODO: Look for a specific version file:
 find_path(PARMETIS_INCLUDE_DIR NAMES parmetis.h
-  HINTS ${PARMETIS_DIR}/include ${CMAKE_INSTALL_PREFIX}/parmetis/${PARMETIS_VERSION}/include
+  HINTS ${SEARCH_DEFAULTS} ${PARMETIS_DIR} ${CMAKE_INSTALL_PREFIX}/parmetis/${PARMETIS_VERSION}
   PATHS ${PC_PARMETIS_INCLUDEDIR} ${PC_PARMETIS_INCLUDE_DIRS}
-  PATH_SUFFIXES finclude parmetis parmetis/finclude
+  PATH_SUFFIXES include/finclude include/parmetis include/parmetis/finclude include
 )
 
-find_library(PARMETIS_LIBRARY NAMES libparmetis.so
-  HINTS ${PARMETIS_DIR} ${CMAKE_INSTALL_PREFIX}/parmetis/${PARMETIS_VERSION}
+find_library(PARMETIS_LIBRARY NAMES parmetis
+  HINTS ${SEARCH_DEFAULTS} ${PARMETIS_DIR} ${CMAKE_INSTALL_PREFIX}/parmetis/${PARMETIS_VERSION}
   PATHS ${PC_PARMETIS_LIBDIR} ${PC_PARMETIS_LIBRARY_DIRS}
   PATH_SUFFIXES lib lib64
 )

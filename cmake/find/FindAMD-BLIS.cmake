@@ -13,12 +13,12 @@ pkg_check_modules(PC_AMD-BLIS QUIET AMD-BLIS)
 set(AMD-BLIS_DIR "" CACHE PATH "The directory of the AMD-BLIS installation")
 
 find_path(AMD-BLIS_INCLUDE_DIR NAMES blis.h
-          HINTS ${AMD-BLIS_DIR} ${CMAKE_INSTALL_PREFIX}/amd-blis/${AMD-BLIS_VERSION}
+          HINTS ${SEARCH_DEFAULTS} ${AMD-BLIS_DIR} ${CMAKE_INSTALL_PREFIX}/amd-blis/${AMD-BLIS_VERSION}
           PATH_SUFFIXES include/blis include
           PATHS ${PC_AMD-BLIS_INCLUDEDIR} ${PC_AMD-BLIS_INCLUDE_DIRS})
 
 find_library(AMD-BLIS_LIBRARY NAMES blis
-             HINTS ${AMD-BLIS_DIR} ${CMAKE_INSTALL_PREFIX}/amd-blis/${AMD-BLIS_VERSION}
+             HINTS ${SEARCH_DEFAULTS} ${AMD-BLIS_DIR} ${CMAKE_INSTALL_PREFIX}/amd-blis/${AMD-BLIS_VERSION}
              PATH_SUFFIXES lib lib64
              PATHS ${PC_AMD-BLIS_LIBDIR} ${PC_AMD-BLIS_LIBRARY_DIRS})
 

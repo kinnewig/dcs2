@@ -13,13 +13,13 @@ pkg_check_modules(PC_NETCDF QUIET NETCDF)
 set(NETCDF_DIR "" CACHE PATH "The directory of the NETCDF installation")
 
 find_path(NETCDF_INCLUDE_DIR NAMES netcdf_dispatch.h
-          HINTS ${NETCDF_DIR}/include ${CMAKE_INSTALL_PREFIX}/netcdf/${NETCDF_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${NETCDF_DIR} ${CMAKE_INSTALL_PREFIX}/netcdf/${NETCDF_VERSION}
           PATHS ${PC_NETCDF_INCLUDEDIR} ${PC_NETCDF_INCLUDE_DIRS}
-          PATH_SUFFIXES netcdf
+          PATH_SUFFIXES include/netcdf include
         )
 
-find_library(NETCDF_LIBRARY NAMES libnetcdf.so
-             HINTS ${NETCDF_DIR} ${CMAKE_INSTALL_PREFIX}/netcdf/${NETCDF_VERSION}
+find_library(NETCDF_LIBRARY NAMES netcdf
+             HINTS ${SEARCH_DEFAULTS} ${NETCDF_DIR} ${CMAKE_INSTALL_PREFIX}/netcdf/${NETCDF_VERSION}
              PATHS ${PC_NETCDF_LIBDIR} ${PC_NETCDF_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

@@ -13,12 +13,13 @@ pkg_check_modules(PC_GMSH QUIET GMSH)
 set(GMSH_DIR "" CACHE PATH "The directory of the GMSH installation")
 
 find_path(GMSH_INCLUDE_DIR NAMES gmsh.h
-          HINTS ${GMSH_DIR}/include ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${GMSH_DIR} ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}
           PATHS ${PC_GMSH_INCLUDEDIR} ${PC_GMSH_INCLUDE_DIRS}
+          PATH_SUFFIXES include/gmsh include
         )
 
-find_library(GMSH_LIBRARY NAMES libgmsh${CMAKE_SHARED_LIBRARY_SUFFIX}
-             HINTS ${GMSH_DIR} ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}
+find_library(GMSH_LIBRARY NAMES gmsh
+             HINTS ${SEARCH_DEFAULTS} ${GMSH_DIR} ${CMAKE_INSTALL_PREFIX}/gmsh/${GMSH_VERSION}
              PATHS ${PC_GMSH_LIBDIR} ${PC_GMSH_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

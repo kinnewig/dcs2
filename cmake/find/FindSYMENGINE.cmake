@@ -13,13 +13,13 @@ pkg_check_modules(PC_SYMENGINE QUIET SYMENGINE)
 set(SYMENGINE_DIR "" CACHE PATH "The directory of the SYMENGINE installation")
 
 find_path(SYMENGINE_INCLUDE_DIR NAMES symengine_config.h
-          HINTS ${SYMENGINE_DIR}/include ${CMAKE_INSTALL_PREFIX}/symengine/${SYMENGINE_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${SYMENGINE_DIR} ${CMAKE_INSTALL_PREFIX}/symengine/${SYMENGINE_VERSION}
           PATHS ${PC_SYMENGINE_INCLUDEDIR} ${PC_SYMENGINE_INCLUDE_DIRS}
-          PATH_SUFFIXES symengine
+          PATH_SUFFIXES include/symengine include
         )
 
-find_library(SYMENGINE_LIBRARY NAMES libsymengine.so
-             HINTS ${SYMENGINE_DIR} ${CMAKE_INSTALL_PREFIX}/symengine/${SYMENGINE_VERSION}
+find_library(SYMENGINE_LIBRARY NAMES symengine
+             HINTS ${SEARCH_DEFAULTS} ${SYMENGINE_DIR} ${CMAKE_INSTALL_PREFIX}/symengine/${SYMENGINE_VERSION}
              PATHS ${PC_SYMENGINE_LIBDIR} ${PC_SYMENGINE_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

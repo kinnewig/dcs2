@@ -13,13 +13,13 @@ pkg_check_modules(PC_MUPARSER QUIET MUPARSER)
 set(MUPARSER_DIR "" CACHE PATH "The directory of the MUPARSER installation")
 
 find_path(MUPARSER_INCLUDE_DIR NAMES muParser.h
-          HINTS ${MUPARSER_DIR}/include ${CMAKE_INSTALL_PREFIX}/muparser/${MUPARSER_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${MUPARSER_DIR} ${CMAKE_INSTALL_PREFIX}/muparser/${MUPARSER_VERSION}
           PATHS ${PC_MUPARSER_INCLUDEDIR} ${PC_MUPARSER_INCLUDE_DIRS}
-          PATH_SUFFIXES muParser
+          PATH_SUFFIXES include/muParser include
         )
 
-find_library(MUPARSER_LIBRARY NAMES libmuparser.so
-             HINTS ${MUPARSER_DIR} ${CMAKE_INSTALL_PREFIX}/muparser/${MUPARSER_VERSION}
+find_library(MUPARSER_LIBRARY NAMES muparser
+             HINTS ${SEARCH_DEFAULTS} ${MUPARSER_DIR} ${CMAKE_INSTALL_PREFIX}/muparser/${MUPARSER_VERSION}
              PATHS ${PC_MUPARSER_LIBDIR} ${PC_MUPARSER_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

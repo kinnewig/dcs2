@@ -13,13 +13,13 @@ pkg_check_modules(PC_ARPACK-NG QUIET ARPACK-NG)
 set(ARPACK-NG_DIR "" CACHE PATH "The directory of the ARPACK-NG installation")
 
 find_path(ARPACK-NG_INCLUDE_DIR NAMES arpackdef.h
-          HINTS ${ARPACK-NG_DIR}/include ${CMAKE_INSTALL_PREFIX}/arpack-ng/${ARPACK-NG_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${ARPACK-NG_DIR} ${CMAKE_INSTALL_PREFIX}/arpack-ng/${ARPACK-NG_VERSION}
           PATHS ${PC_ARPACK-NG_INCLUDEDIR} ${PC_ARPACK-NG_INCLUDE_DIRS}
-          PATH_SUFFIXES arpack
+          PATH_SUFFIXES include/arpack include
         )
 
-find_library(ARPACK-NG_LIBRARY NAMES libarpack.so
-             HINTS ${ARPACK-NG_DIR} ${CMAKE_INSTALL_PREFIX}/arpack-ng/${ARPACK-NG_VERSION}
+find_library(ARPACK-NG_LIBRARY NAMES arpack
+             HINTS ${SEARCH_DEFAULTS} ${ARPACK-NG_DIR} ${CMAKE_INSTALL_PREFIX}/arpack-ng/${ARPACK-NG_VERSION}
              PATHS ${PC_ARPACK-NG_LIBDIR} ${PC_ARPACK-NG_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

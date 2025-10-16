@@ -141,6 +141,13 @@ option(DEALII_WITH_COMPLEX    "Build deal.II with support for complex numbers"  
 
 
 
+# Additional path to search pre-installed tools:
+list(APPEND SEARCH_DEFAULTS "/usr")
+list(APPEND SEARCH_DEFAULTS "/usr/local")
+list(APPEND SEARCH_DEFAULTS "/opt")
+
+
+
 # Build Tool: Ninja
 # Check if Ninja is installed
 find_program(NINJA ninja)

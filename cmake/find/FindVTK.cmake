@@ -15,12 +15,13 @@ set(VTK_DIR "" CACHE PATH "The directory of the VTK installation")
 string(REGEX REPLACE "\\.[0-9]+$" "" VTK_VERSION_SHORT "${VTK_VERSION}")
 
 find_path(VTK_INCLUDE_DIR NAMES NAMES vtkVersion.h 
-          HINTS ${VTK_DIR}/include/vtk-${VTK_VERSION_SHORT} ${CMAKE_INSTALL_PREFIX}/vtk/${VTK_VERSION}/include/vtk-${VTK_VERSION_SHORT}
+          HINTS ${SEARCH_DEFAULTS} ${VTK_DIR} ${CMAKE_INSTALL_PREFIX}/vtk/${VTK_VERSION}
           PATHS ${PC_VTK_INCLUDEDIR} ${PC_VTK_INCLUDE_DIRS}
+          PATH_SUFFIXES include/vtk-${VTK_VERSION_SHORT} include/vtk include
          )
 
 find_library(VTK_LIBRARY NAMES vtkCommonCore 
-             HINTS ${VTK_DIR} ${CMAKE_INSTALL_PREFIX}/vtk/${VTK_VERSION}
+             HINTS ${SEARCH_DEFAULTS} ${VTK_DIR} ${CMAKE_INSTALL_PREFIX}/vtk/${VTK_VERSION}
              PATHS ${PC_VTK_LIBDIR} ${PC_VTK_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
             )

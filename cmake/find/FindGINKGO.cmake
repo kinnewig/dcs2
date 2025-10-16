@@ -13,13 +13,13 @@ pkg_check_modules(PC_GINKGO QUIET GINKGO)
 set(GINKGO_DIR "" CACHE PATH "The directory of the ginkgo installation")
 
 find_path(GINKGO_INCLUDE_DIR NAMES ginkgo.hpp
-          HINTS ${GINKGO_DIR}/include ${CMAKE_INSTALL_PREFIX}/ginkgo/${GINKGO_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${GINKGO_DIR} ${CMAKE_INSTALL_PREFIX}/ginkgo/${GINKGO_VERSION}
           PATHS ${PC_GINKGO_INCLUDEDIR} ${PC_GINKGO_INCLUDE_DIRS}
-          PATH_SUFFIXES ginkgo
+          PATH_SUFFIXES include/ginkgo include
          )
 
-find_library(GINKGO_LIBRARY NAMES libginkgo.so
-             HINTS ${GINKGO_DIR} ${CMAKE_INSTALL_PREFIX}/ginkgo/${GINKGO_VERSION}
+find_library(GINKGO_LIBRARY NAMES ginkgo
+             HINTS ${SEARCH_DEFAULTS} ${GINKGO_DIR} ${CMAKE_INSTALL_PREFIX}/ginkgo/${GINKGO_VERSION}
              PATHS ${PC_GINKGO_LIBDIR} ${PC_GINKGO_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

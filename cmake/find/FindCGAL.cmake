@@ -12,9 +12,9 @@ pkg_check_modules(PC_CGAL QUIET CGAL)
 set(CGAL_DIR "" CACHE PATH "The directory of the CGAL installation")
 
 find_path(CGAL_INCLUDE_DIR NAMES version.h
-          HINTS ${CGAL_DIR}/include ${CMAKE_INSTALL_PREFIX}/cgal/${CGAL_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${CGAL_DIR} ${CMAKE_INSTALL_PREFIX}/cgal/${CGAL_VERSION}
           PATHS ${PC_CGAL_INCLUDEDIR} ${PC_CGAL_INCLUDE_DIRS}
-          PATH_SUFFIXES CGAL
+          PATH_SUFFIXES include/CGAL include
         )
 
 include(FindPackageHandleStandardArgs)

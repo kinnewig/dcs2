@@ -13,13 +13,13 @@ pkg_check_modules(PC_ADOLC QUIET ADOLC)
 set(ADOLC_DIR "" CACHE PATH "The directory of the ADOLC installation")
 
 find_path(ADOLC_INCLUDE_DIR NAMES adolc.h
-          HINTS ${ADOLC_DIR}/include ${CMAKE_INSTALL_PREFIX}/adolc/${ADOLC_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${ADOLC_DIR} ${CMAKE_INSTALL_PREFIX}/adolc/${ADOLC_VERSION}
           PATHS ${PC_ADOLC_INCLUDEDIR} ${PC_ADOLC_INCLUDE_DIRS}
-          PATH_SUFFIXES adolc
+          PATH_SUFFIXES include include/adolc
          )
 
-find_library(ADOLC_LIBRARY NAMES libadolc.so
-             HINTS ${ADOLC_DIR} ${CMAKE_INSTALL_PREFIX}/adolc/${ADOLC_VERSION}
+find_library(ADOLC_LIBRARY NAMES adolc
+             HINTS ${SEARCH_DEFAULTS} ${ADOLC_DIR} ${CMAKE_INSTALL_PREFIX}/adolc/${ADOLC_VERSION}
              PATHS ${PC_ADOLC_LIBDIR} ${PC_ADOLC_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

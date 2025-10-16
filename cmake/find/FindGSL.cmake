@@ -13,13 +13,13 @@ pkg_check_modules(PC_GSL QUIET GSL)
 set(GSL_DIR "" CACHE PATH "The directory of the GSL installation")
 
 find_path(GSL_INCLUDE_DIR NAMES gsl_version.h
-          HINTS ${GSL_DIR}/include ${CMAKE_INSTALL_PREFIX}/gsl/${GSL_VERSION}/include/
+          HINTS ${SEARCH_DEFAULTS} ${GSL_DIR} ${CMAKE_INSTALL_PREFIX}/gsl/${GSL_VERSION}
           PATHS ${PC_GSL_INCLUDEDIR} ${PC_GSL_INCLUDE_DIRS}
-          PATH_SUFFIXES gsl
+          PATH_SUFFIXES include/gsl include
         )
 
-find_library(GSL_LIBRARY NAMES libgsl.so
-             HINTS ${GSL_DIR} ${CMAKE_INSTALL_PREFIX}/gsl/${GSL_VERSION}
+find_library(GSL_LIBRARY NAMES gsl
+             HINTS ${SEARCH_DEFAULTS} ${GSL_DIR} ${CMAKE_INSTALL_PREFIX}/gsl/${GSL_VERSION}
              PATHS ${PC_GSL_LIBDIR} ${PC_GSL_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

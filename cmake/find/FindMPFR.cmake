@@ -13,11 +13,14 @@ pkg_check_modules(PC_MPFR QUIET MPFR)
 set(MPFR_DIR "" CACHE PATH "The directory of the MPFR installation")
 
 find_path(MPFR_INCLUDE_DIR NAMES mpfr.h
-          HINTS ${MPFR_DIR}/include ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}/include/
-          PATHS ${PC_MPFR_INCLUDEDIR} ${PC_MPFR_INCLUDE_DIRS})
+          HINTS ${SEARCH_DEFAULTS} ${MPFR_DIR} ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}/include/
+          PATHS ${PC_MPFR_INCLUDEDIR} ${PC_MPFR_INCLUDE_DIRS}
+          PATH_SUFFIXES include/mpfr include
+        )
+
 
 find_library(MPFR_LIBRARY NAMES mpfr
-             HINTS ${MPFR_DIR} ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}
+             HINTS ${SEARCH_DEFAULTS} ${MPFR_DIR} ${CMAKE_INSTALL_PREFIX}/mpfr/${MPFR_VERSION}
              PATHS ${PC_MPFR_LIBDIR} ${PC_MPFR_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
            )

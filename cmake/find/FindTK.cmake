@@ -15,12 +15,13 @@ set(TK_DIR "" CACHE PATH "The directory of the TK installation")
 string(REGEX REPLACE "\\.[0-9]+$" "" TK_VERSION_SHORT "${TK_VERSION}")
 
 find_path(TK_INCLUDE_DIR NAMES tk.h
-          HINTS ${TK_DIR}/include ${CMAKE_INSTALL_PREFIX}/tk/${TK_VERSION}/include
+          HINTS ${SEARCH_DEFAULTS} ${TK_DIR} ${CMAKE_INSTALL_PREFIX}/tk/${TK_VERSION}
           PATHS ${PC_TK_INCLUDEDIR} ${PC_TK_INCLUDE_DIRS}
+          PATH_SUFFIXES include/tk include
          )
 
 find_library(TK_LIBRARY NAMES tk${TK_VERSION_SHORT} tk
-             HINTS ${TK_DIR} ${CMAKE_INSTALL_PREFIX}/tk/${TK_VERSION}
+             HINTS ${SEARCH_DEFAULTS} ${TK_DIR} ${CMAKE_INSTALL_PREFIX}/tk/${TK_VERSION}
              PATHS ${PC_TK_LIBDIR} ${PC_TK_LIBRARY_DIRS}
              PATH_SUFFIXES lib lib64
             )
