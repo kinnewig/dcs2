@@ -22,3 +22,5 @@ list(APPEND amd-libflame_cmake_args "-D LIBAOCLUTILS_LIBRARY_PATH=${AMD-AOCL-UTI
 # amd-mumps
 list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_UTILS_LIBRARY_PATH=${AMD-AOCL-UTILS_DIR}")
 list(APPEND amd-mumps_cmake_args "-D USER_PROVIDED_UTILS_INCLUDE_PATH=${AMD-AOCL-UTILS_DIR}")
+
+list(APPEND dealii_cmake_args "-D DEAL_II_LIBRARIES=${AMD-AOCL-UTILS_DIR}/lib/libaoclutils${CMAKE_SHARED_LIBRARY_SUFFIX}")
