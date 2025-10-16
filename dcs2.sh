@@ -950,23 +950,23 @@ parse_arguments() {
         echo "deal.II CMake SuberBuild, Version $(cat VERSION)"
         echo "Usage: $0 [options] [--blas-stack=<BLAS option>] [--cmake-flags=\"<CMake Options>\"]"
         echo "  -h,           --help                         Print this message"
-        echo "  -p <path>,    --prefix=<path>                Set a different prefix path (default ${DEFAULT_PATH})"
-        echo "  -b <path>,    --build=<path>                 Set a different build path (default ${DEFAULT_PATH}/tmp)$"
-        echo "  -d <path>,    --bin-dir=<path>               Set a different binary path (default ${DEFAULT_PATH}/bin)$"
-        echo "  -l <path>,    --lib-dir=<path>               Set a different library path (default ${DEFAULT_PATH}/lib)$"
-        echo "  -j <threads>, --parallel=<threads>           Set number of threads to use (default ${THREADS})"
-        echo "  -A <ON|OFF>   --add_to_path=<ON|OFF>         Enable or disable adding deal.II permanently to the path"  
-        echo "  -N <ON|OFF>,  --ninja=<ON|OFF|DOWNLOAD>      Enable or disable the use of Ninja"
-        echo "  -M <ON|OFF>,  --mold=<ON|OFF|DOWNLOAD>       Enable or disable the use of mold"
-        echo "  -U <ON|OFF>,  --user-interaction=<ON|OFF>    Do not interupt"
+        echo "  -p <path>,    --prefix <path>                Set a different prefix path (default ${DEFAULT_PATH})"
+        echo "  -b <path>,    --build <path>                 Set a different build path (default ${DEFAULT_PATH}/tmp)$"
+        echo "  -d <path>,    --bin-dir <path>               Set a different binary path (default ${DEFAULT_PATH}/bin)$"
+        echo "  -l <path>,    --lib-dir <path>               Set a different library path (default ${DEFAULT_PATH}/lib)$"
+        echo "  -j <threads>, --parallel <threads>           Set number of threads to use (default ${THREADS})"
+        echo "  -A <ON|OFF>   --add_to_path <ON|OFF>         Enable or disable adding deal.II permanently to the path"  
+        echo "  -N <ON|OFF>,  --ninja <DOWNLOAD|ON|OFF>      Enable or disable the use of Ninja"
+        echo "  -M <ON|OFF>,  --mold <DOWNLOAD|ON|OFF>       Enable or disable the use of mold"
+        echo "  -U <ON|OFF>,  --user-interaction <ON|OFF>    Do not interupt"
         echo "  -v,           --version                      Print the version number"
-        echo "                --blas-stack=<blas option>     Select which BLAS to use (AMD|FLAME|MKL|SYSTEM)"
-        echo "                --cmake-flags=<CMake Options>  Specify additional CMake Options, see the README for details" 
+        echo "                --blas-stack <blas option>     Select which BLAS to use (FLAME|SYSTEM|AMD|MKL)"
+        echo "                --cmake-flags <CMake Options>  Specify additional CMake Options, see the README for details" 
         exit 1
       ;;
 
       # prefix path
-      -p|--path)
+      -p|--prefix)
         PREFIX="$2"
         shift
         shift

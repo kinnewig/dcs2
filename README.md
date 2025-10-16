@@ -90,21 +90,21 @@ Usage:
 ./dcs2.sh [options] [--blas-stack=<blas option>] [--cmake-flags="<CMake Options>"]
 ```
 
-| Short Option     | Long Option                     | Description                                                  |
-|------------------|---------------------------------|---------------------------------------------------------------
-| `-h`             | `--help`                        | Print the help message                                       |
-| `-p <path>`      | `--prefix=<path>`               | Set a different prefix path                                  |
-| `-b <path>`      | `--build=<path>`                | Set a different build path                                   |
-| `-d <path>`      | `--bin-dir=<path>`              | Set a different binary path                                  |
-| `-l <path>`      | `--lib-dir=<path>`              | Set a different library path                                 |
-| `-j <threads>`   | `--parallel=<threads>`          | Set number of threads to use                                 |
-| `-A <ON\|OFF>`   | `--add_to_path=<ON\|OFF>`       | Enable or disable adding deal.II permanently to the path     |
-| `-N <ON\|OFF>`   | `--ninja=<ON\|OFF>`             | Enable or disable the use of Ninja                           |
-| `-M <ON\|OFF>`   | `--mold=<ON\|OFF>`              | Enable or disable the use of mold                            |
-| `-U`             |                                 | Do not interrupt                                             |
-| `-v`             | `--version`                     | Print the version number                                     |
-|                  | `--blas-stack=<blas option>`    | Select which BLAS to use (default|AMD)                       |
-|                  | `--cmake-flags=<CMake Options>` | Specify additional CMake Options, see below                  |
+| Short Option             | Long Option                     | Description                                                  |
+|--------------------------|---------------------------------|---------------------------------------------------------------
+| `-h`                     | `--help`                        | Print the help message                                       |
+| `-p <path>`              | `--prefix <path>`               | Set a different prefix path                                  |
+| `-b <path>`              | `--build <path>`                | Set a different build path                                   |
+| `-d <path>`              | `--bin-dir <path>`              | Set a different binary path                                  |
+| `-l <path>`              | `--lib-dir <path>`              | Set a different library path                                 |
+| `-j <threads>`           | `--parallel <threads>`          | Set number of threads to use                                 |
+| `-A <ON\|OFF>`           | `--add_to_path <ON\|OFF>`       | Enable or disable adding deal.II permanently to the path     |
+| `-N <DOWNLOAD\|ON\|OFF>` | `--ninja <DOWNLOAD\|ON\|OFF>`   | Enable or disable the use of Ninja                           |
+| `-M <DOWNLOAD\|ON\|OFF>` | `--mold <DOWNLOAD\|ON\|OFF>`    | Enable or disable the use of mold                            |
+| `-U`                     |                                 | Do not interrupt                                             |
+| `-v`                     | `--version`                     | Print the version number                                     |
+|                          | `--blas-stack=<blas option>`    | Select which BLAS to use (FLAME|SYSTEM|AMD|MKL)              |
+|                          | `--cmake-flags=<CMake Options>` | Specify additional CMake Options, see below                  |
 
 
 ### Blas Options
