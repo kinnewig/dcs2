@@ -163,7 +163,7 @@ download_and_extract_ninja() {
 
     # Extract Ninja
     mkdir -p ${PREFIX}/ninja/${NINJA_VERSION}
-    unzip "${BUILD_DIR}/source/ninja-${NINJA_VERSION}.zip" -d "${PREFIX}/ninja/{$NINJA_VERSION}"
+    unzip "${BUILD_DIR}/source/ninja-${NINJA_VERSION}.zip" -d "${PREFIX}/ninja/${NINJA_VERSION}"
 
     # Link the Ninja binary to the bin folder
     ln -sf "${PREFIX}/ninja/${NINJA_VERSION}/ninja" "${BIN_DIR}/ninja"
