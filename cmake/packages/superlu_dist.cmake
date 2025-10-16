@@ -18,6 +18,7 @@ if(NOT SUPERLU_DIST_FOUND)
     ${superlu_dist_cmake_args}
   )
 
+  set(superlu_dist_force_mpi_compilier "ON")
   build_cmake_subproject("superlu_dist")
 
   if(${DEALII_WITH_64BIT})
