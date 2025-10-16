@@ -2,6 +2,9 @@ include(ExternalProject)
 
 # Try to find HDF5 via the CMake build-in function:
 list(APPEND HDF5_ROOT "${HDF5_DIR}")
+list(APPEND HDF5_ROOT "/usr/include/openmpi-x86_64")
+list(APPEND HDF5_ROOT "/usr/lib64/openmpi")
+list(APPEND HDF5_ROOT "${SEARCH_DEFAULTS}")
 list(APPEND HDF5_ROOT "${CMAKE_INSTALL_PREFIX}/hdf5/${HDF5_VERSION}")
 find_package(HDF5)
 
@@ -24,6 +27,9 @@ else()
   list(APPEND petsc_dependencies "hdf5")
   #list(APPEND trilinos_dependencies "hdf5")
   list(APPEND dealii_dependencies "hdf5")
+
+  set(HDF5_INCLUDE_DIR "${HDF5_DIR}/include")
+  set(HDF5_LIBRARIES "${HDF5_DIR}/lib/libhdf5${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
 
 # add HDF5 to GMSH
@@ -34,7 +40,8 @@ list(APPEND netcdf_cmake_args "-D HDF5_ROOT:PATH=${HDF5_DIR}")
 
 # add HDF5 to PETSc
 list(APPEND petsc_autotool_args "--with-hdf5=true")
-list(APPEND petsc_autotool_args "--with-hdf5-dir=${HDF5_DIR}")
+list(APPEND petsc_autotool_args "--with-hdf5-include=${HDF5_INCLUDE_DIR}")
+list(APPEND petsc_autotool_args "--with-hdf5-lib=${HDF5_LIBRARIES}")
 
 # add HDF5 to trilinos
 # TODO:
