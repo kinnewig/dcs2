@@ -9,9 +9,8 @@ list(APPEND HDF5_ROOT "${CMAKE_INSTALL_PREFIX}/hdf5/${HDF5_VERSION}")
 find_package(HDF5)
 
 if(HDF5_FOUND)
-  # Extract the HDF5 root dir:
-  get_filename_component(HDF5_DIR "${HDF5_INCLUDE_DIR}" DIRECTORY)
-  message(STATUS "Found HDF5: ${HDF5_DIR}")
+  # If CMake found HDF5 with the hints provided above, it can do it again.
+  set(HDF5_DIR "${HDF5_ROOT}")
 else()
 
   message(STATUS "Building HDF5")
@@ -49,6 +48,7 @@ list(APPEND petsc_autotool_args "--with-hdf5-lib=${HDF5_LIBRARIES}")
 #list(APPEND trilinos_cmake_args "-D HDF5_LIBRARY_DIRS:PATH=${HDF5_DIR}/lib64")
 #list(APPEND trilinos_cmake_args "-D HDF5_INCLUDE_DIRS:PATH=${HDF5_DIR}/include")
 
-# Force deal.II to use HDF5
+# add HDF5 to dealii
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_HDF5:BOOL=ON")
-list(APPEND dealii_cmake_args "-D HDF5_DIR:PATH=${HDF5_DIR}")
+list(APPEND dealii_cmake_args "-D HDF5_INCLUDE_DIRS='${HDF5_INCLUDE_DIRS}'")
+list(APPEND dealii_cmake_args "-D HDF5_LIBRARIES='${HDF5_LIBRARIES}'")
