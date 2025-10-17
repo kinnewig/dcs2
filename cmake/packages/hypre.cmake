@@ -20,7 +20,7 @@ if(NOT HYPRE_FOUND)
     list(APPEND hypre_cmake_args "-D HYPRE_ENABLE_BIGINT:BOOL=ON")
   endif()
 
-  
+  # unfortunally hypre's build-chain is... ..non standard...
   ############################################
   # get the download url for hypre:
   file(READ ${CMAKE_CURRENT_LIST_DIR}/../libraries.json json)

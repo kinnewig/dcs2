@@ -59,7 +59,7 @@ set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 option(TPL_ENABLE_HDF5 "Hierarchical data format for large datasets" ON)
 set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
 
-option(TPL_ENABLE_HYPRE "Scalable linear solvers and preconditioners" OFF)
+option(TPL_ENABLE_HYPRE "Scalable linear solvers and preconditioners" ON)
 set(HYPRE_VERSION "3.0.0" CACHE STRING "Specify the version of HYPRE to be used")
 
 option(TPL_ENABLE_LIBFLAME "Dense linear algebra library" ON)
