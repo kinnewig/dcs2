@@ -42,7 +42,7 @@ option(TPL_ENABLE_BOOST "General-purpose C++ libraries" ON)
 set(BOOST_VERSION "1.89.0" CACHE STRING "Specify the version of BOOST to be used")
 
 option(TPL_ENABLE_CGAL "Computational geometry algorithms" OFF)
-set(CGAL_VERSION "6.1" CACHE STRING "Specify the version of CGAL to be used")
+set(CGAL_VERSION "v6.1" CACHE STRING "Specify the version of CGAL to be used")
 
 option(TPL_ENABLE_BLIS "High-performance BLAS-like library" ON)
 set(BLIS_VERSION "2.0" CACHE STRING "Specify the version of BLIS to be used")
@@ -57,7 +57,7 @@ option(TPL_ENABLE_GSL "GNU scientific computing library" OFF)
 set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 
 option(TPL_ENABLE_HDF5 "Hierarchical data format for large datasets" ON)
-set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
+set(HDF5_VERSION "5.1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
 
 option(TPL_ENABLE_HYPRE "Scalable linear solvers and preconditioners" ON)
 set(HYPRE_VERSION "3.0.0" CACHE STRING "Specify the version of HYPRE to be used")
@@ -69,7 +69,7 @@ option(TPL_ENABLE_SCALAPACK "Parallel linear algebra routines" ON)
 set(SCALAPACK_VERSION "2.2.2.2" CACHE STRING "Specify the version of SCALAPACK to be used")
 
 option(TPL_ENABLE_MUMPS "Sparse direct solver for linear systems" ON)
-set(MUMPS_VERSION "5.8.1.0" CACHE STRING "Specify the version of MUMPS to be used")
+set(MUMPS_VERSION "5.8.1.2" CACHE STRING "Specify the version of MUMPS to be used")
 
 option(TPL_ENABLE_MUPARSER "Math expression parser library" OFF)
 set(MUPARSER_VERSION "2.3.5" CACHE STRING "Specify the version of MUPARSER to be used")
@@ -124,7 +124,7 @@ option(TPL_ENABLE_VTK "Visualization toolkit for 3D graphics" OFF)
 set(VTK_VERSION "9.5.2" CACHE STRING "Specify the version of VTK to be used")
 
 option(TPL_ENABLE_OCCT "CAD kernel for 3D modeling" OFF)
-set(OCCT_VERSION "7.9.1" CACHE STRING "Specify the version of OCCT to be used")
+set(OCCT_VERSION "7.9.2" CACHE STRING "Specify the version of OCCT to be used")
 
 option(TPL_ENABLE_TCL "Scripting language for embedded applications" OFF)
 set(TCL_VERSION "1.5.0" CACHE STRING "Specify the version of TCL to be used")
@@ -214,7 +214,7 @@ if("${BLAS_STACK}" STREQUAL "AMD")
   set(AMD-LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of AMD-LIBFLAME to be used")
   set(AMD-SCALAPACK_VERSION "5.1" CACHE STRING "Specify the version of AMD-SCALAPACK to be used")
   set(AMD-AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AMD-AOCL-UTILS to be used")
-  set(AMD-MUMPS_VERSION "5.1" CACHE STRING "Specify the version of AMD-MUMPS to be used")
+  set(AMD-MUMPS_VERSION "AOCL-5.1-GA" CACHE STRING "Specify the version of AMD-MUMPS to be used")
 
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-aocl-utils.cmake")
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-blis.cmake")
