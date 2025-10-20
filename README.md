@@ -61,6 +61,10 @@ or if you want to install for exampe your own fork of deal.II
    ./dcs2 -p <path/to/install> -j <Number of threads> --cmake-flags "DEALII_CUSTOM_URL=https://github.com/<username>/dealii.git -D DEALII_CUSTOM_TAG=<Your Branch Name>" 
    ```
 
+### Method 3: Container (Docker/Podman)
+If you want to use dcs2 on a non-supported OS, e.g., Windows, you can use the [dcs2-container](https://github.com/kinnewig/dcs2-container).
+For more information, see the documentation of the dcs2-container.
+
 ## Requirements
 DCS2 requires a modern MPI compiler, and a few additional programs that are not build by DCS2 itself.
 
