@@ -1,3 +1,13 @@
+# ---------------------------------------------------------------------
+#
+# Copyright (C) 2024 - 2025 Sebastian Kinnewig
+#
+# The code is licensed under the GNU Lesser General Public License as 
+# published by the Free Software Foundation in version 2.1 
+# The full text of the license can be found in the file LICENSE.md
+#
+# ---------------------------------------------------------------------
+
 cmake_minimum_required(VERSION 3.10)
 
 if(POLICY CMP0167)
