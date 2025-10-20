@@ -446,6 +446,139 @@ add_to_path() {
 
 
 # ++============================================================++
+# ||                    Check dependencies                      ||
+# ++============================================================++
+
+check_installed_packages() {
+  local installed_packages
+  local installed_groups
+  local install_command
+
+  # apt
+  if command -v apt &>/dev/null; then
+    installed_packages=$(apt list --installed)
+    install_command="apt"
+
+  # dnf
+  elif command -v dnf &>/dev/null; then
+    installed_packages=$(dnf list installed)
+    installed_groups=$(dnf group list installed)
+    install_command="dnf"
+
+  # unkown
+  else
+    cecho ${ERROR} "  Error: Automatic package validation failed. Unkown package manager."
+    return 1
+  fi
+
+  # Check optional packages:
+  local missing_optional_packages=()
+  
+  for dependency in "${dependencies_optional[@]}"; do
+    if  ! echo ${installed_packages} | grep "${dependency}" -iq; then
+      missing_optional_packages+=("${dependency}")
+    fi
+  done
+
+  # Check required packages
+  local missing_required_packages=()
+  
+  for dependency in "${dependencies_required[@]}"; do
+    if  ! echo ${installed_packages} | grep "${dependency}" -iq; then
+      missing_required_packages+=("${dependency}")
+    fi
+  done
+
+  # Check required groups
+  local missing_required_groups=()
+  for dependency in "${dependencies_groups_required[@]}"; do
+    if  ! echo ${installed_groups} | grep "${dependency}" -iq; then
+      missing_required_groups+=("${dependency}")
+    fi
+  done
+
+  # Handle the answer:
+  if [[ ${#missing_required_packages[@]} -ne 0 ]]; then
+  cecho ${ERROR} "  Missing required dependencies:"
+  cecho ${ERROR} "    You can install them with:"
+  cecho ${ERROR} "    sudo ${install_command} install -y ${missing_required_packages[@]}"
+  if [[ ${#missing_required_groups[@]} -ne 0 ]]; then
+    cecho ${ERROR} "    sudo ${install_command} groupinstall -y ${missing_required_groups[@]}"
+  fi
+  echo
+  cecho ${ERROR} "    If these packages were installed manually, for example built from source,"
+  cecho ${ERROR} "    you can safely ignore this message."
+  echo
+
+  if [[ ${#missing_optional_packages[@]} -ne 0 ]]; then
+    cecho ${WARN} "  Some optional packages are also missing."
+    cecho ${WARN} "    To install both required and optional packages, run:"
+    cecho ${WARN} "    sudo ${install_command} install -y ${missing_required_packages[@]} ${missing_optional_packages[@]}"
+    echo
+    cecho ${WARN} "    You may ignore the optional packages, as they can be built automatically by DCS2 if needed."
+    echo
+  fi
+
+  return 2
+
+  elif [[ ${#missing_optional_packages[@]} -ne 0 ]]; then
+    cecho ${WARN} "  Some optional packages are not installed."
+    cecho ${WARN} "    You can install them with:"
+    cecho ${WARN} "    sudo ${install_command} install -y ${missing_optional_packages[@]}"
+    echo
+    cecho ${WARN} "    You may safely ignore this message, these packages are optional and can be built automatically by DCS2 if needed."
+    echo
+
+    return 3
+  
+  else
+    cecho ${GOOD} "  All required packages are installed."
+    echo
+  fi
+}
+
+
+
+check_dependencies() {
+  local os_name
+  local script_path
+
+  # Read OS name
+  if [[ -f /etc/os-release ]]; then
+    . /etc/os-release
+    # Get the lowercase os id
+    os_name="${ID,,}"  
+  else
+    cecho ${ERROR} "  Error: Automatic package validation failed. Unable to determine OS."
+  fi
+
+  # Look if the OS is known, if so, check if the required packages are installed
+  script_path="dependencies/${os_name}.sh"
+  if [[ -f "$script_path" ]]; then
+    cecho ${INFO} "  ... checking dependencies for ${os_name} ..."
+    source "$script_path"
+
+    check_installed_packages
+    check_exit=$?
+
+    if [[ ${check_exit} -ne 0 ]]; then
+      return check_exit
+    fi
+
+  else
+    cecho ${ERROR} "  Error:  Automatic package validation failed. No dependency definition found for '${os_name}'."
+    cecho ${INFO}  "    To support this OS, create a script at:"
+    cecho ${INFO}  "      dependencies/${os_name}.sh"
+    cecho ${INFO}  "    and list the required packages inside."
+    cecho ${INFO}  "    If you add support, please consider contributing via a pull request:"
+    cecho ${INFO}  "      https://github.com/kinnewig/dcs2/pulls"
+    return 4
+  fi
+}
+
+
+
+# ++============================================================++
 # ||                    Check compiler                          ||
 # ++============================================================++
 
@@ -1445,6 +1578,21 @@ fi
 if ! parse_arguments "$@"; then
   exit 0
 fi
+
+echo
+echo "==================================================="
+echo "Check dependencies:"
+echo "==================================================="
+echo
+
+check_dependencies
+if [[ $? -ne 0 ]]; then
+  if [[ "${USER_INTERACTION}" == "ON" ]]; then
+    read -p "Press Enter to continue... otherwise press STR+C"
+  fi
+fi
+
+
 
 echo
 echo "==================================================="
