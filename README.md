@@ -123,6 +123,7 @@ Usage:
 | `-A <ON\|OFF>`           | `--add_to_path <ON\|OFF>`       | Enable or disable adding deal.II permanently to the path     |
 | `-N <DOWNLOAD\|ON\|OFF>` | `--ninja <DOWNLOAD\|ON\|OFF>`   | Enable or disable the use of Ninja                           |
 | `-M <DOWNLOAD\|ON\|OFF>` | `--mold <DOWNLOAD\|ON\|OFF>`    | Enable or disable the use of mold                            |
+| `-O <ON\|OFF>`           | `--optimization-flags <ON\|OFF>`| Enable or disable the use of optimization flags              |
 | `-U`                     |                                 | Do not interrupt                                             |
 | `-v`                     | `--version`                     | Print the version number                                     |
 |                          | `--blas-stack=<blas option>`    | Select which BLAS to use (FLAME|SYSTEM|AMD|MKL)              |

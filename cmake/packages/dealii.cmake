@@ -2,11 +2,14 @@ include(ExternalProject)
 
 # deal.II
 
+# Usefull compile flags for deal.II
+set(dealii_cxx_flags "-fdiagnostics-color -std=c++20 ${CMAKE_CXX_FLAGS}")
+
 set(dealii_cmake_args
   -D CMAKE_C_COMPILER=${C_COMPILER}
   -D CMAKE_CXX_COMPILER=${CXX_COMPILER}
   -D CMAKE_Fortran_COMPILER=${MPI_Fortran_COMPILER}
-  -D CMAKE_CXX_FLAGS="-fdiagnostics-color"
+  -D CMAKE_CXX_FLAGS=${dealii_cxx_flags}
   -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/dealii/${DEALII_VERSION}
   -D DEAL_II_WITH_MPI=ON 
   -D DEAL_II_WITH_64BIT_INDICES=${DEALII_WITH_64BIT} 

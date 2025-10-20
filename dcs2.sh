@@ -958,6 +958,7 @@ parse_arguments() {
         echo "  -A <ON|OFF>   --add_to_path <ON|OFF>         Enable or disable adding deal.II permanently to the path"  
         echo "  -N <ON|OFF>,  --ninja <DOWNLOAD|ON|OFF>      Enable or disable the use of Ninja"
         echo "  -M <ON|OFF>,  --mold <DOWNLOAD|ON|OFF>       Enable or disable the use of mold"
+        echo "  -O <ON|OFF>,  --optimization-flags <ON|OFF>  Enable or disable the use of optimization flags (-march=native)"
         echo "  -U <ON|OFF>,  --user-interaction <ON|OFF>    Do not interupt"
         echo "  -v,           --version                      Print the version number"
         echo "                --blas-stack <blas option>     Select which BLAS to use (FLAME|SYSTEM|AMD|MKL)"
@@ -1034,6 +1035,14 @@ parse_arguments() {
         shift
         shift
         ;;
+
+      # Optimization Flags
+      -O|--optimization-flags)
+        USE_OPTIMIZATION_FLAGS=$(echo "${2^^}")
+        shift
+        shift
+        ;;
+
 
       -U|--user-interaction)
         USER_INTERACTION=$(echo "${2^^}")
@@ -1336,6 +1345,32 @@ parse_arguments() {
   #  export LDFLAGS="-fuse-ld=mold"
   #fi
 
+
+  # --- OPTIMIZATION FLAGS ---
+  cecho ${INFO} "Optimization flags:"
+  if [ -z "${USE_OPTIMIZATION_FLAGS}" ]; then
+      cecho ${INFO} "  Enable compilier optimization by default."
+      echo "  If you want to execute the code on a different machine, than you are compiling."
+      echo "  You need to disable this feature via -O OFF or --optimization-flags OFF."
+      USE_OPTIMIZATION_FLAGS=ON
+  fi
+
+  # Check if the variable is valid
+  if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${USE_OPTIMIZATION_FLAGS} " ]]; then
+    cecho ${WARN} "  Unkown optimization-flag option: ${USE_OPTIMIZATION_FLAGS} (available option: ON|OFF)"
+    cecho ${WARN} "  Compilier optimization will be enabled by default."
+    echo "  If you want to execute the code on a different machine, than you are compiling."
+    echo "  You need to disable this feature via -O OFF or --optimization-flags OFF."
+  fi
+
+  if [ "${USE_OPTIMIZATION_FLAGS}" = "ON" ]; then
+    echo "  enabled."
+  else
+    echo "  disabled."
+  fi
+  echo
+
+
   # -- SET_AOCC_PATH --
   if [ -z "${SET_AOCC_PATH}" ]; then
       SET_AOCC_PATH=OFF
@@ -1350,7 +1385,7 @@ parse_arguments() {
 
   # Check if the variable is valid
   if [[ ! " ${BOOL_OPTIONS[@]} " =~ " ${USER_INTERACTION} " ]]; then
-    cecho ${WARN} "  Unkown -U option: ${ADD_TO_PATH} (available option: ON|OFF)"
+    cecho ${WARN} "  Unkown -U option: ${USER_INTERACTION} (available option: ON|OFF)"
     cecho ${WARN} "  Default to -U ON"
   fi
 
@@ -1462,9 +1497,14 @@ elif [ "${USE_NINJA}" = "DOWNLOAD" ]; then
 fi
 
 
-# Check the compiler
+# Check the compiler:
 if ! check_compiler "$@"; then
   exit 1
+fi
+
+# Set additional compilier flags:
+if [ "${USE_OPTIMIZATION_FLAGS}" = "ON" ]; then
+  CMAKE_FLAGS="${CMAKE_FLAGS} -D CMAKE_CXX_FLAGS=-march=native"
 fi
 
 echo

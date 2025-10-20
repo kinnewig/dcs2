@@ -7,8 +7,8 @@ else()
   message(STATUS "Build TRILINOS")
 
   set(trilinos_cmake_args
-    -D CMAKE_C_FLAGS="${CMAKE_C_FLAGS}-Wno-error=implicit-function-declaration"
-    -D CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}-Wno-error=implicit-function-declaration"
+    -D CMAKE_C_FLAGS=${CMAKE_C_FLAGS} -Wno-error=implicit-function-declaration
+    -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -Wno-error=implicit-function-declaration
     -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}/trilinos/${TRILINOS_VERSION}
     -D CMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON 
     -D CMAKE_VERBOSE_MAKEFILE:BOOL=OFF 
