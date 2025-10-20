@@ -562,7 +562,7 @@ check_dependencies() {
     check_exit=$?
 
     if [[ ${check_exit} -ne 0 ]]; then
-      return check_exit
+      return $check_exit
     fi
 
   else
@@ -1311,12 +1311,6 @@ parse_arguments() {
   fi
   echo
 
-  # Check if the provided build directory is writable
-  mkdir -p "${BUILD_DIR}"           || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}"; exit 1; }
-  mkdir -p "${BUILD_DIR}/source"    || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/source"; exit 1; }
-  mkdir -p "${BUILD_DIR}/extracted" || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/extracted"; exit 1; }
-  mkdir -p "${BUILD_DIR}/build"     || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}/build"; exit 1; }
-
 
   # -- ADD TO PATH --
   cecho ${INFO} "DCS2 offers to add the installed components to the default path"
@@ -1620,7 +1614,11 @@ if [[ -d "${BUILD_DIR}" ]]; then
   if [[ "${USER_INTERACTION}" == "ON" ]]; then
     read -p "Press Enter to continue... otherwise press STR+C"
   fi
-fi
+else
+  # Check if the provided build directory is writable
+  mkdir -p "${BUILD_DIR}"           || { cecho ${ERROR} "Failed to create: ${BUILD_DIR}"; exit 1; }
+fi 
+
 
 # Check wether CMake is available.
 # If it not available install it.
