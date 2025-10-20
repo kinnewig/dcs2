@@ -9,8 +9,14 @@ list(APPEND HDF5_ROOT "${CMAKE_INSTALL_PREFIX}/hdf5/${HDF5_VERSION}")
 find_package(HDF5)
 
 if(HDF5_FOUND)
-  # If CMake found HDF5 with the hints provided above, it can do it again.
-  set(HDF5_DIR "${HDF5_ROOT}")
+  # Check that the LIBRARY is populated:
+  if(NOT DEFINED HDF5_LIBRARIES)
+    # Try to find the HDF5_DIR:
+    get_filename_component(HDF5_DIR "${HDF5_INCLUDE_DIR}" DIRECTORY)
+
+    # Set the Library
+    set(HDF5_LIBRARIES "${HDF5_DIR}/lib/libhdf5${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  endif()
 else()
 
   message(STATUS "Building HDF5")
@@ -32,15 +38,23 @@ else()
 endif()
 
 # add HDF5 to GMSH
-list(APPEND gmsh_cmake_args "-D HDF5_ROOT:PATH=${HDF5_DIR}")
+if(DEFINED HDF5_DIR)
+  list(APPEND gmsh_cmake_args "-D HDF5_ROOT:PATH=${HDF5_DIR}")
+endif()
 
 # add HDF5 to netcdf
-list(APPEND netcdf_cmake_args "-D HDF5_ROOT:PATH=${HDF5_DIR}")
+if(DEFINED HDF5_DIR)
+  list(APPEND netcdf_cmake_args "-D HDF5_ROOT:PATH=${HDF5_DIR}")
+endif()
 
 # add HDF5 to PETSc
 list(APPEND petsc_autotool_args "--with-hdf5=true")
-list(APPEND petsc_autotool_args "--with-hdf5-include=${HDF5_INCLUDE_DIR}")
-list(APPEND petsc_autotool_args "--with-hdf5-lib=${HDF5_LIBRARIES}")
+if(DEFINED HDF5_DIR)
+  list(APPEND petsc_autotool_args "--with-hdf5-dir=${HDF5_DIR}")
+else()
+  list(APPEND petsc_autotool_args "--with-hdf5-include=${HDF5_INCLUDE_DIR}")
+  list(APPEND petsc_autotool_args "--with-hdf5-lib=${HDF5_LIBRARIES}")
+endif()
 
 # add HDF5 to trilinos
 # TODO:
@@ -50,5 +64,9 @@ list(APPEND petsc_autotool_args "--with-hdf5-lib=${HDF5_LIBRARIES}")
 
 # add HDF5 to dealii
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_HDF5:BOOL=ON")
-list(APPEND dealii_cmake_args "-D HDF5_INCLUDE_DIRS='${HDF5_INCLUDE_DIRS}'")
-list(APPEND dealii_cmake_args "-D HDF5_LIBRARIES='${HDF5_LIBRARIES}'")
+if(DEFINED HDF5_DIR)
+  list(APPEND dealii_cmake_args "-D HDF5_DIR='${HDF5_DIR}'")
+else()
+  list(APPEND dealii_cmake_args "-D HDF5_INCLUDE_DIRS='${HDF5_INCLUDE_DIRS}'")
+  list(APPEND dealii_cmake_args "-D HDF5_LIBRARIES='${HDF5_LIBRARIES}'")
+endif()
