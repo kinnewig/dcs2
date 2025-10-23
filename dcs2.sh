@@ -386,6 +386,7 @@ check_and_install_aocc() {
     cecho ${INFO} "  The tool will attempt to install it automatically from there."
     exit 1
   fi
+  echo
 }
 
 
@@ -461,8 +462,8 @@ check_installed_packages() {
 
   # dnf
   elif command -v dnf &>/dev/null; then
-    installed_packages=$(dnf list installed)
-    installed_groups=$(dnf group list installed)
+    installed_packages=$(dnf list --installed)
+    installed_groups=$(dnf group list --installed)
     install_command="dnf"
 
   # unkown
@@ -600,6 +601,7 @@ check_compiler() {
       else
         cecho ${WARN} "  Could not find the AMD linker"
     fi
+    echo
   fi
 
 

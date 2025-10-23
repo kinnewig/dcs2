@@ -6,7 +6,12 @@ list(APPEND HDF5_ROOT "/usr/include/openmpi-x86_64")
 list(APPEND HDF5_ROOT "/usr/lib64/openmpi")
 list(APPEND HDF5_ROOT "${SEARCH_DEFAULTS}")
 list(APPEND HDF5_ROOT "${CMAKE_INSTALL_PREFIX}/hdf5/${HDF5_VERSION}")
+
+# Find package overwrites HDF5_VERSION
+set(HDF5_VERSION_BACKUP ${HDF5_VERSION})
+
 find_package(HDF5)
+
 
 if(HDF5_FOUND)
   # Check that the LIBRARY is populated:
@@ -18,6 +23,8 @@ if(HDF5_FOUND)
     set(HDF5_LIBRARIES "${HDF5_DIR}/lib/libhdf5${CMAKE_SHARED_LIBRARY_SUFFIX}")
   endif()
 else()
+  # Restore HDF5_VERSION
+  set(HDF5_VERSION ${HDF5_VERSION_BACKUP})
 
   message(STATUS "Building HDF5")
   
