@@ -43,16 +43,21 @@ To use DCS2, follow these steps:
 2. Clone this repository:
    ```bash
    git clone https://github.com/kinnewig/dcs2.git
-   ```
-
-3. (Optional) Package selection
-   ```bash
-   python scripts/select_packages.py
-   ```
-
-4. Start the install script
-   ```bash
    cd dcs2
+   ```
+
+3. (Optional) Select the deal.II Version
+   ```bash
+   python3 scripts/select_version.py
+   ```
+
+4. (Optional) Package selection
+   ```bash
+   python3 scripts/select_packages.py
+   ```
+
+5. Start the install script
+   ```bash
    ./dcs2 -p <path/to/install> -j <Number of threads> 
    ```
 or if you want to install for exampe your own fork of deal.II

@@ -6,6 +6,7 @@ import subprocess
 import pty
 
 from select_packages import run_select_tpls
+from select_version import select_dealii_version
 
 from packaging import version as v
 
@@ -167,8 +168,7 @@ First, select the installation mode (↑/↓ to navigate, Enter to confirm):
 
 
   # === deal.II Version ===
-  # TODO: Write a selector that checks out the corresponding dcs2 branch
-  dealii_version="9.7.0"
+  select_dealii_version()
 
   
   # === Install path ===
