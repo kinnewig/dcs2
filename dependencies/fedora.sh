@@ -17,3 +17,15 @@ dependencies_groups_required=(
 "c-development"
 "development-tools"
 )
+
+dependencies_gmsh=(
+"fltk-devel"
+"mesa-libGLU-devel"
+"mesa-libGL-devel"
+)
+
+dependencies_system_blas=(
+"openblas-devel"
+"lapack-devel"
+"scalapack-openmpi-devel"
+)

@@ -179,8 +179,10 @@ If you want to install DEALII using the system-provided BLAS stack, please use t
 The most straightforward method for installing DEALII is to rely on the BLAS, LAPACK, and ScaLAPACK libraries, which are typically provided by the system repositories. 
 
 You need to install the developer packages of the following packages `openblas` `lapack` `scalapack`.
+
 In the case of Fedora/Rocky/Redhat this boils down to `sudo dnf install openblas-devel lapack-devel scalapack-openmpi-devel`
 
+In the case of Ubuntu/Debian `sudo apt install libopenblas-dev liblapack-dev libscalapack-openmpi-dev`
 
 
 ### Installation Tools 
@@ -248,9 +250,9 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 
   Extra dependencie for OCCT: `FLTK` 
 
-   Extra dependencies of GMSH for Fedora / Rocky 9 `sudo dnf install fltk fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
+   Extra dependencies of GMSH for Fedora / Rocky 9 `sudo dnf install fltk-devel mesa-libGLU-devel mesa-libGL-devel`.
 
-   Extra dependencies of GMSH for Ubuntu / Debian `sudo apt install libfltk1.3 libfltk1.3-dev libglu1-mesa-dev libgl1-mesa-dev`.
+   Extra dependencies of GMSH for Ubuntu / Debian `sudo apt install libfltk1.3-dev libglu1-mesa-dev libgl1-mesa-dev`.
 
 - `OCCT` OpenCascade (default version: "7.8.1", default "OFF")
 

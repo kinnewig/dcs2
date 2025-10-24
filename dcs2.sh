@@ -490,6 +490,24 @@ check_installed_packages() {
     fi
   done
 
+  # If the system BLAS is used, check the additionally required packages
+  if [ "${BLAS_STACK}" = "SYSTEM" ]; then
+    for dependency in "${dependencies_system_blas[@]}"; do
+      if  ! echo ${installed_packages} | grep "${dependency}" -iq; then
+        missing_required_packages+=("${dependency}")
+      fi
+    done
+  fi
+
+  # If GMSH is requested, check the adiitionally required packages.
+  if grep -q 'TPL_ENABLE_GMSH.*ON' CMakeLists.txt || [[ "$CMAKE_FLAGS" == *TPL_ENABLE_GMSH=ON* ]]; then
+    for dependency in "${dependencies_gmsh[@]}"; do
+      if  ! echo ${installed_packages} | grep "${dependency}" -iq; then
+        missing_required_packages+=("${dependency}")
+      fi
+    done
+  fi
+
   # Check required groups
   local missing_required_groups=()
   for dependency in "${dependencies_groups_required[@]}"; do
