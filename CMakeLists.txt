@@ -79,7 +79,7 @@ option(TPL_ENABLE_SCALAPACK "Parallel linear algebra routines" ON)
 set(SCALAPACK_VERSION "2.2.2.2" CACHE STRING "Specify the version of SCALAPACK to be used")
 
 option(TPL_ENABLE_MUMPS "Sparse direct solver for linear systems" ON)
-set(MUMPS_VERSION "5.8.1.0" CACHE STRING "Specify the version of MUMPS to be used")
+set(MUMPS_VERSION "5.8.1.2" CACHE STRING "Specify the version of MUMPS to be used")
 
 option(TPL_ENABLE_MUPARSER "Math expression parser library" OFF)
 set(MUPARSER_VERSION "2.3.5" CACHE STRING "Specify the version of MUPARSER to be used")
@@ -119,7 +119,7 @@ option(TPL_ENABLE_SLEPC "Eigenvalue problem solvers built on PETSc" ON)
 set(SLEPC_VERSION "3.24.0" CACHE STRING "Specify the version of SLEPC to be used")
 
 option(TPL_ENABLE_SUPERLU_DIST "Distributed-memory sparse direct solver" ON)
-set(SUPERLU_DIST_VERSION "9.1.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
+set(SUPERLU_DIST_VERSION "9.2.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
 
 option(TPL_ENABLE_TRILINOS "Scientific computing framework" ON)
 set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of TRILINOS to be used")
@@ -134,7 +134,7 @@ option(TPL_ENABLE_VTK "Visualization toolkit for 3D graphics" OFF)
 set(VTK_VERSION "9.5.2" CACHE STRING "Specify the version of VTK to be used")
 
 option(TPL_ENABLE_OCCT "CAD kernel for 3D modeling" OFF)
-set(OCCT_VERSION "7.9.1" CACHE STRING "Specify the version of OCCT to be used")
+set(OCCT_VERSION "7.9.2" CACHE STRING "Specify the version of OCCT to be used")
 
 option(TPL_ENABLE_TCL "Scripting language for embedded applications" OFF)
 set(TCL_VERSION "1.5.0" CACHE STRING "Specify the version of TCL to be used")
