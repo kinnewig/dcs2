@@ -138,7 +138,8 @@
     "5.6.1": "477ab2ce4450cfe357acbfbc3cfd61d1e41dd391",
     "5.8.0.2": "v5.8.0.2",
     "5.8.0.3": "v5.8.0.3",
-    "5.8.1.0": "v5.8.1.0"
+    "5.8.1.0": "v5.8.1.0",
+    "5.8.1.2": "v5.8.1.2"
   },
   "muparser": {
     "git": "https://github.com/beltoforion/muparser.git",
@@ -161,7 +162,8 @@
   "occt": {
     "git": "https://github.com/Open-Cascade-SAS/OCCT.git",
     "7.8.1": "bd2a789f15235755ce4d1a3b07379a2e062fdc2e",
-    "7.9.1": "V7_9_1"
+    "7.9.1": "V7_9_1",
+    "7.9.2": "V7_9_2"
   },
   "parmetis": {
     "git": "https://karypis.github.io/glaros/files/sw/parmetis",
@@ -205,7 +207,8 @@
   },
   "superlu_dist": {
     "git": "https://github.com/xiaoyeli/superlu_dist.git",
-    "9.1.0": "v9.1.0"
+    "9.1.0": "v9.1.0",
+    "9.2.0": "v9.2.0"
   },
   "symengine": {
     "git": "https://github.com/symengine/symengine.git",
