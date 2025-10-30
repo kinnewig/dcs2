@@ -24,6 +24,9 @@ endif()
 # LAPACK
 find_package(LAPACK)
 if(${LAPACK_FOUND})
+  # LAPACK_LIBRARIES includes some linker flags, that we need to remove first
+  list(GET LAPACK_LIBRARIES 0 LAPACK_LIBRARIES)
+
   # Add lapack to ARPACK-NG
   list(APPEND arpack-ng_cmake_args "-D LAPACK_LIBRARIES:PATH=${LAPACK_LIBRARIES}")
   
