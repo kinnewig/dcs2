@@ -96,7 +96,7 @@ set(GMP_VERSION "6.2.1" CACHE STRING "Specify the version of GMP to be used")
 option(TPL_ENABLE_MPFR "Multiple-precision floating-point library" ON)
 set(MPFR_VERSION "4.2.2" CACHE STRING "Specify the version of MPFR to be used")
 
-option(TPL_ENABLE_SUITESPARSE "Sparse matrix algorithms collection" ON)
+option(TPL_ENABLE_SUITESPARSE "Sparse matrix algorithms collection" OFF)
 set(SUITESPARSE_VERSION "7.11.0" CACHE STRING "Specify the version of SUITESPARSE to be used")
 
 option(TPL_ENABLE_SUNDIALS "Nonlinear and differential equation solvers" OFF)
