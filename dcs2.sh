@@ -547,6 +547,16 @@ check_installed_packages() {
     echo
   fi
 
+  if [[ "${missing_required_packages[@]}" =~ "openmpi-devel" ]]; then
+    cecho ${INFO} " Remember to enable the MPI compilier! "
+    cecho ${INFO} "   This can be done by adding the following block to your ~/.bashrc"
+    echo          "     source /etc/profile.d/modules.sh"
+    echo          "     module load mpi/openmpi-x86_64"
+    cecho ${INFO} "   And then reload your bashrc:"
+    echo          "     source ~/.bashrc"
+    echo
+  fi
+
   return 2
 
   elif [[ ${#missing_optional_packages[@]} -ne 0 ]]; then
