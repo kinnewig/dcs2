@@ -67,7 +67,7 @@ download_and_install_cmake() {
   # Assemble the download URL
   CMAKE_BASE_GIT=$(python3 -c "import json; print(json.load(open('cmake/libraries.json'))['cmake']['git'])")
   CMAKE_BASE_URL="${CMAKE_BASE_GIT%.git}"
-  CMAKE_DOWNLOAD_URL=${CMAKE_BASE_URL}/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-${ARCHITECTURE}.tar.gz
+  CMAKE_DOWNLOAD_URL=${CMAKE_BASE_URL}/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-${OS,,}-${SYSTEM}.tar.gz
   
   if command -v curl &>/dev/null; then
     curl -L ${CMAKE_DOWNLOAD_URL}  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
