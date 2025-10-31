@@ -69,6 +69,7 @@ download_and_install_cmake() {
   CMAKE_BASE_URL="${CMAKE_BASE_GIT%.git}"
   CMAKE_DOWNLOAD_URL=${CMAKE_BASE_URL}/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-${OS,,}-${SYSTEM}.tar.gz
   
+  mkdir -p ${BUILD_DIR}/source
   if command -v curl &>/dev/null; then
     curl -L ${CMAKE_DOWNLOAD_URL}  -o "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz"
   elif command -v wget &>/dev/null; then
@@ -82,16 +83,22 @@ download_and_install_cmake() {
   fi
 
   # Extract CMake
-  tar -xf "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz" -C "${BUILD_DIR}/extracted"
-
-  # Build CMake
-  cd "${BUILD_DIR}/extracted/cmake-${CMAKE_VERSION}"
-  ./bootstrap --prefix="${PREFIX}/cmake/${CMAKE_VERSION}" 
-  make -C "${BUILD_DIR}/extracted/cmake-${CMAKE_VERSION}" -j ${THREADS}
-  make install
+  mkdir -p ${PREFIX}/cmake/${CMAKE_VERSION}
+  tar -xf "${BUILD_DIR}/source/cmake-${CMAKE_VERSION}.tar.gz" -C "${PREFIX}/cmake/${CMAKE_VERSION}"
 
   # Link cmake binary to the bin folder
-  ln -sf "${PREFIX}/cmake/${CMAKE_VERSION}/bin/cmake" "${BIN_DIR}/cmake"
+  ln -sf "${PREFIX}/cmake/${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-${OS,,}-${SYSTEM}/bin/cmake" "${BIN_DIR}/cmake"
+
+  # Add CMAKE to the PATH
+  export PATH=${BIN_DIR}:${PATH}
+
+  # Check CMake
+  if ! command -v cmake &>/dev/null; then
+    cecho ${ERROR} "  ERROR: Failed to download CMake automatically."
+    exit 1
+  else
+    cecho ${GOOD} "  CMake has been downloaded successfully."
+  fi
 
   CMAKE_INSTALLED=YES
 }
@@ -159,6 +166,7 @@ download_and_extract_ninja() {
     mkdir -p ${BIN_DIR}
 
     # Download Ninja
+    mkdir -p ${BUILD_DIR}/source
     if command -v curl &>/dev/null; then
       curl -L ${NINJA_DOWNLOAD_URL} -o "${BUILD_DIR}/source/ninja-${NINJA_VERSION}.zip"
     elif command -v wget &>/dev/null; then
@@ -236,6 +244,7 @@ download_and_extract_mold() {
     MOLD_DOWNLOAD_URL=${MOLD_BASE_URL}/releases/download/v${MOLD_VERSION}/mold-${MOLD_VERSION}-${ARCHITECTURE}.tar.gz
 
     # Download Mold
+    mkdir -p ${BUILD_DIR}/source
     if command -v curl &>/dev/null; then
       curl -L ${MOLD_DOWNLOAD_URL} -o "${BUILD_DIR}/source/mold-${MOLD_VERSION}.tar.gz"
     elif command -v wget &>/dev/null; then
