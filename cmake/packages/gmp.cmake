@@ -28,7 +28,6 @@ else()
   # Add GMP to SuiteSparse (how to link GMP depends on wether we build GMP ourself or if we use the system package)
   list(APPEND suitesparse_cmake_args "-D GMP_INCLUDE_DIR:PATH=${GMP_INCLUDE_DIR}")
   list(APPEND suitesparse_cmake_args "-D GMP_LIBRARY:PATH=${GMP_LIBRARY}/libgmp${CMAKE_SHARED_LIBRARY_SUFFIX}")
-  list(APPEND suitesparse_cmake_args "-D GMP_STATIC:PATH=${GMP_LIBRARY}/libgmp.a")
 endif()
 
 # add GMP to MPFR
