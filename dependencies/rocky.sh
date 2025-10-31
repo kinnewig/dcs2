@@ -13,7 +13,7 @@ dependencies_required=(
 )
 
 dependencies_groups_required=(
-"Development Tools"
+"'Development Tools'"
 )
 
 dependencies_gmsh=(

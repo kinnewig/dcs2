@@ -12,6 +12,7 @@ dependencies_required=(
 "git"
 "texinfo"
 "libssl-dev"
+"pkg-config"
 "python-is-python3"
 )
 

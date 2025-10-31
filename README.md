@@ -111,7 +111,7 @@ module load mpi/openmpi-x86_64
 ### Ubuntu/Debian
 Install the dependencies
 ```bash
-sudo apt install build-essential libopenmpi-dev gfortran git texinfo libssl-dev libboost-all-dev cmake ninja-build mold 
+sudo apt install build-essential libopenmpi-dev gfortran git texinfo libssl-dev python-is-python3 pkg-config libboost-all-dev cmake ninja-build mold 
 ```
 
 ## DCS2 Options
