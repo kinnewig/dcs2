@@ -21,6 +21,7 @@ endif()
 # add SuiteSparse to deal.II
 list(APPEND dealii_cmake_args "-D DEAL_II_WITH_UMFPACK:BOOL=ON")
 list(APPEND dealii_cmake_args "-D UMFPACK_DIR=${SUITESPARSE_DIR}")
+list(APPEND dealii_cmake_args "-D UMFPACK_INCLUDE_DIR=${SUITESPARSE_DIR}/include/suitesparse")
 
 # add SuiteSparse to PETSc
 #list(APPEND petsc_autotool_args "--with-suitesparse=true")
