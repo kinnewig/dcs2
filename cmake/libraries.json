@@ -63,9 +63,8 @@
   "cmake": {
     "git": "https://github.com/Kitware/CMake.git",
     "4.0.3": "v4.0.3",
-    "4.1.0": "v4.1.0",
-    "4.1.1": "v4.1.1",
-    "4.1.2": "v4.1.2"
+    "4.1.2": "v4.1.2",
+    "4.2.0": "v4.2.0"
   },
   "dealii": {
     "git": "https://github.com/dealii/dealii",
@@ -94,7 +93,8 @@
     "git": "https://gitlab.onelab.info/gmsh/gmsh.git",
     "4.12.2": "bc6b651adf17a57698ee60d88b305afb4bb216b8",
     "4.14.0": "gmsh_4_14_0",
-    "4.14.1": "gmsh_4_14_1"
+    "4.14.1": "gmsh_4_14_1",
+    "4.15.0": "gmsh_4_15_0"
   },
   "gsl": {
     "git": "https://git.savannah.gnu.org/git/gsl.git",
@@ -102,7 +102,8 @@
   },
   "hdf5": {
     "git": "https://github.com/HDFGroup/hdf5.git",
-    "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea"
+    "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea",
+    "2.0.0": "2.0.0"
   },
   "hypre": {
     "git": "https://github.com/hypre-space/hypre.git",
@@ -153,7 +154,8 @@
     "git": "https://github.com/ninja-build/ninja.git",
     "1.11.1": "a524bf3f6bacd1b4ad85d719eed2737d8562f27a",
     "1.13.0": "v1.13.0",
-    "1.13.1": "v1.13.1"
+    "1.13.1": "v1.13.1",
+    "1.13.2": "v1.13.2"
   },
   "numdiff": {
     "git": "https://download-mirror.savannah.gnu.org/releases/numdiff",
@@ -179,7 +181,8 @@
     "3.23.2": "v3.23.2",
     "3.23.5": "v3.23.5",
     "3.23.6": "v3.23.6",
-    "3.24.0": "v3.24.0"
+    "3.24.0": "v3.24.0",
+    "3.24.2": "v3.24.2"
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
@@ -192,13 +195,15 @@
     "git": "https://github.com/slepc/slepc.git",
     "3.23.2": "v3.23.2",
     "3.23.3": "v3.23.3",
-    "3.24.0": "v3.24.0"
+    "3.24.0": "v3.24.0",
+    "3.24.1": "v3.24.1"
   },
   "suitesparse": {
     "git": "https://github.com/DrTimothyAldenDavis/SuiteSparse.git",
     "7.7.0": "13806726cbf470914d012d132a85aea1aff9ee77",
     "7.10.3": "1786fef52d4bea8fadb9f775f0fd5af459a14293",
-    "7.11.0": "v7.11.0"
+    "7.11.0": "v7.11.0",
+    "7.12.1": "v7.12.1"
   },
   "sundials": {
     "git": "https://github.com/LLNL/sundials.git",
@@ -217,12 +222,14 @@
   "tbb": {
     "git": "https://github.com/oneapi-src/oneTBB.git",
     "2021.13.0": "1c4c93fc5398c4a1acb3492c02db4699f3048dea",
-    "2022.2.0": "v2022.2.0"
+    "2022.2.0": "v2022.2.0",
+    "2022.3.0": "v2022.3.0"
   },
   "tcl": {
     "git": "https://github.com/tcltk/tcl.git",
     "8.6.15": "1a98213e55128c8a2136379fedfaef0c8e15320b",
-    "1.5.0": "tclpro-1-5-0"
+    "1.5.0": "tclpro-1-5-0",
+    "9.0.3": "core-9-0-3"
   },
   "tk": {
     "git": "https://github.com/tcltk/tk.git",
@@ -236,7 +243,8 @@
     "15.0.0": "3703c194db5ba3d9f2353aa0f1bb4731c7e53d45",
     "15.1.0": "6af5f44df4eb9be0799961afcdbcbf2c2ea3f5ca",
     "16.0.0": "c6f6bea715046c00b327f5ddaacdc372dccd3f64",
-    "16.1.0": "trilinos-release-16-1-0"
+    "16.1.0": "trilinos-release-16-1-0",
+    "16.2.0": "16.2.0"
   },
   "vtk": {
     "git": "https://github.com/Kitware/VTK.git",
@@ -247,6 +255,7 @@
   },
   "zlib-ng": {
     "git": "https://github.com/zlib-ng/zlib-ng.git",
-    "2.2.5": "2.2.5"
+    "2.2.5": "2.2.5",
+    "2.3.1": "2.3.1"
   }
 }

@@ -97,7 +97,7 @@ option(TPL_ENABLE_MPFR "Multiple-precision floating-point library" ON)
 set(MPFR_VERSION "4.2.2" CACHE STRING "Specify the version of MPFR to be used")
 
 option(TPL_ENABLE_SUITESPARSE "Sparse matrix algorithms collection" OFF)
-set(SUITESPARSE_VERSION "7.11.0" CACHE STRING "Specify the version of SUITESPARSE to be used")
+set(SUITESPARSE_VERSION "7.12.1" CACHE STRING "Specify the version of SUITESPARSE to be used")
 
 option(TPL_ENABLE_SUNDIALS "Nonlinear and differential equation solvers" OFF)
 set(SUNDIALS_VERSION "7.5.0" CACHE STRING "Specify the version of SUNDIALS to be used")
@@ -113,22 +113,22 @@ option(TPL_ENABLE_PARMETIS "Parallel graph partitioning library" ON)
 set(PARMETIS_VERSION "4.0.3" CACHE STRING "Specify the version of PARMETIS to be used")
 
 option(TPL_ENABLE_PETSC "Scalable solver toolkit for PDEs" ON)
-set(PETSC_VERSION "3.24.0" CACHE STRING "Specify the version of PETSC to be used")
+set(PETSC_VERSION "3.24.2" CACHE STRING "Specify the version of PETSC to be used")
 
 option(TPL_ENABLE_SLEPC "Eigenvalue problem solvers built on PETSc" ON)
-set(SLEPC_VERSION "3.24.0" CACHE STRING "Specify the version of SLEPC to be used")
+set(SLEPC_VERSION "3.24.1" CACHE STRING "Specify the version of SLEPC to be used")
 
 option(TPL_ENABLE_SUPERLU_DIST "Distributed-memory sparse direct solver" ON)
 set(SUPERLU_DIST_VERSION "9.2.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
 
 option(TPL_ENABLE_TRILINOS "Scientific computing framework" ON)
-set(TRILINOS_VERSION "16.1.0" CACHE STRING "Specify the version of TRILINOS to be used")
+set(TRILINOS_VERSION "16.2.0" CACHE STRING "Specify the version of TRILINOS to be used")
 
 option(TPL_ENABLE_TBB "Intel's Threading Building Blocks" ON)
-set(TBB_VERSION "2022.2.0" CACHE STRING "Specify the version of TBB to be used")
+set(TBB_VERSION "2022.3.0" CACHE STRING "Specify the version of TBB to be used")
 
 option(TPL_ENABLE_GMSH "Mesh generation and visualization tool" OFF)
-set(GMSH_VERSION "4.14.1" CACHE STRING "Specify the version of GMSH to be used")
+set(GMSH_VERSION "4.15.0" CACHE STRING "Specify the version of GMSH to be used")
 
 option(TPL_ENABLE_VTK "Visualization toolkit for 3D graphics" OFF)
 set(VTK_VERSION "9.5.2" CACHE STRING "Specify the version of VTK to be used")
@@ -137,13 +137,13 @@ option(TPL_ENABLE_OCCT "CAD kernel for 3D modeling" OFF)
 set(OCCT_VERSION "7.9.2" CACHE STRING "Specify the version of OCCT to be used")
 
 option(TPL_ENABLE_TCL "Scripting language for embedded applications" OFF)
-set(TCL_VERSION "1.5.0" CACHE STRING "Specify the version of TCL to be used")
+set(TCL_VERSION "9.0.3" CACHE STRING "Specify the version of TCL to be used")
 
 option(TPL_ENABLE_TK "GUI toolkit for TCL" OFF)
 set(TK_VERSION "1.5.0" CACHE STRING "Specify the version of TK to be used")
 
 option(TPL_ENABLE_ZLIB-NG "Next-gen compression library (Zlib-compatible)" OFF)
-set(ZLIB-NG_VERSION "2.2.5" CACHE STRING "Specify the version of ZLIB-NG to be used")
+set(ZLIB-NG_VERSION "2.3.1" CACHE STRING "Specify the version of ZLIB-NG to be used")
 
 set(DEALII_VERSION "9.7.1" CACHE STRING "Specify the version of DEALII to be used")
 option(DEALII_WITH_64BIT      "Build deal.II with support for 64bit long numbers"                 OFF)
