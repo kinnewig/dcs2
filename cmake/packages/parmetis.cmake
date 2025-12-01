@@ -79,8 +79,8 @@ if(NOT PARMETIS_FOUND)
 endif()
 
 # Add parmetis to deal.II
-list(APPEND dealii_cmake_args "-D DEAL_II_WITH_PARMETIS:BOOL=ON")
-list(APPEND dealii_cmake_args "-D PARMETIS_DIR=${PARMETIS_DIR}")
+list(APPEND dealii_cmake_args "-D DEAL_II_WITH_METIS:BOOL=ON")
+list(APPEND dealii_cmake_args "-D METIS_DIR=${PARMETIS_DIR}")
 
 # add parmetis to trilinos
 list(APPEND trilinos_cmake_args "-D TPL_ENABLE_METIS:BOOL=ON")
