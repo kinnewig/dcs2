@@ -105,6 +105,9 @@ set(SUNDIALS_VERSION "7.5.0" CACHE STRING "Specify the version of SUNDIALS to be
 option(TPL_ENABLE_SYMENGINE "Symbolic math library in C++" OFF)
 set(SYMENGINE_VERSION "0.14.0" CACHE STRING "Specify the version of SYMENGINE to be used")
 
+option(TPL_ENABLE_T8CODE "Tree-based adaptive mesh refinement with arbitrary element shapes" ON)
+set(T8CODE_VERSION "3.0.1" CACHE STRING "Specify the version of T8CODE to be used")
+
 option(TPL_ENABLE_P4EST "Adaptive mesh refinement on forests of quadtrees" ON)
 set(P4EST_VERSION "2.8.7" CACHE STRING "Specify the version of P4EST to be used")
 set(LIBSC_VERSION "2.8.7" CACHE STRING "Specify the version of LIBSC to be used")

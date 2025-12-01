@@ -219,6 +219,10 @@
     "git": "https://github.com/symengine/symengine.git",
     "0.14.0": "v0.14.0"
   },
+  "t8code": {
+    "git": "https://github.com/DLR-AMR/t8code.git",
+    "3.0.1": "v3.0.1"
+  },
   "tbb": {
     "git": "https://github.com/oneapi-src/oneTBB.git",
     "2021.13.0": "1c4c93fc5398c4a1acb3492c02db4699f3048dea",

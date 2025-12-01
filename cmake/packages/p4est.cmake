@@ -18,6 +18,7 @@ else()
   build_cmake_subproject("libsc")
 
   list(APPEND p4est_dependencies "libsc")
+  list(APPEND t8code_dependencies "libsc")
   
   
   # P4EST itself
@@ -33,8 +34,25 @@ else()
 
   # Dependencies:
   list(APPEND dealii_dependencies "p4est")
+  list(APPEND t8code_dependencies "p4est")
 endif()
 
+# Add SC and P4EST to T8CODE
+list(APPEND t8code_cmake_args "-D T8CODE_USE_SYSTEM_SC:BOOL=ON")
+list(APPEND t8code_cmake_args "-D SC_ROOT=/home/ifam/kinnewig/Software/dcs2/p4est/2.8.7")
+list(APPEND t8code_cmake_args "-D T8CODE_USE_SYSTEM_P4EST:BOOL=ON")
+list(APPEND t8code_cmake_args "-D P4EST_ROOT=/home/ifam/kinnewig/Software/dcs2/p4est/2.8.7")
+
 # Add P4est to deal.II
-list(APPEND dealii_cmake_args "-D DEAL_II_WITH_P4EST=ON") 
+
+# TODO: Only enable P4EST when t8code is not present. 
+#       At the moment, t8code still requires P4EST, but P4EST has to be disabled 
+#       in deal.II to avoid conflicts between both packages.
+if(TPL_ENABLE_T8CODE)
+  list(APPEND dealii_cmake_args "-D DEAL_II_WITH_P4EST=OFF") 
+else()
+  list(APPEND dealii_cmake_args "-D DEAL_II_WITH_P4EST=ON") 
+endif()
+
 list(APPEND dealii_cmake_args "-D P4EST_DIR=${P4EST_DIR}") 
+

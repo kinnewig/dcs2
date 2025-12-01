@@ -247,6 +247,7 @@ This feature is meant for development (e.g. you can provide your local deal.II f
 #### Graph partitioning
 - `P4EST` (default version: "2.8.5")
 - `METIS` and `ParMETIS` Graph partitioner (default "ON")
+- `T8CODE` Tree-based adaptive mesh refinement with arbitrary element shapes (default "OFF")
 
 #### Grid generation
 - `ASSIMP` is a portable Open Source library to import various well-known 3D model formats in a uniform manner (default "OFF")
