@@ -77,6 +77,16 @@ else()
   set(trilinos_force_mpi_compilier "ON")
   build_cmake_subproject("trilinos")
 
+  if(NOT ${DEALII_WITH_64BIT})
+    # Bug Fix:
+    ExternalProject_Add_Step(
+      trilinos trilinos_patch
+      COMMAND sed -i "s/^template class Details::FixedHashTable<GO, LO, Kokkos::HostSpace::device_type>;/\/\/template class Details::FixedHashTable<GO, LO, Kokkos::HostSpace::device_type>;/" packages/tpetra/core/src/Tpetra_Details_FixedHashTable_def.hpp
+      DEPENDEES download
+      DEPENDERS update
+    )
+  endif()
+
   # Dependencies:
   list(APPEND dealii_dependencies "trilinos")
   list(APPEND arborx_dependencies "trilinos")
