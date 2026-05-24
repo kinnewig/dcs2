@@ -40,52 +40,52 @@ option(TPL_ENABLE_ADOLC "Automatic differentiation library" OFF)
 set(ADOLC_VERSION "2.7.2" CACHE STRING "Specify the version of ADOLC to be used")
 
 option(TPL_ENABLE_ARBORX "Performance-portable spatial data structures" OFF)
-set(ARBORX_VERSION "2.0.1" CACHE STRING "Specify the version of ARBORX to be used")
+set(ARBORX_VERSION "v2.1" CACHE STRING "Specify the version of ARBORX to be used")
 
 option(TPL_ENABLE_ARPACK-NG "Eigenvalue solver for large sparse matrices" OFF)
 set(ARPACK-NG_VERSION "3.9.1" CACHE STRING "Specify the version of ARPACK-NG to be used")
 
 option(TPL_ENABLE_ASSIMP "3D model import/export library" OFF)
-set(ASSIMP_VERSION "6.0.2" CACHE STRING "Specify the version of ASSIMP to be used")
+set(ASSIMP_VERSION "6.0.5" CACHE STRING "Specify the version of ASSIMP to be used")
 
 option(TPL_ENABLE_BOOST "General-purpose C++ libraries" ON)
-set(BOOST_VERSION "1.89.0" CACHE STRING "Specify the version of BOOST to be used")
+set(BOOST_VERSION "1.91.0.1" CACHE STRING "Specify the version of BOOST to be used")
 
 option(TPL_ENABLE_CGAL "Computational geometry algorithms" OFF)
-set(CGAL_VERSION "6.1" CACHE STRING "Specify the version of CGAL to be used")
+set(CGAL_VERSION "6.1.1" CACHE STRING "Specify the version of CGAL to be used")
 
 option(TPL_ENABLE_BLIS "High-performance BLAS-like library" ON)
 set(BLIS_VERSION "2.0" CACHE STRING "Specify the version of BLIS to be used")
 
 option(TPL_ENABLE_FLTK "Lightweight GUI toolkit" OFF)
-set(FLTK_VERSION "1.4.4" CACHE STRING "Specify the version of FLTK to be used")
+set(FLTK_VERSION "1.4.5" CACHE STRING "Specify the version of FLTK to be used")
 
 option(TPL_ENABLE_GINKGO "Sparse linear algebra library" OFF)
-set(GINKGO_VERSION "1.10.0" CACHE STRING "Specify the version of GINKGO to be used")
+set(GINKGO_VERSION "1.11.0" CACHE STRING "Specify the version of GINKGO to be used")
 
 option(TPL_ENABLE_GSL "GNU scientific computing library" OFF)
 set(GSL_VERSION "2.8" CACHE STRING "Specify the version of GSL to be used")
 
 option(TPL_ENABLE_HDF5 "Hierarchical data format for large datasets" ON)
-set(HDF5_VERSION "1.14.6" CACHE STRING "Specify the version of HDF5 to be used")
+set(HDF5_VERSION "2.1.1" CACHE STRING "Specify the version of HDF5 to be used")
 
 option(TPL_ENABLE_HYPRE "Scalable linear solvers and preconditioners" ON)
-set(HYPRE_VERSION "3.0.0" CACHE STRING "Specify the version of HYPRE to be used")
+set(HYPRE_VERSION "3.1.0" CACHE STRING "Specify the version of HYPRE to be used")
 
 option(TPL_ENABLE_LIBFLAME "Dense linear algebra library" ON)
 set(LIBFLAME_VERSION "5.2.0" CACHE STRING "Specify the version of LIBFLAME to be used")
 
 option(TPL_ENABLE_SCALAPACK "Parallel linear algebra routines" ON)
-set(SCALAPACK_VERSION "2.2.2.2" CACHE STRING "Specify the version of SCALAPACK to be used")
+set(SCALAPACK_VERSION "2.2.2.3" CACHE STRING "Specify the version of SCALAPACK to be used")
 
 option(TPL_ENABLE_MUMPS "Sparse direct solver for linear systems" ON)
-set(MUMPS_VERSION "5.8.1.2" CACHE STRING "Specify the version of MUMPS to be used")
+set(MUMPS_VERSION "5.9.0.2" CACHE STRING "Specify the version of MUMPS to be used")
 
 option(TPL_ENABLE_MUPARSER "Math expression parser library" OFF)
 set(MUPARSER_VERSION "2.3.5" CACHE STRING "Specify the version of MUPARSER to be used")
 
 option(TPL_ENABLE_NETCDF "Scientific data storage format" OFF)
-set(NETCDF_VERSION "4.9.3" CACHE STRING "Specify the version of NETCDF to be used")
+set(NETCDF_VERSION "4.10.0" CACHE STRING "Specify the version of NETCDF to be used")
 
 option(TPL_ENABLE_NUMDIFF "Numerical differentiation tool" ON)
 set(NUMDIFF_VERSION "5.9.0" CACHE STRING "Specify the version of NUMDIFF to be used")
@@ -97,10 +97,10 @@ option(TPL_ENABLE_MPFR "Multiple-precision floating-point library" ON)
 set(MPFR_VERSION "4.2.2" CACHE STRING "Specify the version of MPFR to be used")
 
 option(TPL_ENABLE_SUITESPARSE "Sparse matrix algorithms collection" OFF)
-set(SUITESPARSE_VERSION "7.12.1" CACHE STRING "Specify the version of SUITESPARSE to be used")
+set(SUITESPARSE_VERSION "7.12.2" CACHE STRING "Specify the version of SUITESPARSE to be used")
 
 option(TPL_ENABLE_SUNDIALS "Nonlinear and differential equation solvers" OFF)
-set(SUNDIALS_VERSION "7.5.0" CACHE STRING "Specify the version of SUNDIALS to be used")
+set(SUNDIALS_VERSION "7.7.0" CACHE STRING "Specify the version of SUNDIALS to be used")
 
 option(TPL_ENABLE_SYMENGINE "Symbolic math library in C++" OFF)
 set(SYMENGINE_VERSION "0.14.0" CACHE STRING "Specify the version of SYMENGINE to be used")
@@ -113,28 +113,28 @@ option(TPL_ENABLE_PARMETIS "Parallel graph partitioning library" ON)
 set(PARMETIS_VERSION "4.0.3" CACHE STRING "Specify the version of PARMETIS to be used")
 
 option(TPL_ENABLE_PETSC "Scalable solver toolkit for PDEs" ON)
-set(PETSC_VERSION "3.24.2" CACHE STRING "Specify the version of PETSC to be used")
+set(PETSC_VERSION "3.25.1" CACHE STRING "Specify the version of PETSC to be used")
 
 option(TPL_ENABLE_SLEPC "Eigenvalue problem solvers built on PETSc" ON)
-set(SLEPC_VERSION "3.24.1" CACHE STRING "Specify the version of SLEPC to be used")
+set(SLEPC_VERSION "3.25.1" CACHE STRING "Specify the version of SLEPC to be used")
 
 option(TPL_ENABLE_SUPERLU_DIST "Distributed-memory sparse direct solver" ON)
-set(SUPERLU_DIST_VERSION "9.2.0" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
+set(SUPERLU_DIST_VERSION "9.2.1" CACHE STRING "Specify the version of SUPERLU_DIST to be used")
 
 option(TPL_ENABLE_TRILINOS "Scientific computing framework" ON)
-set(TRILINOS_VERSION "16.2.0" CACHE STRING "Specify the version of TRILINOS to be used")
+set(TRILINOS_VERSION "17.1.0" CACHE STRING "Specify the version of TRILINOS to be used")
 
 option(TPL_ENABLE_TBB "Intel's Threading Building Blocks" ON)
-set(TBB_VERSION "2022.3.0" CACHE STRING "Specify the version of TBB to be used")
+set(TBB_VERSION "2023.0.0" CACHE STRING "Specify the version of TBB to be used")
 
 option(TPL_ENABLE_GMSH "Mesh generation and visualization tool" OFF)
-set(GMSH_VERSION "4.15.0" CACHE STRING "Specify the version of GMSH to be used")
+set(GMSH_VERSION "4.15.2" CACHE STRING "Specify the version of GMSH to be used")
 
 option(TPL_ENABLE_VTK "Visualization toolkit for 3D graphics" OFF)
-set(VTK_VERSION "9.5.2" CACHE STRING "Specify the version of VTK to be used")
+set(VTK_VERSION "9.6.2" CACHE STRING "Specify the version of VTK to be used")
 
 option(TPL_ENABLE_OCCT "CAD kernel for 3D modeling" OFF)
-set(OCCT_VERSION "7.9.2" CACHE STRING "Specify the version of OCCT to be used")
+set(OCCT_VERSION "8.0.0" CACHE STRING "Specify the version of OCCT to be used")
 
 option(TPL_ENABLE_TCL "Scripting language for embedded applications" OFF)
 set(TCL_VERSION "9.0.3" CACHE STRING "Specify the version of TCL to be used")
@@ -143,7 +143,7 @@ option(TPL_ENABLE_TK "GUI toolkit for TCL" OFF)
 set(TK_VERSION "1.5.0" CACHE STRING "Specify the version of TK to be used")
 
 option(TPL_ENABLE_ZLIB-NG "Next-gen compression library (Zlib-compatible)" OFF)
-set(ZLIB-NG_VERSION "2.3.1" CACHE STRING "Specify the version of ZLIB-NG to be used")
+set(ZLIB-NG_VERSION "2.3.3" CACHE STRING "Specify the version of ZLIB-NG to be used")
 
 set(DEALII_VERSION "9.7.1" CACHE STRING "Specify the version of DEALII to be used")
 option(DEALII_WITH_64BIT      "Build deal.II with support for 64bit long numbers"                 OFF)
@@ -220,11 +220,11 @@ endif()
 # Build the selected BLAS stack
 # AMD - AOCL
 if("${BLAS_STACK}" STREQUAL "AMD")
-  set(AMD-BLIS_VERSION "5.1" CACHE STRING "Specify the version of AMD-BLIS to be used")
-  set(AMD-LIBFLAME_VERSION "5.1" CACHE STRING "Specify the version of AMD-LIBFLAME to be used")
-  set(AMD-SCALAPACK_VERSION "5.1" CACHE STRING "Specify the version of AMD-SCALAPACK to be used")
-  set(AMD-AOCL-UTILS_VERSION "5.1" CACHE STRING "Specify the version of AMD-AOCL-UTILS to be used")
-  set(AMD-MUMPS_VERSION "5.1" CACHE STRING "Specify the version of AMD-MUMPS to be used")
+  set(AMD-BLIS_VERSION "5.3" CACHE STRING "Specify the version of AMD-BLIS to be used")
+  set(AMD-LIBFLAME_VERSION "5.3" CACHE STRING "Specify the version of AMD-LIBFLAME to be used")
+  set(AMD-SCALAPACK_VERSION "5.3" CACHE STRING "Specify the version of AMD-SCALAPACK to be used")
+  set(AMD-AOCL-UTILS_VERSION "5.3.0" CACHE STRING "Specify the version of AMD-AOCL-UTILS to be used")
+  set(AMD-MUMPS_VERSION "AOCL-5.1-GA" CACHE STRING "Specify the version of AMD-MUMPS to be used")
 
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-aocl-utils.cmake")
   list(APPEND TPLS_TO_INCLUDE "${CMAKE_SOURCE_DIR}/cmake/packages/amd-blis.cmake")

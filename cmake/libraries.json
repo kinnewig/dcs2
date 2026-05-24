@@ -7,34 +7,40 @@
     "git": "https://github.com/amd/aocl-utils.git",
     "4.2.0": "661527c6cc42bdde7086d752d56a44d9d2de01e3",
     "5.0.0": "91ae4d2cf4cbb67f66faeb7a3844c93691d126fd",
-    "5.1": "5.1"
+    "5.1": "5.1",
+    "5.3.0": "5.3.0"
   },
   "amd-libflame": {
     "git": "https://github.com/amd/libflame.git",
     "4.2.0": "b51ceb238bb3a597c014f371822fc6963b1d5893",
     "5.0.0": "3279fc59b292bc521d072560c0340a30fb7e16df",
-    "5.1": "5.1"
+    "5.1": "5.1",
+    "5.3": "5.3"
   },
   "amd-blis": {
     "git": "https://github.com/amd/blis.git",
     "4.2.0": "7c564c74e103249b52636e6cfc5a93ba8c2b0406",
     "5.0.0": "34d4bbade33a4384cfaff2208c833fc33a311c5d",
-    "5.1": "5.1"
+    "5.1": "5.1",
+    "5.3": "5.3"
   },
   "amd-mumps": {
     "git": "https://github.com/amd/mumps-build.git",
     "5.0": "5.0",
-    "5.1": "AOCL-5.1-GA"
+    "5.1": "AOCL-5.1-GA",
+    "AOCL-5.1-GA": "AOCL-5.1-GA"
   },
   "amd-scalapack": {
     "git": "https://github.com/amd/aocl-scalapack.git",
     "4.2.0": "46ce83a5e0be9133c11e1bb057105abb97dbfc22",
     "5.0.0": "255f4082871b3c25198ca7603dab2891fc9b72f4",
-    "5.1": "5.1"
+    "5.1": "5.1",
+    "5.3": "5.3"
   },
   "arborx": {
     "git": "https://github.com/arborx/ArborX.git",
-    "2.0.1": "v2.0.1"
+    "2.0.1": "v2.0.1",
+    "v2.1": "v2.1"
   },
   "arpack-ng": {
     "git": "https://github.com/opencollab/arpack-ng.git",
@@ -42,7 +48,8 @@
   },
   "assimp": {
     "git": "https://github.com/assimp/assimp.git",
-    "6.0.2": "v6.0.2"
+    "6.0.2": "v6.0.2",
+    "6.0.5": "v6.0.5"
   },
   "blis": {
     "git": "https://github.com/flame/blis.git",
@@ -52,19 +59,22 @@
   "boost": {
     "git": "https://github.com/boostorg/boost.git",
     "1.88.0": "boost-1.88.0",
-    "1.89.0": "boost-1.89.0"
+    "1.89.0": "boost-1.89.0",
+    "1.91.0.1": "boost-1.91.0-1"
   },
   "cgal": {
     "git": "https://github.com/CGAL/cgal.git",
     "6.0.1": "v6.0.1",
     "6.0.2": "v6.0.2",
-    "6.1.0": "v6.1"
+    "6.1.0": "v6.1",
+    "6.1.1": "v6.1.1"
   },
   "cmake": {
     "git": "https://github.com/Kitware/CMake.git",
     "4.0.3": "v4.0.3",
     "4.1.2": "v4.1.2",
-    "4.2.0": "v4.2.0"
+    "4.2.0": "v4.2.0",
+    "4.3.3": "v4.3.3"
   },
   "dealii": {
     "git": "https://github.com/dealii/dealii",
@@ -79,11 +89,13 @@
   },
   "fltk": {
     "git": "https://github.com/fltk/fltk.git",
-    "1.4.4": "release-1.4.4"
+    "1.4.4": "release-1.4.4",
+    "1.4.5": "release-1.4.5"
   },
   "ginkgo": {
     "git": "https://github.com/ginkgo-project/ginkgo.git",
-    "1.10.0": "v1.10.0"
+    "1.10.0": "v1.10.0",
+    "1.11.0": "v1.11.0"
   },
   "gmp": {
     "git": "https://github.com/alisw/GMP.git",
@@ -94,7 +106,8 @@
     "4.12.2": "bc6b651adf17a57698ee60d88b305afb4bb216b8",
     "4.14.0": "gmsh_4_14_0",
     "4.14.1": "gmsh_4_14_1",
-    "4.15.0": "gmsh_4_15_0"
+    "4.15.0": "gmsh_4_15_0",
+    "4.15.2": "gmsh_4_15_2"
   },
   "gsl": {
     "git": "https://git.savannah.gnu.org/git/gsl.git",
@@ -103,12 +116,14 @@
   "hdf5": {
     "git": "https://github.com/HDFGroup/hdf5.git",
     "1.14.6": "7bf340440909d468dbb3cf41f0ea0d87f5050cea",
-    "2.0.0": "2.0.0"
+    "2.0.0": "2.0.0",
+    "2.1.1": "2.1.1"
   },
   "hypre": {
     "git": "https://github.com/hypre-space/hypre.git",
     "2.33.0": "v2.33.0",
-    "3.0.0": "v3.0.0"
+    "3.0.0": "v3.0.0",
+    "3.1.0": "v3.1.0"
   },
   "libflame": {
     "git": "https://github.com/flame/libflame.git",
@@ -126,7 +141,8 @@
     "2.40.1": "v2.40.1",
     "2.40.2": "v2.40.2",
     "2.40.3": "v2.40.3",
-    "2.40.4": "v2.40.4"
+    "2.40.4": "v2.40.4",
+    "2.41.0": "v2.41.0"
   },
   "mpfr": {
     "git": "https://gitlab.inria.fr/mpfr/mpfr.git",
@@ -140,7 +156,8 @@
     "5.8.0.2": "v5.8.0.2",
     "5.8.0.3": "v5.8.0.3",
     "5.8.1.0": "v5.8.1.0",
-    "5.8.1.2": "v5.8.1.2"
+    "5.8.1.2": "v5.8.1.2",
+    "5.9.0.2": "v5.9.0.2"
   },
   "muparser": {
     "git": "https://github.com/beltoforion/muparser.git",
@@ -148,7 +165,8 @@
   },
   "netcdf": {
     "git": "https://github.com/Unidata/netcdf-c.git",
-    "4.9.3": "v4.9.3"
+    "4.9.3": "v4.9.3",
+    "4.10.0": "v4.10.0"
   },
   "ninja": {
     "git": "https://github.com/ninja-build/ninja.git",
@@ -165,7 +183,8 @@
     "git": "https://github.com/Open-Cascade-SAS/OCCT.git",
     "7.8.1": "bd2a789f15235755ce4d1a3b07379a2e062fdc2e",
     "7.9.1": "V7_9_1",
-    "7.9.2": "V7_9_2"
+    "7.9.2": "V7_9_2",
+    "8.0.0": "V8_0_0"
   },
   "parmetis": {
     "git": "https://karypis.github.io/glaros/files/sw/parmetis",
@@ -182,38 +201,44 @@
     "3.23.5": "v3.23.5",
     "3.23.6": "v3.23.6",
     "3.24.0": "v3.24.0",
-    "3.24.2": "v3.24.2"
+    "3.24.2": "v3.24.2",
+    "3.25.1": "v3.25.1"
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
     "2.2.1": "a8cc939fec988191d0267a9b39436d6f6cb66b08",
     "2.2.0": "7dbf35c74ceb77e06fdacf7056f78b5f56fe67fb",
     "2.2.2.1": "v2.2.2.1",
-    "2.2.2.2": "v2.2.2.2"
+    "2.2.2.2": "v2.2.2.2",
+    "2.2.2.3": "v2.2.2.3"
   },
   "slepc": {
     "git": "https://github.com/slepc/slepc.git",
     "3.23.2": "v3.23.2",
     "3.23.3": "v3.23.3",
     "3.24.0": "v3.24.0",
-    "3.24.1": "v3.24.1"
+    "3.24.1": "v3.24.1",
+    "3.25.1": "v3.25.1"
   },
   "suitesparse": {
     "git": "https://github.com/DrTimothyAldenDavis/SuiteSparse.git",
     "7.7.0": "13806726cbf470914d012d132a85aea1aff9ee77",
     "7.10.3": "1786fef52d4bea8fadb9f775f0fd5af459a14293",
     "7.11.0": "v7.11.0",
-    "7.12.1": "v7.12.1"
+    "7.12.1": "v7.12.1",
+    "7.12.2": "v7.12.2"
   },
   "sundials": {
     "git": "https://github.com/LLNL/sundials.git",
     "7.4.0": "v7.4.0",
-    "7.5.0": "v7.5.0"
+    "7.5.0": "v7.5.0",
+    "7.7.0": "v7.7.0"
   },
   "superlu_dist": {
     "git": "https://github.com/xiaoyeli/superlu_dist.git",
     "9.1.0": "v9.1.0",
-    "9.2.0": "v9.2.0"
+    "9.2.0": "v9.2.0",
+    "9.2.1": "v9.2.1"
   },
   "symengine": {
     "git": "https://github.com/symengine/symengine.git",
@@ -223,7 +248,8 @@
     "git": "https://github.com/oneapi-src/oneTBB.git",
     "2021.13.0": "1c4c93fc5398c4a1acb3492c02db4699f3048dea",
     "2022.2.0": "v2022.2.0",
-    "2022.3.0": "v2022.3.0"
+    "2022.3.0": "v2022.3.0",
+    "2023.0.0": "v2023.0.0"
   },
   "tcl": {
     "git": "https://github.com/tcltk/tcl.git",
@@ -244,18 +270,21 @@
     "15.1.0": "6af5f44df4eb9be0799961afcdbcbf2c2ea3f5ca",
     "16.0.0": "c6f6bea715046c00b327f5ddaacdc372dccd3f64",
     "16.1.0": "trilinos-release-16-1-0",
-    "16.2.0": "16.2.0"
+    "16.2.0": "16.2.0",
+    "17.1.0": "trilinos-release-17-1-0"
   },
   "vtk": {
     "git": "https://github.com/Kitware/VTK.git",
     "9.3.1": "4f02ae83179c6a1542ac3c335c73dea976578c63",
     "9.5.0": "v9.5.0",
     "9.5.1": "v9.5.1",
-    "9.5.2": "v9.5.2"
+    "9.5.2": "v9.5.2",
+    "9.6.2": "v9.6.2"
   },
   "zlib-ng": {
     "git": "https://github.com/zlib-ng/zlib-ng.git",
     "2.2.5": "2.2.5",
-    "2.3.1": "2.3.1"
+    "2.3.1": "2.3.1",
+    "2.3.3": "2.3.3"
   }
 }
