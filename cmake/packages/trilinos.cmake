@@ -81,7 +81,8 @@ else()
     # Bug Fix:
     ExternalProject_Add_Step(
       trilinos trilinos_patch
-      COMMAND sed -i "s/^template class Details::FixedHashTable<GO, LO, Kokkos::HostSpace::device_type>;/\/\/template class Details::FixedHashTable<GO, LO, Kokkos::HostSpace::device_type>;/" packages/tpetra/core/src/Tpetra_Details_FixedHashTable_def.hpp
+      COMMAND sed -i "s/  template class Details::FixedHashTable<GO, LO, Kokkos::HostSpace::device_type>.//g" packages/tpetra/core/src/Tpetra_Details_FixedHashTable_def.hpp
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/trilinos-prefix/src/trilinos
       DEPENDEES download
       DEPENDERS update
     )
